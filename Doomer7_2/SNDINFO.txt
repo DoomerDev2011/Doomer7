@@ -1,0 +1,39 @@
+weapon/getppk GETPPK
+weapon/fireppk FIREPPK
+weapon/reppk RPPK
+weapon/gettaurus GETTAR
+weapon/firetaurus FIRETAR
+weapon/retaurus RTAR
+weapon/getglk GETGLK
+weapon/fireglk FIREGLK
+weapon/reglk RGLK
+weapon/gettmg GETTMG
+weapon/firetmg FIRETMG
+weapon/retmg RTMG
+weapon/getrev GETREV
+weapon/firerev FIREREV
+weapon/rerev RREV
+weapon/firerevcharge RCHRGE
+weapon/gethar GETHARD
+weapon/firehard FIREHARD
+weapon/rehard RHARD
+weapon/zoomhard ZHARD
+weapon/statichard STATIC
+weapon/getm79 GETM79
+weapon/firem79 FIREM79
+weapon/rem79 RM79
+weapon/getknife GETKNIFE
+weapon/fireknife FIRKN
+grunt/newAttack NEWATK
+weapon/MaskExplosion MGRS
+meme title
+level1 					raveon
+menu/activate            MENUACT    // Activate a new menu
+menu/backup            MENUACT    // Backup to previous menu
+menu/prompt            MENUACT   // Activate a prompt "menu"
+menu/cursor            MENU        // Move cursor up/down
+menu/change            dsstnmov    // Select new value for option
+menu/invalid            dsoof        // Menu not available
+menu/dismiss            dsswtchx    // Dismiss a prompt message
+menu/choose            SELECT    // Choose a menu item
+menu/clear            dsswtchx    // Close top menu

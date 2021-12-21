@@ -1,0 +1,20 @@
+HardwareShader PostProcess Scene
+{
+	Name "Static"
+	Shader "shaders/static.fp" 330
+	Uniform int timer
+	Uniform int resX
+	Uniform int resY
+}
+
+/*
+This function can be put onto the Player Pawn class to switch the shader on or off.
+The function could be alled from anywhere (weapons, for example) if it is made
+sure that the player variable (PlayerInfo pointer) is not null.
+void SetStatic(bool on)
+	{
+		Shader.SetUniform1i(player, "Static", "resX", Screen.GetWidth() / 8);
+		Shader.SetUniform1i(player, "Static", "resY", Screen.GetHeight() / 8);
+		Shader.SetEnabled(player,"Static",on);
+	}
+*/
