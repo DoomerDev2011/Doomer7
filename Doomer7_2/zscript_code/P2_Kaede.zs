@@ -55,7 +55,7 @@ Class K7_Hardballer: Weapon{
 		Loop;
 		
 		Ready:
-		KAED A 0 A_JumpIf(invoker.zoomedIn, "ReadyZoomed");
+		KAED A 0 A_JumpIf( invoker.zoomedIn, "ReadyZoomed" );
 		KAED A 1 bright A_WeaponReady(WRF_ALLOWRELOAD);
 		Loop;
 		

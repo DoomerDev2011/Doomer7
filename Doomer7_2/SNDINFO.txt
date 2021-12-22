@@ -2,9 +2,10 @@
 weapon/tubea K7_TUBEA
 weapon/tubeb K7_TUBEB
 weapon/tubec K7_TUBEC
-persona_explode K7_DISPERSEA.mp3
-persona_disperse K7_DISPERSEB.mp3
-persona_reappear K7_REAPPEAR.mp3
+
+persona_explode K7_PDISA
+persona_disperse K7_PDISB
+persona_reform K7_PREFM
 persona_scan K7_SCAN
 
 
@@ -29,6 +30,7 @@ weapon/coyotereload RREV
 weapon/coyoteaim CYOAIM
 weapon/coyotespecial RCHRGE
 weapon/coyotecharge CYOCHARGE
+grunt/cyocrit CYOCRIT
 
 // Unsorted
 weapon/getglk GETGLK

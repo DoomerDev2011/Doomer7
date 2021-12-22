@@ -4,8 +4,9 @@ class SmithSyndicate: DoomPlayer
 	{
 		// Shared
 		Player.ForwardMove 1, 0.5;
-		Player.SideMove 0.8, 0.4;
+		Player.SideMove 0.66, 0.33;
 		Player.StartItem "K7_ThinBlood", 5;
+		Player.JumpZ 6.5;
 		
 		// Garcian
 		
@@ -53,54 +54,109 @@ class SmithSyndicate: DoomPlayer
 		Player.WeaponSlot 7, "K7_TommyGun";
 	}
 	// Shared
-	int iSyndicateLVPower;
-	int iSyndicateLVSpeed;
-	int iSyndicateLVWaver;
-	int iSyndicateLVCrits;
+	int m_iSyndicateLVPower;
+	int m_iSyndicateLVSpeed;
+	int m_iSyndicateLVWaver;
+	int m_iSyndicateLVCrits;
 	
-	bool bPersonaChange;
-	int iPersonaCurrent;
-	int iPersonaChargeMax;
-	int iPersonaCharge;
+	float m_fPersonaSpeed;
 	
+	// Tics after changing weapons before they are raised
+	int m_iPersonaChangeTime;
+	// Tics between the fade in sound and deploying the weapon
+	int m_iPersonaFormTime;
+	
+	bool m_bPersonaChange;
+	int m_iPersonaCurrent;
+	int m_iPersonaChargeMax;
+	int m_iPersonaCharge;
+	int m_iPersonaScanRange;
+	
+	// 
+	//
+	void InitSyndicate()
+	{
+		m_iPersonaCurrent = 0;
+	}
+	
+	
+	// Scan 
+	//
 	void VisionRingScan()
 	{
 		A_StartSound( "persona_scan", CHAN_BODY, CHANF_OVERLAP );
+		
 	}
 	
 	// Switch out of personality
-	//
+	// (start lowering weapon)
 	void PersonaChangeBegin()
 	{
-		A_StartSound( "persona_disperse", CHAN_BODY, CHANF_OVERLAP );
-		iPersonaChargeMax = 0;
-		iPersonaCharge = 0;
+		A_StartSound( "persona_explode", CHAN_BODY, CHANF_OVERLAP );
+		m_iPersonaChargeMax = 0;
+		m_iPersonaCharge = 0;
+		m_bPersonaChange = true;
+		m_iPersonaChangeTime = 25;
+		m_iPersonaFormTime = 65;
+		m_iPersonaScanRange = 64;
+		
+		forwardmove1 = 0;
+		sidemove1 = 0;
+		forwardmove2 = forwardmove1;
+		sidemove2 = sidemove1;
 	}
 	
 	// Start changing of personality
-	// (lower weapon)
+	// (done lowering weapon)
 	void PersonaChange()
 	{
-		A_StartSound( "persona_explode", CHAN_BODY, CHANF_OVERLAP );
+		if ( m_bPersonaChange )
+		{
+			A_StartSound( "persona_disperse", CHAN_BODY, CHANF_OVERLAP );
+			m_bPersonaChange = false;
+		}
 	}
 	
 	// Switch in to personality
 	// (raise weapon)
-	void PersonaChangeEnd( int persona )
+	// returns if change neccessary
+	bool PersonaChangeEnd( int persona )
 	{
-		Speed = 0.5;
-		iPersonaCurrent = persona;
-		A_StartSound( "persona_reappear", CHAN_BODY, CHANF_OVERLAP );
-		iPersonaChargeMax = 0;
-		iPersonaCharge = 0;
-		switch( iPersonaCurrent )
+		m_iPersonaChargeMax = 0;
+		m_fPersonaSpeed = 0.975;
+		switch( persona )
 		{
 			case 1: // DAN
-				iPersonaChargeMax = 3;
+				m_iPersonaChargeMax = 3;
+				break;
+			case 4: // COYOTE
+				m_iPersonaChargeMax = 1;
+				break;
+			case 5: // CON
+				m_fPersonaSpeed = 1.33;
 				break;
 		}
+		
+		if ( m_iPersonaCurrent == persona )
+		{
+			return false;
+		}
+		if (m_iPersonaCurrent != 0)
+		{
+			A_StartSound( "persona_reform", CHAN_BODY, CHANF_OVERLAP );
+		}
+		m_iPersonaCurrent = persona;
+		m_iPersonaCharge = 0;
+		return true;
 	}
 	
+	void PersonaChangeReady()
+	{
+		forwardmove1 = m_fPersonaSpeed;
+		sidemove1 = m_fPersonaSpeed * 0.7;
+		forwardmove2 = forwardmove1 * 0.5;
+		sidemove2 = sidemove1 * 0.5;
+	}
 	
 	override void Tick()
     {
