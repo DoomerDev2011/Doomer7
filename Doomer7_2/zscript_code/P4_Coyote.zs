@@ -1,4 +1,5 @@
-Class K7_Enfield2: Weapon{
+Class K7_Enfield2: Weapon
+{
 	default{
 		+Weapon.NOAUTOFIRE;
 		+Weapon.Ammo_Optional;
@@ -39,7 +40,8 @@ Class K7_Enfield2: Weapon{
 	*/
 	int counter;
 		
-	States{
+	States
+	{
 		Spawn:
 		COYH A -1 bright;
 		Loop;

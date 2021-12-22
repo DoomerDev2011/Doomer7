@@ -1,9 +1,18 @@
 weapon/getppk GETPPK
 weapon/fireppk FIREPPK
 weapon/reppk RPPK
-weapon/gettaurus GETTAR
+
+// Dan
+//
+
+weapon/gettaurus DANCRITVO
 weapon/firetaurus FIRETAR
 weapon/retaurus RTAR
+grunt/dancrit DANCRITVO
+grunt/danspecial DANCSVO
+weapon/danspecial DANCS
+
+
 weapon/getglk GETGLK
 weapon/fireglk FIREGLK
 weapon/reglk RGLK
@@ -26,6 +35,9 @@ weapon/getknife GETKNIFE
 weapon/fireknife FIRKN
 grunt/newAttack NEWATK
 weapon/MaskExplosion MGRS
+
+
+
 meme title
 level1 					raveon
 menu/activate            MENUACT    // Activate a new menu

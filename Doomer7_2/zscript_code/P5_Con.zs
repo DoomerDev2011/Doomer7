@@ -67,7 +67,7 @@ Class K7_Glock: Weapon{
 		
 		Fire:
 		CONS A 0 bright A_JumpIfNoAmmo("Reload");
-		CONS A 0 bright A_FireBullets(5.6,0,1,10,"NewBulletPuff");
+		CONS A 0 bright A_FireBullets( 5.6, 0, 1, 10, "NewBulletPuff");
 		CONS A 0 bright A_StartSound("weapon/fireglk",CHAN_AUTO,CHANF_OVERLAP);
 		CONS B 1 bright{
 			int num = Random(0,2);
