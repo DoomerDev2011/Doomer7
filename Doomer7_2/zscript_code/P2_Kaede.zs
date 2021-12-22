@@ -5,7 +5,7 @@ Class K7_Hardballer: Weapon{
 		Weapon.AmmoType1 "HardballerLoaded";
 		Weapon.AmmoUse1 1;
 		Weapon.AmmoGive1 0;
-		Weapon.AmmoType2 "NewClip";
+		Weapon.AmmoType2 "K7_ThinBlood";
 		Weapon.AmmoUse2 0;
 		Weapon.AmmoGive2 200;
 	    Inventory.PickupSound "weapon/gethar";
@@ -60,7 +60,10 @@ Class K7_Hardballer: Weapon{
 		Loop;
 		
 		ReadyZoomed:
-		TNT1 A 0 {SmithSyndicate(invoker.owner).SetStatic(true);}
+		TNT1 A 0
+		{
+			SmithSyndicate(invoker.owner).SetStatic(true);
+		}
 		TNT1 A 1 A_WeaponReady(WRF_ALLOWRELOAD);
 		Goto Ready;
 		
@@ -68,7 +71,7 @@ Class K7_Hardballer: Weapon{
 		KAED A 0 A_JumpIf (invoker.zoomedIn, "FireZoomed");
 		KAED A 0 bright A_JumpIfNoAmmo("Reload");
 		KAED A 0 bright A_StartSound("weapon/firehard",CHAN_AUTO,CHANF_OVERLAP);
-		KAED A 0 bright A_FireBullets(5.6,0,1,45,"NewBulletPuff");
+		KAED A 0 bright A_FireBullets( 5.6, 0, 1, 40, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
 		KAED B 2 bright{
 			int num = Random(0,2);
 			if(num == 0){
@@ -92,7 +95,7 @@ Class K7_Hardballer: Weapon{
 		TNT1 A 0 A_JumpIfNoAmmo("Reload");
 		TNT1 A 0 A_StartSound("weapon/firehard",CHAN_AUTO,CHANF_OVERLAP);
 		TNT1 A 0 A_SetBlend("E6F63F",.25,10);
-		TNT1 A 0 A_FireBullets(5.6,0,1,45,"NewBulletPuff");
+		TNT1 A 0 A_FireBullets( 5.6, 0, 1, 40, "NewBulletPuff", FBF_NORANDOM );
 		TNT1 A 2;
 		TNT1 A 0 A_SetPitch(pitch-1,SPF_INTERPOLATE);
 		TNT1 A 2 A_SetPitch(pitch-.75,SPF_INTERPOLATE);

@@ -54,7 +54,6 @@ Class K7_M79: Weapon {
 		Ready:
 		MASK A 1 bright A_WeaponReady(WRF_ALLOWRELOAD);
 		Loop; 
-
 		
 		Fire:
 		TNT1 A 0{
@@ -167,10 +166,7 @@ Class K7_M79: Weapon {
 		TNT1 A 0 A_GiveInventory("M79Loaded",1);
 		TNT1 A 0 A_JumpIfInventory("M79Loaded",2,"ReloadFinish");
 		TNT1 A 0 A_JumpIfInventory("NewRocket",1,"ReloadLoop");
-		Goto ReloadFinish;
-		
-		ReloadFinish:
-		TNT1 A 30;
+		TNT1 A 40;
 		MASK A 1 bright A_WeaponOffset (0,127,WOF_INTERPOLATE);
 		MASK A 1 bright A_WeaponOffset (0,107,WOF_INTERPOLATE);
 		MASK A 1 bright A_WeaponOffset (0,87,WOF_INTERPOLATE);
@@ -219,7 +215,7 @@ Class MaskGrenade: Actor{
 		Death:
 		MISL B 0 Bright A_NoGravity();
 		MISL B 0 Bright A_SetTranslucent(0.5, 1);
-		MISL B 8 Bright A_Explode;
+		MISL B 8 Bright A_Explode( 40, 32, 0, false, 32 );
 		MISL C 6 Bright;
 		MISL D 4 BRIGHT;
 		Stop;

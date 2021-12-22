@@ -1,13 +1,14 @@
-Class K7_Glock: Weapon{
-	default{
-		+Weapon.NOAUTOFIRE;
+// Glock weapon
+//
+
+Class K7_Con_Glock: Weapon{
+	default
+	{
 		+Weapon.Ammo_Optional
-		Weapon.AmmoType1 "GlockLoaded";
+		Weapon.AmmoType1 "K7_Con_Glock_Ammo";
 		Weapon.AmmoUse1 1;
-		Weapon.AmmoGive1 0;
-		Weapon.AmmoType2 "NewClip";
-		Weapon.AmmoUse2 0;
-		Weapon.AmmoGive2 200;
+		Weapon.AmmoGive1 10;
+		Weapon.AmmoType2 "K7_ThinBlood";
 	    Inventory.PickupSound "weapon/getglk";
 		Inventory.Pickupmessage "You got Con's Glocks."; 
 	}
@@ -62,12 +63,18 @@ Class K7_Glock: Weapon{
 		Loop;
 		
 		Ready:
-		CONS A 1 bright A_WeaponReady(WRF_ALLOWRELOAD);
+		CONS A 1 bright A_WeaponReady( WRF_ALLOWRELOAD );
 		Loop;
 		
 		Fire:
-		CONS A 0 bright A_JumpIfNoAmmo("Reload");
-		CONS A 0 bright A_FireBullets( 5.6, 0, 1, 10, "NewBulletPuff");
+		TNT1 A 0 bright
+		{
+			if (invoker.ammo1.amount < 1){
+				return ResolveState( "Reload" );
+			}
+			return ResolveState( null );
+		}
+		CONS A 0 bright A_FireBullets( 5.6, 0, 1, 10, "NewBulletPuff", FBF_NORANDOM );
 		CONS A 0 bright A_StartSound("weapon/fireglk",CHAN_AUTO,CHANF_OVERLAP);
 		CONS B 1 bright{
 			int num = Random(0,2);
@@ -82,8 +89,11 @@ Class K7_Glock: Weapon{
 			A_SetPitch(pitch+randomPitch,SPF_INTERPOLATE);
 		}
 		CONS C 1 bright;
-		CONS F 0 bright A_CheckReload;
-		CONS F 2 bright{
+		CONS DE 1 bright;
+		CONS F 0 bright A_FireBullets( 5.6, 0, 1, 10, "NewBulletPuff", FBF_NORANDOM );
+		CONS F 0 bright A_StartSound("weapon/fireglk",CHAN_AUTO,CHANF_OVERLAP);
+		CONS F 2 bright
+		{
 			int num = Random(0,2);
 			if(num == 0){
 				A_Overlay(-1,"BottomFlash");
@@ -95,12 +105,9 @@ Class K7_Glock: Weapon{
 			int randomPitch = random(1,2);
 			A_SetPitch(pitch-randomPitch,SPF_INTERPOLATE);
 		}
-		CONS F 0 bright A_FireBullets(5.6,0,1,10,"NewBulletPuff");
-		CONS F 0 bright A_StartSound("weapon/fireglk",CHAN_AUTO,CHANF_OVERLAP);
 		CONS GHI 1 bright;
 		CONS KLMO 1 bright;
 		CONS RST 1 bright;
-		CONS A 1 bright A_ReFire;
 		Goto Ready;
 		
 		Altfire:
@@ -112,7 +119,8 @@ Class K7_Glock: Weapon{
 			invoker.cooldown = 30;
 			return ResolveState(null);
 		}
-		CONS A 0 A_GiveInventory("ConSpeed",1);
+		CONS A 16 bright;
+		CONS A 4 A_GiveInventory( "K7_Con_Speed", 1 );
 		Goto Ready;
 		
 		Flash:
@@ -171,12 +179,6 @@ Class K7_Glock: Weapon{
 		
 		
 		Reload:
-		CONS A 0 A_JumpIfInventory("GlockLoaded", 10, 2);
-		CONS A 0 A_JumpIfInventory("NewClip", 1, "ReloadWork"); 
-		CONS A 0;
-		Goto Ready;
-		
-		ReloadWork:
 		CONS A 0 bright A_StartSound("weapon/reglk");
 		CONS A 1 bright A_WeaponOffset (0,32,WOF_INTERPOLATE);
 		CONS A 1 bright A_WeaponOffset (5,32,WOF_INTERPOLATE);
@@ -190,15 +192,7 @@ Class K7_Glock: Weapon{
 		CONS A 1 bright A_WeaponOffset (100,32,WOF_INTERPOLATE);
 		CONS A 1 bright A_WeaponOffset (120,32,WOF_INTERPOLATE);
 		CONS A 1 bright A_WeaponOffset (140,32,WOF_INTERPOLATE);
-		
-		ReloadLoop:
-		TNT1 A 0 A_TakeInventory("NewClip", 1);
-		TNT1 A 0 A_GiveInventory("GlockLoaded", 1) ;
-		TNT1 A 0 A_JumpIfInventory("GlockLoaded", 10, "ReloadFinish");
-		TNT1 A 0 A_JumpIfInventory("NewClip", 1, "ReloadLoop");
-		Goto ReloadFinish;
-		
-		ReloadFinish:
+		TNT1 A 0 bright A_SetInventory( "K7_Con_Glock_Ammo", 10 );
 		TNT1 A 18;
 		CONS A 1 bright A_WeaponOffset (140,32,WOF_INTERPOLATE);
 		CONS A 1 bright A_WeaponOffset (120,32,WOF_INTERPOLATE);
@@ -216,15 +210,20 @@ Class K7_Glock: Weapon{
 	}
 }
 
-Class GlockLoaded: Ammo{
-	default{
+Class K7_Con_Glock_Ammo : Ammo
+{
+	default
+	{
 		Inventory.MaxAmount 10;
 		+INVENTORY.IGNORESKILL;
 	}
 }
 
-Class ConSpeed: PowerSpeed{
-	default{
+Class K7_Con_Speed : PowerSpeed
+{
+	default
+	{
+		-POWERSPEED.NOTRAIL
 		Speed 2.5;
 		Powerup.Duration -10;
 		inventory.maxamount 1;

@@ -1,5 +1,3 @@
-
-
 Class GarcianGun: CustomInventory{
 	default{
 		+SOLID
@@ -50,12 +48,12 @@ Class DanGun: CustomInventory{
 		
 		Pickup:
 		TNT1 A 0 {
-			if (CountInv("K7_Taurus") <= 0) {
-				GiveInventory("K7_Taurus", 1);
-				A_SelectWeapon("K7_Taurus");
+			if (CountInv("K7_Dan_Taurus") <= 0) {
+				GiveInventory("K7_Dan_Taurus", 1);
+				A_SelectWeapon("K7_Dan_Taurus");
 			}
 			else{
-				GiveInventory("K7_Taurus", 1);
+				GiveInventory("K7_Dan_Taurus", 1);
 			}
 		}
 		Stop;
@@ -81,12 +79,12 @@ Class CoyoteGun: CustomInventory{
 		
 		Pickup:
 		TNT1 A 0 {
-			if (CountInv("K7_Enfield2") <= 0) {
-				GiveInventory("K7_Enfield2", 1);
-				A_SelectWeapon("K7_Enfield2");
+			if (CountInv("K7_Coyote_Enfield2") <= 0) {
+				GiveInventory("K7_Coyote_Enfield2", 1);
+				A_SelectWeapon("K7_Coyote_Enfield2");
 			}
 			else{
-				GiveInventory("K7_Enfield2", 1);
+				GiveInventory("K7_Coyote_Enfield2", 1);
 			}
 		}
 		Stop;
@@ -205,12 +203,12 @@ Class ConGun: CustomInventory{
 		
 		Pickup:
 		TNT1 A 0 {
-			if (CountInv("K7_Glock") <= 0) {
-				GiveInventory("K7_Glock", 1);
-				A_SelectWeapon("K7_Glock");
+			if (CountInv("K7_Con_Glock") <= 0) {
+				GiveInventory("K7_Con_Glock", 1);
+				A_SelectWeapon("K7_Con_Glock");
 			}
 			else{
-				GiveInventory("K7_Glock", 1);
+				GiveInventory("K7_Con_Glock", 1);
 			}
 		}
 		Stop;
