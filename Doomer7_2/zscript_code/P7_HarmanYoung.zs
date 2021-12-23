@@ -2,7 +2,8 @@
 Class K7_TommyGun: Weapon{
 	//The TommyGun's global properties
 	default{
-		+Weapon.Ammo_Optional
+		+WEAPON.NOAUTOAIM
+		+WEAPON.AMMO_OPTIONAL
 		Weapon.AmmoType1 "TommyGunLoaded";
 		Weapon.AmmoUse1 1;
 		Weapon.AmmoGive1 0;

@@ -17,12 +17,12 @@ Class GarcianGun: CustomInventory{
 		
 		Pickup:
 		TNT1 A 0 {
-			if (CountInv("K7_PPK") <= 0) {
-				GiveInventory("K7_PPK", 1);
-				A_SelectWeapon("K7_PPK");
+			if (CountInv("K7_Garcian_PPK") <= 0) {
+				GiveInventory("K7_Garcian_PPK", 1);
+				A_SelectWeapon("K7_Garcian_PPK");
 			}
 			else{
-				GiveInventory("K7_PPK", 1);
+				GiveInventory("K7_Garcian_PPK", 1);
 			}
 		}
 		Stop;
@@ -141,12 +141,12 @@ Class KaedeGun: CustomInventory{
 		
 		Pickup:
 		TNT1 A 0 {
-			if (CountInv("K7_Hardballer") <= 0) {
-				GiveInventory("K7_Hardballer", 1);
-				A_SelectWeapon("K7_Hardballer");
+			if (CountInv("K7_Kaede_Hardballer") <= 0) {
+				GiveInventory("K7_Kaede_Hardballer", 1);
+				A_SelectWeapon("K7_Kaede_Hardballer");
 			}
 			else{
-				GiveInventory("K7_Hardballer", 1);
+				GiveInventory("K7_Kaede_Hardballer", 1);
 			}
 		}
 		Stop;

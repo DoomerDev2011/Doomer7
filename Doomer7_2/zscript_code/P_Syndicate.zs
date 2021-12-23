@@ -6,9 +6,12 @@ class SmithSyndicate: DoomPlayer
 		Player.ForwardMove 1, 0.5;
 		Player.SideMove 0.66, 0.33;
 		Player.StartItem "K7_ThinBlood", 5;
-		Player.JumpZ 6.5;
+		Player.JumpZ 7.5;
 		
 		// Garcian
+		Player.StartItem "K7_Garcian_PPK";
+		Player.StartItem "K7_Garcian_PPK_Ammo", 5;
+		Player.WeaponSlot 0, "K7_Garcian_PPK";
 		
 		// Dan
 		Player.StartItem "K7_Dan_Taurus";
@@ -16,7 +19,9 @@ class SmithSyndicate: DoomPlayer
 		Player.WeaponSlot 1, "K7_Dan_Taurus";
 		
 		// Kaede
-		
+		Player.StartItem "K7_Kaede_Hardballer";
+		Player.StartItem "K7_Kaede_Hardballer_Ammo", 10;
+		Player.WeaponSlot 2, "K7_Kaede_Hardballer";
 		// Kevin
 		
 		// Coyote
@@ -26,88 +31,117 @@ class SmithSyndicate: DoomPlayer
 		
 		// Con
 		Player.StartItem "K7_Con_Glock";
-		Player.StartItem "K7_Con_Glock_Ammo", 10;
+		Player.StartItem "K7_Con_Glock_Ammo", 20;
 		Player.WeaponSlot 5, "K7_Con_Glock";
 		
 		// Mask
 		
 		// Not yet cleaned up
-		Player.StartItem "K7_PPK";
-		Player.StartItem "K7_Hardballer";
 		Player.StartItem "K7_M79";
 		Player.StartItem "K7_ThrowingKnife";
 		Player.StartItem "K7_TommyGun";
-		
-		Player.StartItem "Clip", 100;
-		Player.StartItem "NewClip", 100;
-		Player.StartItem "PPKLoaded", 5;
-		Player.StartItem "NewShell", 100;
-		Player.StartItem "TommyGunLoaded", 50;
-		Player.StartItem "HardballerLoaded", 10;
-		Player.StartItem "M79Loaded", 2;
-		Player.StartItem "NewRocket", 50;
-		
-        Player.WeaponSlot 2, "K7_Hardballer";
         Player.WeaponSlot 3, "K7_ThrowingKnife";
 		Player.WeaponSlot 6, "K7_M79";
-		
 		Player.WeaponSlot 7, "K7_TommyGun";
 	}
+	
 	// Shared
+	//
+	
 	int m_iSyndicateLVPower;
 	int m_iSyndicateLVSpeed;
 	int m_iSyndicateLVWaver;
 	int m_iSyndicateLVCrits;
 	
-	float m_fPersonaSpeed;
+	int m_iSyndicateThinBlood;
+	int m_iSyndicateThickBlood;
 	
+	// Current Persona
+	//
+	
+	bool m_bPersonaChange;
 	// Tics after changing weapons before they are raised
 	int m_iPersonaChangeTime;
 	// Tics between the fade in sound and deploying the weapon
 	int m_iPersonaFormTime;
-	
-	bool m_bPersonaChange;
 	int m_iPersonaCurrent;
 	int m_iPersonaChargeMax;
 	int m_iPersonaCharge;
-	int m_iPersonaScanRange;
 	
-	// 
+	int m_iPersonaScanRange;
+	int m_iPersonaHeight;
+	// Character Stats
+	float m_fPersonaSpeed;
+	float m_fPersonaSpeed_Reloading;
+	float m_fPersonaVitality;
+	// Weapon Stats
+	int m_iPersonaClipSize;
+	int m_iPersonaPrimaryDamage;
+	float m_iPersonaSpread;
+	
+	
+	// Speed
 	//
-	void InitSyndicate()
+	
+	void SetSpeed( float new_speed )
 	{
-		m_iPersonaCurrent = 0;
+		forwardmove1 = new_speed;
+		sidemove1 = new_speed;
+		forwardmove2 = forwardmove1 * 0.5;
+		sidemove2 = sidemove1 * 0.5;
+		ViewBob = new_speed * 0.66;
 	}
 	
+	// Scan ( Common Alt Fire )
+	// 
 	
-	// Scan 
-	//
 	void VisionRingScan()
 	{
 		A_StartSound( "persona_scan", CHAN_BODY, CHANF_OVERLAP );
 		
 	}
 	
-	// Switch out of personality
-	// (start lowering weapon)
+	// Use Special Generic ( Add vials if available )
+	//
+	
+	void UseSpecial()
+	{
+		if ( m_iPersonaChargeMax > 0 )
+		{
+			if ( m_iPersonaCharge = m_iPersonaChargeMax )
+			{
+				m_iPersonaCharge = 0;
+			}
+		}
+	}
+	
+	// Called before all reloads
+	//
+	
+	void ReloadGenericPre()
+	{
+		m_iPersonaCharge = 0;
+	}
+	
+	// Switch out of personality (start lowering weapon)
+	// 
+		
 	void PersonaChangeBegin()
 	{
 		A_StartSound( "persona_explode", CHAN_BODY, CHANF_OVERLAP );
 		m_iPersonaChargeMax = 0;
 		m_iPersonaCharge = 0;
 		m_bPersonaChange = true;
-		m_iPersonaChangeTime = 25;
-		m_iPersonaFormTime = 65;
+		m_iPersonaChangeTime = 20;
+		m_iPersonaFormTime = 50;
 		m_iPersonaScanRange = 64;
 		
-		forwardmove1 = 0;
-		sidemove1 = 0;
-		forwardmove2 = forwardmove1;
-		sidemove2 = sidemove1;
+		SetSpeed( 0 );
 	}
 	
-	// Start changing of personality
-	// (done lowering weapon)
+	// Start changing of personality (finished lowering weapon)
+	// 
+	
 	void PersonaChange()
 	{
 		if ( m_bPersonaChange )
@@ -117,23 +151,64 @@ class SmithSyndicate: DoomPlayer
 		}
 	}
 	
-	// Switch in to personality
-	// (raise weapon)
-	// returns if change neccessary
+	// Switch in to personality (raise weapon)
+	// Establish persona stats
+	// Returns if persona was changed
+	
 	bool PersonaChangeEnd( int persona )
 	{
+		ViewBob = 0.66;
+		m_fPersonaVitality = 100;
 		m_iPersonaChargeMax = 0;
 		m_fPersonaSpeed = 0.975;
+		m_fPersonaSpeed_Reloading = 0.45;
+		m_iPersonaHeight = 52;
+		m_iPersonaClipSize = 0;
+		m_iPersonaPrimaryDamage = 15;
+		m_iPersonaSpread = 3.15;
 		switch( persona )
 		{
-			case 1: // DAN
+			case 0: // Garcian
+				m_iPersonaHeight = 55;
+				m_iPersonaClipSize = 5;
+				m_iPersonaPrimaryDamage = 8;
+				break;
+			case 1: // Dan
+				m_iPersonaClipSize = 6;
 				m_iPersonaChargeMax = 3;
+				m_iPersonaPrimaryDamage = 40;
 				break;
-			case 4: // COYOTE
+			case 2: // KAEDE
+				m_iPersonaHeight = 48;
+				m_fPersonaSpeed = 0.9;
+				m_iPersonaClipSize = 10;
+				m_iPersonaPrimaryDamage = 35;
+				break;
+			case 3: // Kevin
+				m_fPersonaSpeed = 1.25;
+				m_iPersonaClipSize = 1;
+				m_iPersonaPrimaryDamage = 25;
+				break;
+			case 4: // Coyote
+				m_iPersonaHeight = 46;
+				m_iPersonaClipSize = 6;
 				m_iPersonaChargeMax = 1;
+				m_iPersonaPrimaryDamage = 30;
 				break;
-			case 5: // CON
+			case 5: // Con
+				m_iPersonaHeight = 35;
 				m_fPersonaSpeed = 1.33;
+				m_fPersonaSpeed_Reloading = 0.66;
+				m_iPersonaClipSize = 20;
+				m_iPersonaPrimaryDamage = 9;
+				break;
+			case 6: // MASK
+				m_fPersonaSpeed = 1.1;
+				m_iPersonaClipSize = 2;
+				break;
+			case 7: // HarmanYoung
+				m_fPersonaSpeed = 1;
+				m_iPersonaClipSize = 50;
 				break;
 		}
 		
@@ -141,10 +216,7 @@ class SmithSyndicate: DoomPlayer
 		{
 			return false;
 		}
-		if (m_iPersonaCurrent != 0)
-		{
-			A_StartSound( "persona_reform", CHAN_BODY, CHANF_OVERLAP );
-		}
+		A_StartSound( "persona_reform", CHAN_BODY, CHANF_OVERLAP );
 		m_iPersonaCurrent = persona;
 		m_iPersonaCharge = 0;
 		return true;
@@ -152,10 +224,7 @@ class SmithSyndicate: DoomPlayer
 	
 	void PersonaChangeReady()
 	{
-		forwardmove1 = m_fPersonaSpeed;
-		sidemove1 = m_fPersonaSpeed * 0.7;
-		forwardmove2 = forwardmove1 * 0.5;
-		sidemove2 = sidemove1 * 0.5;
+		SetSpeed( m_fPersonaSpeed );
 	}
 	
 	override void Tick()
@@ -166,6 +235,7 @@ class SmithSyndicate: DoomPlayer
 	
 	// Dan
 	//
+	
 	int iDanLVPower;
 	int iDanLVSpeed;
 	int iDanLVWaver;
@@ -186,7 +256,7 @@ class SmithSyndicate: DoomPlayer
 	}
 	
 	// Con
-	//
+	// 
 	
 	int iConSpeedBoost;
 	

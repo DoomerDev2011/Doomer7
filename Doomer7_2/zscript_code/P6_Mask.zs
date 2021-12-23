@@ -1,9 +1,7 @@
 Class K7_M79: Weapon {
 	default{
-		+Weapon.NOAUTOFIRE;
-		+Weapon.Ammo_Optional;
-		+Weapon.Alt_Uses_Both;
-		+WEAPON.ALT_AMMO_OPTIONAL;
+		+WEAPON.NOAUTOAIM
+		+WEAPON.AMMO_OPTIONAL
 		Weapon.SelectionOrder 100; 
 		Weapon.AmmoUse 1;
 		Weapon.AmmoGive 0; 

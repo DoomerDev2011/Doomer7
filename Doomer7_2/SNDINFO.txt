@@ -19,18 +19,22 @@ weapon/danaim DANAIM
 weapon/getdan DANCRITVO
 weapon/danshoot FIRETAR
 weapon/danreload RTAR
-weapon/dancharge DANCHARGE
+weapon/dancharge DANCSOK
 grunt/danspecial DANCSVO
 weapon/danspecial DANCS
-grunt/dancrit DANCRITVO
+grunt/dancrit DANCRIT
 
 // Coyote
 weapon/coyoteshoot FIREREV
 weapon/coyotereload RREV
 weapon/coyoteaim CYOAIM
-weapon/coyotespecial RCHRGE
-weapon/coyotecharge CYOCHARGE
+weapon/coyotespecial CYOSP
+weapon/coyotecharge CYOSPOK
 grunt/cyocrit CYOCRIT
+
+// Con
+weapon/conaim CONAIM
+weapon/conshoot FIREGLK
 
 // Unsorted
 weapon/getglk GETGLK
