@@ -1,15 +1,11 @@
 // Enfield2 Weapon
 //
 
-Class K7_Coyote_Enfield2: Weapon
+Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 {
 	default{
-		+WEAPON.NOAUTOAIM
-		+WEAPON.AMMO_OPTIONAL
+		Weapon.SlotNumber 4;
 		Weapon.AmmoType1 "K7_Coyote_Enfield2_Ammo";
-		Weapon.AmmoUse1 1;
-		Weapon.AmmoGive1 0;
-		Weapon.AmmoType2 "K7_ThinBlood";
 	    Inventory.PickupSound "weapon/getrev";
 		Inventory.Pickupmessage "You got Coyote's Modified Enfield No.2."; 
 	}
@@ -52,10 +48,7 @@ Class K7_Coyote_Enfield2: Weapon
 			Goto Ready;
 			
 		Deselect:
-		TNT1 A 0
-			{
-				SmithSyndicate( invoker.owner ).PersonaChangeBegin();
-			}
+			TNT1 A 0 A_Overlay( -1, "ChangePersona" );
 			COYO A 1 bright A_WeaponOffset (0,32,WOF_INTERPOLATE);
 			COYO A 1 bright A_WeaponOffset (10,32,WOF_INTERPOLATE);
 			COYO A 1 bright A_WeaponOffset (20,32,WOF_INTERPOLATE);
@@ -66,11 +59,7 @@ Class K7_Coyote_Enfield2: Weapon
 			COYO A 1 bright A_WeaponOffset (120,32,WOF_INTERPOLATE);
 			COYO A 1 bright A_WeaponOffset (150,32,WOF_INTERPOLATE);
 			COYO A 1 bright A_WeaponOffset (180,32,WOF_INTERPOLATE);
-			TNT1 A 4;
-			TNT1 A 0
-			{
-				SmithSyndicate( invoker.owner).PersonaChange();
-			}
+			Stop;
 			
 		KeepLowering:
 			TNT1 A 0 A_Lower;
@@ -81,9 +70,24 @@ Class K7_Coyote_Enfield2: Weapon
 			Loop;
 			
 		Fire:
-			COYO A 0 bright A_JumpIfNoAmmo("Reload");
-			COYO A 0 bright A_StartSound("weapon/coyoteshoot",CHAN_AUTO,CHANF_OVERLAP);
-			COYO A 0 bright A_FireBullets( 5.6, 0, 1, SmithSyndicate( invoker.owner ).m_iPersonaPrimaryDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
+			TNT1 A 0 bright A_JumpIfNoAmmo("Reload");
+			TNT1 A 0 bright A_StopSound( CHAN_7 );
+			TNT1 A 0 bright
+			{
+				let smith = SmithSyndicate( invoker.owner );
+				if ( smith.m_iPersonaCharge > 0 && invoker.ammo2.amount > 0 )
+				{
+					A_FireBullets( 5.6, 0, 1, 150, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
+					A_StartSound("weapon/coyotespecial",CHAN_AUTO,CHANF_OVERLAP);
+					A_TakeInventory( "K7_ThinBlood", 1 );
+				}
+				else
+				{
+					A_FireBullets( 5.6, 0, 1, smith.m_iPersonaPrimaryDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
+					A_StartSound("weapon/coyoteshoot",CHAN_AUTO,CHANF_OVERLAP);
+				}
+				smith.m_iPersonaCharge = 0;
+			}
 			COYO B 1 bright{
 				int num = Random(0,2);
 				if(num == 0)
@@ -108,17 +112,8 @@ Class K7_Coyote_Enfield2: Weapon
 			Goto Ready;
 			
 		AltFire:
-			TNT1 A 0
-			{
-				if ( invoker.ammo2.amount < 1 || invoker.ammo1.amount < 1 )
-				{
-					return ResolveState( "Ready" );
-				}
-				return ResolveState( null );
-			}
-		ChargeTubes:
-			COYO A 0 A_StartSound( "weapon/tubea", CHAN_AUTO, CHANF_OVERLAP  );
-			COYO A 3 A_StartSound( "weapon/coyotecharge", CHAN_7, CHANF_OVERLAP  );
+			TNT1 A 0 A_Overlay( -1, "ChargeTube" );
+			Goto Ready;
 			
 		SpecialFire:
 			TNT1 A 0 bright A_StopSound( CHAN_7 );
@@ -215,6 +210,7 @@ Class K7_Coyote_Enfield2: Weapon
 			}
 			COYO A 1 bright A_WeaponOffset (10,32,WOF_INTERPOLATE);
 			COYO A 1 bright A_WeaponOffset (0,32,WOF_INTERPOLATE);
+			TNT1 A 0 A_Refire();
 			Goto Ready;
 	}
 }

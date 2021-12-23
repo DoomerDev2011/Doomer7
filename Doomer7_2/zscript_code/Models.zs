@@ -110,12 +110,12 @@ Class YoungHarmanGun: CustomInventory{
 		
 		Pickup:
 		TNT1 A 0 {
-			if (CountInv("K7_TommyGun") <= 0) {
-				GiveInventory("K7_TommyGun", 1);
-				A_SelectWeapon("K7_TommyGun");
+			if (CountInv("K7_HarmanYoung_TommyGun") <= 0) {
+				GiveInventory("K7_HarmanYoung_TommyGun", 1);
+				A_SelectWeapon("K7_HarmanYoung_TommyGun");
 			}
 			else{
-				GiveInventory("K7_TommyGun", 1);
+				GiveInventory("K7_HarmanYoung_TommyGun", 1);
 			}
 		}
 		Stop;
@@ -172,12 +172,12 @@ Class MaskGun: CustomInventory{
 		
 		Pickup:
 		TNT1 A 0 {
-			if (CountInv("K7_M79") <= 0) {
-				GiveInventory("K7_M79", 1);
-				A_SelectWeapon("K7_M79");
+			if (CountInv("K7_Mask_M79") <= 0) {
+				GiveInventory("K7_Mask_M79", 1);
+				A_SelectWeapon("K7_Mask_M79");
 			}
 			else{
-				GiveInventory("K7_M79", 1);
+				GiveInventory("K7_Mask_M79", 1);
 			}
 		}
 		Stop;
@@ -234,12 +234,12 @@ Class KevinKnife: CustomInventory{
 		
 		Pickup:
 		TNT1 A 0 {
-			if (CountInv("K7_ThrowingKnife") <= 0) {
-				GiveInventory("K7_ThrowingKnife", 1);
-				A_SelectWeapon("K7_ThrowingKnife");
+			if (CountInv("K7_Kevin_ThrowingKnife") <= 0) {
+				GiveInventory("K7_Kevin_ThrowingKnife", 1);
+				A_SelectWeapon("K7_Kevin_ThrowingKnife");
 			}
 			else{
-				GiveInventory("K7_ThrowingKnife", 1);
+				GiveInventory("K7_Kevin_ThrowingKnife", 1);
 			}
 		}
 		Stop;

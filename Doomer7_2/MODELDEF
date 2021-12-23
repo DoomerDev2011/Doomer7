@@ -117,7 +117,7 @@ Model KevinKnife{
 	FrameIndex KEVP A 0 0
 }
 
-Model MaskGrenade{
+Model K7_Mask_M79_Grenade{
 	Path "models"
 	Model 0 "MaskGrenade.md3"
 	Skin 0 "Skins/MaskTextureTGA6.tga"

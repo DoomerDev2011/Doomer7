@@ -1,7 +1,8 @@
-Class K7_ThrowingKnife: Weapon {
-	default{
-		+WEAPON.NOAUTOAIM
-		+WEAPON.AMMO_OPTIONAL
+Class K7_Kevin_ThrowingKnife: K7_SmithSyndicate_Weapon
+{
+	default
+	{
+		Weapon.SlotNumber 3;
 		Weapon.SelectionOrder 800; 
 		Weapon.AmmoUse 0;
 	    Inventory.PickupSound "weapon/getknife";
@@ -54,10 +55,7 @@ Class K7_ThrowingKnife: Weapon {
 			Goto Ready; 
 		
 		Deselect:
-			TNT1 A 0
-			{
-				SmithSyndicate( invoker.owner ).PersonaChangeBegin();
-			}
+			TNT1 A 0 A_Overlay( -1, "ChangePersona" );
 			KEVI A 1 bright A_WeaponOffset(0,32,0);
 			KEVI A 1 bright A_WeaponOffset(0,35,WOF_INTERPOLATE);
 			KEVI A 1 bright A_WeaponOffset(0,38,WOF_INTERPOLATE);
@@ -68,10 +66,7 @@ Class K7_ThrowingKnife: Weapon {
 			KEVI A 1 bright A_WeaponOffset(0,95,WOF_INTERPOLATE);
 			KEVI A 1 bright A_WeaponOffset(0,120,WOF_INTERPOLATE);
 			KEVI A 1 bright A_WeaponOffset(0,145,WOF_INTERPOLATE);
-			TNT1 A 0
-			{
-				SmithSyndicate( invoker.owner).PersonaChange();
-			}
+			Stop;
 			
 		KeepLowering:
 			TNT1 A 0 A_Lower;
@@ -93,7 +88,7 @@ Class K7_ThrowingKnife: Weapon {
 			KEVI BCS 1 bright;
 			TNT1 A 4;
 			KEVI DEFG 1 bright;
-			KEVI H 0 bright A_FireBullets( 0, 0, 1, SmithSyndicate( invoker.owner ).m_iPersonaPrimaryDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
+			KEVI H 0 bright A_FireBullets( 3, 0, 1, SmithSyndicate( invoker.owner ).m_iPersonaPrimaryDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
 			TNT1 A 0 bright A_SetBlend("E6F63F",.25,7);
 			KEVI H 0 bright A_StartSound("weapon/fireknife",CHAN_AUTO,CHANF_OVERLAP);
 			KEVI H 1 bright A_Overlay(-1,"Flash");

@@ -1,13 +1,16 @@
 // Shared
+weapon/tube K7_TUBE
 weapon/tubea K7_TUBEA
 weapon/tubeb K7_TUBEB
 weapon/tubec K7_TUBEC
 
+persona_swap K7_CSWAP
 persona_explode K7_PDISA
 persona_disperse K7_PDISB
 persona_reform K7_PREFM
 persona_scan K7_SCAN
-
+persona_powera K7_POWA
+persona_powerb K7_POWB
 
 // Garcian
 weapon/getppk GETPPK
@@ -35,6 +38,8 @@ grunt/cyocrit CYOCRIT
 // Con
 weapon/conaim CONAIM
 weapon/conshoot FIREGLK
+weapon/conspecial CONSP
+vo/conspecial CONSPVO
 
 // Unsorted
 weapon/getglk GETGLK

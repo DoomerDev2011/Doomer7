@@ -1,16 +1,16 @@
+// Tick while currently dan
+//
+
+
 // Taurus weapon
 //
 
-Class K7_Dan_Taurus : Weapon
+Class K7_Dan_Taurus : K7_SmithSyndicate_Weapon
 {
 	default
 	{
-		+WEAPON.NOAUTOAIM
-		+WEAPON.AMMO_OPTIONAL
+		Weapon.SlotNumber 1;
 		Weapon.AmmoType1 "K7_Dan_Taurus_Ammo";
-		Weapon.AmmoUse1 1;
-		Weapon.AmmoGive1 6;
-		Weapon.AmmoType2 "K7_ThinBlood";
 	    Inventory.PickupSound "weapon/getdan";
 		Inventory.Pickupmessage "You got Dan's Taurus.";
 	}
@@ -42,10 +42,10 @@ Class K7_Dan_Taurus : Weapon
 			{
 				SmithSyndicate( invoker.owner ).PersonaChangeReady();
 			}
-			TNT1 A 0 A_StartSound( "weapon/danaim", CHAN_BODY, CHANF_OVERLAP );
 			DANF A 1 bright A_WeaponOffset( 100, 0, 0 );
 			DANF A 1 bright A_WeaponOffset( 66, 16, WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset( 33, 28, WOF_INTERPOLATE);
+			DANF A 1 bright A_WeaponOffset( 33, 22, WOF_INTERPOLATE);
+			DANF A 1 bright A_WeaponOffset( 0, 28, WOF_INTERPOLATE);
 			DANF A 1 bright A_WeaponOffset( -9, 30, WOF_INTERPOLATE);
 			DANF A 1 bright A_WeaponOffset( 0, 32, WOF_INTERPOLATE);
 			Goto Ready;
@@ -64,21 +64,6 @@ Class K7_Dan_Taurus : Weapon
 			DANF A 1 bright A_WeaponOffset(0,118,WOF_INTERPOLATE);
 			DANF A 1 bright A_WeaponOffset(0,138,WOF_INTERPOLATE);
 			DANF A 1 bright A_WeaponOffset(0,158,WOF_INTERPOLATE);
-			TNT1 A 10;
-			
-		KeepLowering:
-			TNT1 A 0 bright A_Lower;
-			Loop;
-		
-		ChangePersona:
-			TNT1 A 11
-			{
-				SmithSyndicate( invoker.owner ).PersonaChangeBegin();
-			}
-			TNT1 A 0
-			{
-				SmithSyndicate( invoker.owner).PersonaChange();
-			}
 			Stop;
 		
 		Ready:
@@ -129,6 +114,7 @@ Class K7_Dan_Taurus : Weapon
 			DANF E 1 bright A_SetPitch( pitch - 0.25, SPF_INTERPOLATE );
 			DANF F 1 bright;
 			DANF GIMOQSUWZ 2 bright; 
+			DANF A 1 bright A_ReFire;
 			Goto Ready;
 		
 		// COlAORAL SHOT
@@ -236,9 +222,13 @@ Class K7_Dan_Taurus : Weapon
 			DANF A 1 bright A_WeaponOffset(0,48,WOF_INTERPOLATE);
 			DANF A 1 bright A_WeaponOffset(0,38,WOF_INTERPOLATE);
 			DANF A 1 bright A_WeaponOffset(0,32,WOF_INTERPOLATE);
+			DANF A 1 bright A_ReFire;
 			Goto Ready;
 	}
 }
+
+// Taurus Ammo
+//
 
 Class K7_Dan_Taurus_Ammo : Ammo
 {
@@ -249,6 +239,8 @@ Class K7_Dan_Taurus_Ammo : Ammo
 	}
 }
 
+// Collateral Shot Projectile
+// 
 
 Class K7_CollateralShot : PlasmaBall
 {

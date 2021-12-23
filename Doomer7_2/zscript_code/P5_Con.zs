@@ -1,15 +1,12 @@
 // Glock weapon
 //
 
-Class K7_Con_Glock: Weapon
+Class K7_Con_Glock: K7_SmithSyndicate_Weapon
 {
 	default
 	{
-		+WEAPON.NOAUTOAIM
-		+WEAPON.AMMO_OPTIONAL
+		Weapon.SlotNumber 5;
 		Weapon.AmmoType1 "K7_Con_Glock_Ammo";
-		Weapon.AmmoUse1 1;
-		Weapon.AmmoType2 "K7_ThinBlood";
 	    Inventory.PickupSound "weapon/getglk";
 		Inventory.Pickupmessage "You got Con's Glocks."; 
 	}
@@ -62,10 +59,7 @@ Class K7_Con_Glock: Weapon
 			Goto Ready;
 		
 		Deselect:
-			TNT1 A 0
-			{
-				SmithSyndicate( invoker.owner ).PersonaChangeBegin();
-			}
+			TNT1 A 0 A_Overlay( -1, "ChangePersona" );
 			CONS A 1 bright A_WeaponOffset (0,32,WOF_INTERPOLATE);
 			CONS A 1 bright A_WeaponOffset (5,32,WOF_INTERPOLATE);
 			CONS A 1 bright A_WeaponOffset (10,32,WOF_INTERPOLATE);
@@ -78,16 +72,7 @@ Class K7_Con_Glock: Weapon
 			CONS A 1 bright A_WeaponOffset (100,32,WOF_INTERPOLATE);
 			CONS A 1 bright A_WeaponOffset (120,32,WOF_INTERPOLATE);
 			CONS A 1 bright A_WeaponOffset (140,32,WOF_INTERPOLATE);
-			CONS A 0 A_WeaponOffset (0,-50);
-			TNT1 A 4;
-			TNT1 A 0
-			{
-				SmithSyndicate( invoker.owner).PersonaChange();
-			}
-			
-		KeepLowering:
-			TNT1 A 0 A_Lower;
-			Loop;
+			Stop;
 		
 		Ready:
 			CONS A 1 bright A_WeaponReady( WRF_ALLOWRELOAD );
@@ -101,7 +86,7 @@ Class K7_Con_Glock: Weapon
 				}
 				return ResolveState( null );
 			}
-			CONS A 0 bright A_FireBullets( 5.6, 0, 1, SmithSyndicate( invoker.owner).m_iPersonaPrimaryDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
+			CONS A 0 bright A_FireBullets( 5.5, 0, 1, SmithSyndicate( invoker.owner).m_iPersonaPrimaryDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
 			CONS A 0 bright A_StartSound("weapon/fireglk",CHAN_AUTO,CHANF_OVERLAP);
 			TNT1 A 0 A_Overlay( -1, "Recoil" );
 			CONS B 1 bright{
@@ -116,7 +101,7 @@ Class K7_Con_Glock: Weapon
 			}
 			CONS C 1 bright;
 			CONS DE 1 bright;
-			CONS F 0 bright A_FireBullets( 5.6, 0, 1, SmithSyndicate( invoker.owner).m_iPersonaPrimaryDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
+			CONS F 0 bright A_FireBullets( 5.5, 0, 1, SmithSyndicate( invoker.owner).m_iPersonaPrimaryDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
 			CONS F 0 bright A_StartSound("weapon/fireglk",CHAN_AUTO,CHANF_OVERLAP);
 			TNT1 A 0 A_Overlay( -1, "Recoil" );
 			CONS F 2 bright
@@ -141,16 +126,28 @@ Class K7_Con_Glock: Weapon
 			Stop;
 			
 		Altfire:
-			TNT1 A 0{
+			TNT1 A 0
+			{
 				if(invoker.cooldown > 0){
 					return ResolveState("Ready");
 				}
 				invoker.isRunning = true;
 				invoker.cooldown = 30;
-				return ResolveState(null);
+				return ResolveState( null );
 			}
-			CONS A 16 bright;
-			CONS A 4 A_GiveInventory( "K7_Con_Speed", 1 );
+			CONS A 30 bright
+			{
+				A_StartSound( "persona_powera", CHAN_BODY, CHANF_OVERLAP );
+			}
+			CONS A 15
+			{
+				A_StartSound( "vo/conspecial", CHAN_VOICE, 0 );
+			}
+			CONS A 15
+			{
+				A_StartSound ( "weapon/conspecial", CHAN_BODY, CHANF_OVERLAP );
+			}
+			CONS A 1 A_GiveInventory( "K7_Con_Speed", 1 );
 			Goto Ready;
 			
 		Flash:
@@ -246,6 +243,7 @@ Class K7_Con_Glock: Weapon
 			CONS A 1 bright A_WeaponOffset (10,32,WOF_INTERPOLATE);
 			CONS A 1 bright A_WeaponOffset (5,32,WOF_INTERPOLATE);
 			CONS A 1 bright A_WeaponOffset (0,32,WOF_INTERPOLATE);
+			CONS A 1 bright A_ReFire;
 			Goto Ready;
 	}
 }
@@ -264,7 +262,7 @@ Class K7_Con_Speed : PowerSpeed
 	default
 	{
 		-POWERSPEED.NOTRAIL
-		Speed 2.5;
+		Speed 1.66;
 		Powerup.Duration -10;
 		inventory.maxamount 1;
 	}

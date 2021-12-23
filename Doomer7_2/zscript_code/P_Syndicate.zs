@@ -1,4 +1,4 @@
-class SmithSyndicate: DoomPlayer
+Class SmithSyndicate : DoomPlayer
 {
 	default
 	{
@@ -6,44 +6,42 @@ class SmithSyndicate: DoomPlayer
 		Player.ForwardMove 1, 0.5;
 		Player.SideMove 0.66, 0.33;
 		Player.StartItem "K7_ThinBlood", 5;
-		Player.JumpZ 7.5;
+		Player.JumpZ 0;
 		
 		// Garcian
 		Player.StartItem "K7_Garcian_PPK";
 		Player.StartItem "K7_Garcian_PPK_Ammo", 5;
-		Player.WeaponSlot 0, "K7_Garcian_PPK";
 		
 		// Dan
 		Player.StartItem "K7_Dan_Taurus";
-		Player.StartItem "K7_Dan_Taurus_Ammo", 6;
-		Player.WeaponSlot 1, "K7_Dan_Taurus";
 		
 		// Kaede
 		Player.StartItem "K7_Kaede_Hardballer";
-		Player.StartItem "K7_Kaede_Hardballer_Ammo", 10;
-		Player.WeaponSlot 2, "K7_Kaede_Hardballer";
+		
 		// Kevin
+		Player.StartItem "K7_Kevin_ThrowingKnife";
 		
 		// Coyote
 		Player.StartItem "K7_Coyote_Enfield2";
-		Player.StartItem "K7_Coyote_Enfield2_Ammo", 6;
-		Player.WeaponSlot 4, "K7_Coyote_Enfield2";
 		
 		// Con
 		Player.StartItem "K7_Con_Glock";
-		Player.StartItem "K7_Con_Glock_Ammo", 20;
-		Player.WeaponSlot 5, "K7_Con_Glock";
 		
 		// Mask
+		Player.StartItem "K7_Mask_M79";
 		
-		// Not yet cleaned up
-		Player.StartItem "K7_M79";
-		Player.StartItem "K7_ThrowingKnife";
-		Player.StartItem "K7_TommyGun";
-        Player.WeaponSlot 3, "K7_ThrowingKnife";
-		Player.WeaponSlot 6, "K7_M79";
-		Player.WeaponSlot 7, "K7_TommyGun";
+		// HarmanYoung
+		Player.StartItem "K7_HarmanYoung_Tommygun";
+		
+		
 	}
+	bool m_bInitSyndicate;
+	
+	// Garcian Force Swap
+	//
+	
+	bool m_bPersonaSwap;
+	int m_iPersonaSwapTo;
 	
 	// Shared
 	//
@@ -56,6 +54,25 @@ class SmithSyndicate: DoomPlayer
 	int m_iSyndicateThinBlood;
 	int m_iSyndicateThickBlood;
 	
+	void SyndicateTick()
+	{
+		if ( m_bInitSyndicate == false )
+		{
+			m_bInitSyndicate = true;
+			m_bPersonaSwap = true;
+		}
+		
+		switch ( m_iPersonaCurrent )
+		{
+			case 1:
+				
+				break;
+			case 2:
+				Shader.SetUniform1i( player, "Static", "timer", level.time );
+				break;
+		}
+	}
+	
 	// Current Persona
 	//
 	
@@ -64,6 +81,7 @@ class SmithSyndicate: DoomPlayer
 	int m_iPersonaChangeTime;
 	// Tics between the fade in sound and deploying the weapon
 	int m_iPersonaFormTime;
+	int m_iPersonaExplodeTime;
 	int m_iPersonaCurrent;
 	int m_iPersonaChargeMax;
 	int m_iPersonaCharge;
@@ -71,6 +89,7 @@ class SmithSyndicate: DoomPlayer
 	int m_iPersonaScanRange;
 	int m_iPersonaHeight;
 	// Character Stats
+	float m_fPersonaJumpZ;
 	float m_fPersonaSpeed;
 	float m_fPersonaSpeed_Reloading;
 	float m_fPersonaVitality;
@@ -132,11 +151,13 @@ class SmithSyndicate: DoomPlayer
 		m_iPersonaChargeMax = 0;
 		m_iPersonaCharge = 0;
 		m_bPersonaChange = true;
+		m_iPersonaExplodeTime = 10;
 		m_iPersonaChangeTime = 20;
 		m_iPersonaFormTime = 50;
 		m_iPersonaScanRange = 64;
 		
 		SetSpeed( 0 );
+		JumpZ = 0;
 	}
 	
 	// Start changing of personality (finished lowering weapon)
@@ -166,6 +187,7 @@ class SmithSyndicate: DoomPlayer
 		m_iPersonaClipSize = 0;
 		m_iPersonaPrimaryDamage = 15;
 		m_iPersonaSpread = 3.15;
+		m_fPersonaJumpZ = 0;
 		switch( persona )
 		{
 			case 0: // Garcian
@@ -194,6 +216,7 @@ class SmithSyndicate: DoomPlayer
 				m_iPersonaClipSize = 6;
 				m_iPersonaChargeMax = 1;
 				m_iPersonaPrimaryDamage = 30;
+				m_fPersonaJumpZ = 18;
 				break;
 			case 5: // Con
 				m_iPersonaHeight = 35;
@@ -225,12 +248,13 @@ class SmithSyndicate: DoomPlayer
 	void PersonaChangeReady()
 	{
 		SetSpeed( m_fPersonaSpeed );
+		JumpZ = m_fPersonaJumpZ;
 	}
 	
 	override void Tick()
     {
         Super.Tick();
-        Shader.SetUniform1i(player, "Static", "timer", level.time);
+		SyndicateTick();
     }
 	
 	// Dan
@@ -258,8 +282,75 @@ class SmithSyndicate: DoomPlayer
 	// Con
 	// 
 	
-	int iConSpeedBoost;
+	int iConSpeedBoostTimer;
 	
+}
+
+Class K7_SmithSyndicate_Weapon : Weapon
+{
+	Default
+	{
+		// Flags
+		+WEAPON.NOAUTOAIM
+		+WEAPON.AMMO_OPTIONAL
+		+WEAPON.NOAUTOFIRE
+		// Stats
+		Weapon.AmmoUse1 1;
+		Weapon.AmmoGive1 0;
+		Weapon.AmmoType2 "K7_ThinBlood";
+		Weapon.AmmoUse2 0;
+		Weapon.AmmoGive2 0;
+	}
+	States
+	{
+		FormPersona:
+			
+			Stop;
+		ChangePersona:
+			TNT1 A 0
+			{
+				SmithSyndicate( invoker.owner ).PersonaChangeBegin();
+				A_SetTics( SmithSyndicate( invoker.owner ).m_iPersonaExplodeTime );
+			}
+			TNT1 A 0
+			{
+				SmithSyndicate( invoker.owner).PersonaChange();
+			}
+			TNT1 A 0 A_Lower( 512 );
+			Stop;
+		
+		ChargeTube:
+			TNT1 A 0
+			{
+				let smith = SmithSyndicate( invoker.owner );
+				if ( smith.m_iPersonaChargeMax > 0 && invoker.ammo2.amount > 0 )
+				{
+					smith.m_iPersonaCharge++;
+					if ( smith.m_iPersonaCharge > invoker.ammo2.amount || smith.m_iPersonaCharge > smith.m_iPersonaChargeMax )
+					{
+						smith.m_iPersonaCharge = 0;
+					}
+					switch( smith.m_iPersonaCharge )
+					{
+						case 0:
+							A_StartSound( "weapon/tube", CHAN_7, CHANF_OVERLAP  );
+							break;
+						case 1:
+							A_StartSound( "weapon/tubea", CHAN_7, CHANF_OVERLAP  );
+							break;
+						case 2:
+							A_StartSound( "weapon/tubeb", CHAN_7, CHANF_OVERLAP  );
+							break;
+						case 3:
+							A_StartSound( "weapon/tubec", CHAN_7, CHANF_OVERLAP  );
+							break;
+						default:
+							A_StartSound( "weapon/tubec", CHAN_7, CHANF_OVERLAP  );
+					}
+				}
+			}
+			stop;
+	}
 }
 
 Class K7_ThinBlood : Ammo
@@ -271,66 +362,19 @@ Class K7_ThinBlood : Ammo
 	}
 }
 
+Class K7_ThickBlood : Ammo
+{
+	Default
+	{
+		Inventory.Amount 0;
+		Inventory.MaxAmount 1000;
+	}
+}
+
 Class NewBulletPuff: BulletPuff
 {
 	default
 	{
 		+NOEXTREMEDEATH
-	}
-}
-
-Class NewClip : Ammo replaces Clip{
-	default{
-		Inventory.Amount 10; 
-		Inventory.MaxAmount 200;
-		Ammo.BackpackAmount 30; 
-		Ammo.BackpackMaxAmount 300; 
-		Inventory.Icon "CLIPA0";
-		Inventory.PickupMessage "Picked up some 9mm ammo.";
-	}
-	States{
-		Spawn:
-		CLIP A -1;
-		Stop;
-	}
-}
-
-Class NewShell: Ammo
-{
-	default
-	{
-		Inventory.Amount 7;
-		Inventory.MaxAmount 200;
-		Ammo.BackpackAmount 7;
-		Ammo.BackPackMaxAmount 100;
-		Inventory.Icon "SHELA0";
-		Inventory.PickupMessage "Picked up revolver ammo."; 
-	}
-	States{
-		Spawn:
-		SHEL A -1;
-		Stop;
-	}
-}
-
-Class NewRocket: Ammo{
-	default{
-		Inventory.PickupMessage "$GOTROCKET";
-		Inventory.Amount 1;
-		Inventory.MaxAmount 50;
-		Ammo.BackpackAmount 1;
-		Ammo.BackpackMaxAmount 100;
-		Inventory.Icon "ROCKA0";
-	}
-	States{
-		Spawn:
-		ROCK A -1;
-		Stop;
-	}
-}
-
-Class MaskMissile: Rocket{
-	default{
-		Speed 200;
 	}
 }
