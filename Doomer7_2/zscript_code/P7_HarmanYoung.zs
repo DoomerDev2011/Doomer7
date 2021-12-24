@@ -88,6 +88,7 @@ Class K7_HarmanYoung_Tommygun: K7_SmithSyndicate_Weapon
 				A_SetAngle(angle+randomAngle,SPF_INTERPOLATE);
 			}
 			YHAR CEFI 1 bright;
+			TNT1 A 0 A_Refire();
 			Goto Ready;
 		
 		Flash:

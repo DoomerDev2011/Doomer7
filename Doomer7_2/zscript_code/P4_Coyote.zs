@@ -43,8 +43,10 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 			TNT1 A 0 A_StartSound( "weapon/coyoteaim", CHAN_BODY, CHANF_OVERLAP );
 			COYO A 1 bright A_WeaponOffset (90,52,WOF_INTERPOLATE);
 			COYO A 1 bright A_WeaponOffset (50,40,WOF_INTERPOLATE);
-			COYO A 1 bright A_WeaponOffset (20,32,WOF_INTERPOLATE);
-			COYO A 1 bright A_WeaponOffset (0,32,WOF_INTERPOLATE);
+			COYO A 1 bright A_WeaponOffset (20,38,WOF_INTERPOLATE);
+			COYO A 1 bright A_WeaponOffset (0,36,WOF_INTERPOLATE);
+			COYO A 1 bright A_WeaponOffset ( -10, 34, WOF_INTERPOLATE );
+			COYO A 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
 			Goto Ready;
 			
 		Deselect:
@@ -70,9 +72,9 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 			Loop;
 			
 		Fire:
-			TNT1 A 0 bright A_JumpIfNoAmmo("Reload");
-			TNT1 A 0 bright A_StopSound( CHAN_7 );
-			TNT1 A 0 bright
+			TNT1 A 0 A_JumpIfNoAmmo("Reload");
+			TNT1 A 0 A_StopSound( CHAN_7 );
+			TNT1 A 0
 			{
 				let smith = SmithSyndicate( invoker.owner );
 				if ( smith.m_iPersonaCharge > 0 && invoker.ammo2.amount > 0 )
@@ -108,7 +110,8 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 			TNT1 A 6;
 			COYO FGHI 1 bright;
 			COYO JKL 2 bright;
-			COYO A 1 bright A_ReFire;
+			COYO A 1 bright A_ReFire();
+			TNT1 A 0 A_Refire();
 			Goto Ready;
 			
 		AltFire:
@@ -143,12 +146,16 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 			Goto Ready;
 			
 		Recoil:
-			COYO B 0 bright A_SetPitch( pitch + 3, SPF_INTERPOLATE );
-			COYO B 1 bright A_SetAngle( angle + 3, SPF_INTERPOLATE );
-			COYO B 0 bright A_SetPitch( pitch + 1.5, SPF_INTERPOLATE );
-			COYO C 1 bright A_SetAngle( angle + 1.5, SPF_INTERPOLATE );
-			COYO C 0 bright A_SetPitch( pitch + 0.75, SPF_INTERPOLATE );
-			COYO D 1 bright A_SetAngle( angle + 0.75, SPF_INTERPOLATE );
+			TNT1 A 0 bright A_SetPitch( pitch + 2.5, 0 );
+			TNT1 A 1 bright A_SetAngle( angle + 3.5, 0 );
+			TNT1 A 0 bright A_SetPitch( pitch + 1.25, SPF_INTERPOLATE );
+			TNT1 A 1 bright A_SetAngle( angle + 1.75, SPF_INTERPOLATE );
+			TNT1 A 0 bright A_SetPitch( pitch + 0.625, SPF_INTERPOLATE );
+			TNT1 A 1 bright A_SetAngle( angle + 0.875, SPF_INTERPOLATE );
+			TNT1 A 1 bright A_SetPitch( pitch + 0.75, 0 );
+			TNT1 A 1 bright A_SetPitch( pitch - 0.75, 0 );
+			TNT1 A 2 bright A_SetPitch( pitch + 0.75, 0 );
+			TNT1 A 2 bright A_SetPitch( pitch - 0.75, 0 );
 			Stop;
 		
 		Flash1:

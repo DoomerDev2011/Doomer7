@@ -3,10 +3,7 @@ Class SmithSyndicate : DoomPlayer
 	default
 	{
 		// Shared
-		Player.ForwardMove 1, 0.5;
-		Player.SideMove 0.66, 0.33;
-		Player.StartItem "K7_ThinBlood", 5;
-		Player.JumpZ 0;
+		
 		
 		// Garcian
 		Player.StartItem "K7_Garcian_PPK";
@@ -64,11 +61,11 @@ Class SmithSyndicate : DoomPlayer
 		
 		switch ( m_iPersonaCurrent )
 		{
-			case 1:
-				
-				break;
 			case 2:
-				Shader.SetUniform1i( player, "Static", "timer", level.time );
+				m_fnKaedeTick();
+				break;
+			case 5:
+				m_fnConTick();
 				break;
 		}
 	}
@@ -92,23 +89,33 @@ Class SmithSyndicate : DoomPlayer
 	float m_fPersonaJumpZ;
 	float m_fPersonaSpeed;
 	float m_fPersonaSpeed_Reloading;
+	float m_fPersonaSpeed_Factor;
+	float m_fPersonaFriction;
 	float m_fPersonaVitality;
 	// Weapon Stats
 	int m_iPersonaClipSize;
 	int m_iPersonaPrimaryDamage;
 	float m_iPersonaSpread;
 	
+	float m_iPersonaLVPower;
+	float m_iPersonaLVSpeed;
+	float m_iPersonaLVWaver;
+	float m_IPersonaLVCrits;
+	
 	
 	// Speed
 	//
-	
+	float m_fCurrentSpeed;
 	void SetSpeed( float new_speed )
 	{
-		forwardmove1 = new_speed;
-		sidemove1 = new_speed;
+		m_fCurrentSpeed = new_speed * m_fPersonaSpeed_Factor;
+		forwardmove1 = m_fCurrentSpeed;
+		sidemove1 = forwardmove1 * 0.7;
 		forwardmove2 = forwardmove1 * 0.5;
 		sidemove2 = sidemove1 * 0.5;
-		ViewBob = new_speed * 0.66;
+		
+		Friction = 1;
+		//ViewBob = new_speed * 0.66;
 	}
 	
 	// Scan ( Common Alt Fire )
@@ -147,17 +154,21 @@ Class SmithSyndicate : DoomPlayer
 		
 	void PersonaChangeBegin()
 	{
-		A_StartSound( "persona_explode", CHAN_BODY, CHANF_OVERLAP );
+		if ( Health > 0 )
+		{
+			A_StartSound( "persona_explode", CHAN_BODY, CHANF_OVERLAP );
+			m_bPersonaChange = true;
+		}
 		m_iPersonaChargeMax = 0;
 		m_iPersonaCharge = 0;
-		m_bPersonaChange = true;
-		m_iPersonaExplodeTime = 10;
-		m_iPersonaChangeTime = 20;
-		m_iPersonaFormTime = 50;
+		m_iPersonaExplodeTime = 9;
+		m_iPersonaChangeTime = 18;
+		m_iPersonaFormTime = 70;
 		m_iPersonaScanRange = 64;
 		
 		SetSpeed( 0 );
 		JumpZ = 0;
+		Friction = 0.9;
 	}
 	
 	// Start changing of personality (finished lowering weapon)
@@ -179,15 +190,20 @@ Class SmithSyndicate : DoomPlayer
 	bool PersonaChangeEnd( int persona )
 	{
 		ViewBob = 0.66;
+		SoundClass = "player";
+		//
+		//
 		m_fPersonaVitality = 100;
 		m_iPersonaChargeMax = 0;
 		m_fPersonaSpeed = 0.975;
 		m_fPersonaSpeed_Reloading = 0.45;
+		m_fPersonaSpeed_Factor = 1;
 		m_iPersonaHeight = 52;
 		m_iPersonaClipSize = 0;
 		m_iPersonaPrimaryDamage = 15;
 		m_iPersonaSpread = 3.15;
 		m_fPersonaJumpZ = 0;
+		
 		switch( persona )
 		{
 			case 0: // Garcian
@@ -219,6 +235,7 @@ Class SmithSyndicate : DoomPlayer
 				m_fPersonaJumpZ = 18;
 				break;
 			case 5: // Con
+				SoundClass = "k7_con";
 				m_iPersonaHeight = 35;
 				m_fPersonaSpeed = 1.33;
 				m_fPersonaSpeed_Reloading = 0.66;
@@ -268,22 +285,54 @@ Class SmithSyndicate : DoomPlayer
 	// KAEDE
 	// 
 	
+	int m_iStaticStart;
+	
+	void m_fnKaedeTick()
+	{
+		Shader.SetUniform1i( player, "Static", "timer", level.time );
+	}
+	
 	void SetStatic( bool on )
 	{
-		if( IsActorPlayingSound( CHAN_5, "weapon/statichard" ) == false ){
-			A_StartSound( "weapon/statichard", CHAN_5, CHANF_LOOPING, 0.5 );
+		if ( IsActorPlayingSound( CHAN_6, "weapon/statichard" ) )
+		{
+			if ( on == false )
+			{
+				A_StopSound( CHAN_6 );
+			}
+		}
+		else
+		{
+			A_StartSound( "weapon/statichard", CHAN_6, CHANF_LOOPING, 0.5 );
         }
-		Shader.SetUniform1i(player, "Static", "timer", level.time);
-		Shader.SetUniform1i(player, "Static", "resX", Screen.GetWidth() / 8);
-		Shader.SetUniform1i(player, "Static", "resY", Screen.GetHeight() / 8);
-		Shader.SetEnabled(player,"Static",on);
+		Shader.SetUniform1i( player, "Static", "timer", level.time - m_iStaticStart );
+		Shader.SetUniform1i( player, "Static", "resX", Screen.GetWidth() / 1 );
+		Shader.SetUniform1i( player, "Static", "resY", Screen.GetHeight() / 1 );
+		Shader.SetEnabled( player, "Static", on );
 	}
 	
 	// Con
 	// 
 	
-	int iConSpeedBoostTimer;
+	int m_iConSpeedTimer;
 	
+	void m_fnConTick()
+	{
+		if ( m_iConSpeedTimer > 0 )
+		{
+			m_iConSpeedTimer--;
+			if ( m_iConSpeedTimer < 1 )
+			{
+				m_iConSpeedTimer = 0;
+				m_fPersonaSpeed_Factor = 1;
+				
+				if ( m_fCurrentSpeed > m_fPersonaSpeed )
+				{
+					SetSpeed( m_fPersonaSpeed );
+				}
+			}
+		}
+	}
 }
 
 Class K7_SmithSyndicate_Weapon : Weapon
@@ -333,19 +382,19 @@ Class K7_SmithSyndicate_Weapon : Weapon
 					switch( smith.m_iPersonaCharge )
 					{
 						case 0:
-							A_StartSound( "weapon/tube", CHAN_7, CHANF_OVERLAP  );
+							A_StartSound( "charge_tube", CHAN_7, CHANF_OVERLAP  );
 							break;
 						case 1:
-							A_StartSound( "weapon/tubea", CHAN_7, CHANF_OVERLAP  );
+							A_StartSound( "charge_tubea", CHAN_7, CHANF_OVERLAP  );
 							break;
 						case 2:
-							A_StartSound( "weapon/tubeb", CHAN_7, CHANF_OVERLAP  );
+							A_StartSound( "charge_tubeb", CHAN_7, CHANF_OVERLAP  );
 							break;
 						case 3:
-							A_StartSound( "weapon/tubec", CHAN_7, CHANF_OVERLAP  );
+							A_StartSound( "charge_tubec", CHAN_7, CHANF_OVERLAP  );
 							break;
 						default:
-							A_StartSound( "weapon/tubec", CHAN_7, CHANF_OVERLAP  );
+							A_StartSound( "charge_tubec", CHAN_7, CHANF_OVERLAP  );
 					}
 				}
 			}
@@ -357,8 +406,16 @@ Class K7_ThinBlood : Ammo
 {
 	Default
 	{
-		Inventory.Amount 0;
+		Inventory.Amount 1;
 		Inventory.MaxAmount 20;
+		Inventory.PickupMessage "Picked up a tube of thin blood";
+		//Inventory.PickupSound "";
+	}
+	States
+	{
+		Spawn:
+			BLDV A 1;
+			Loop;
 	}
 }
 
@@ -366,8 +423,9 @@ Class K7_ThickBlood : Ammo
 {
 	Default
 	{
-		Inventory.Amount 0;
+		Inventory.Amount 1;
 		Inventory.MaxAmount 1000;
+		//Inventory.PickupSound "";
 	}
 }
 

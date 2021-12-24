@@ -1,8 +1,8 @@
 // Shared
-weapon/tube K7_TUBE
-weapon/tubea K7_TUBEA
-weapon/tubeb K7_TUBEB
-weapon/tubec K7_TUBEC
+charge_tube K7_TUBE
+charge_tubea K7_TUBEA
+charge_tubeb K7_TUBEB
+charge_tubec K7_TUBEC
 
 persona_swap K7_CSWAP
 persona_explode K7_PDISA
@@ -18,14 +18,19 @@ weapon/fireppk FIREPPK
 weapon/reppk RPPK
 
 // Dan
-weapon/danaim DANAIM
-weapon/getdan DANCRITVO
-weapon/danshoot FIRETAR
-weapon/danreload RTAR
-weapon/dancharge DANCSOK
-grunt/danspecial DANCSVO
-weapon/danspecial DANCS
-grunt/dancrit DANCRIT
+dan_aim sound/dan/aim.ogg
+dan_shoot sound/dan/shoot.ogg
+dan_reload sound/dan/reload.ogg
+dan_special sound/dan/special.ogg
+dan_special_vo sound/dan/special_vo.ogg
+dan_special_explode sound/dan/special_explode.ogg
+
+// KAEDE
+ked_aim sound/ked/aim.ogg
+ked_shoot sound/ked/shoot.ogg
+ked_reload sound/ked/reload.ogg
+
+// Kevin
 
 // Coyote
 weapon/coyoteshoot FIREREV
@@ -33,13 +38,43 @@ weapon/coyotereload RREV
 weapon/coyoteaim CYOAIM
 weapon/coyotespecial CYOSP
 weapon/coyotecharge CYOSPOK
-grunt/cyocrit CYOCRIT
+
+vo/cyocrit CYOCRIT
+
+cyo_hurt1 sound/cyo/hurt1.ogg
 
 // Con
-weapon/conaim CONAIM
-weapon/conshoot FIREGLK
-weapon/conspecial CONSP
-vo/conspecial CONSPVO
+con_aim sound/cat/aim.ogg
+con_shoot sound/cat/shoot.ogg
+con_reload sound/cat/reload.ogg
+con_special_pose sound/cat/special_pose.ogg
+con_special_vo sound/cat/spvoice.ogg
+con_die sound/cat/die.ogg
+con_hurt1 sound/cat/hurt1.ogg
+con_hurt2 sound/cat/hurt2.ogg
+con_hurt3 sound/cat/hurt3.ogg
+con_hurt4 sound/cat/hurt4.ogg
+con_hurt5 sound/cat/hurt5.ogg
+con_hurt6 sound/cat/hurt6.ogg
+con_hurt7 sound/cat/hurt7.ogg
+$random con_hurt { con_hurt1 con_hurt2 con_hurt3 con_hurt4 con_hurt5 con_hurt6 con_hurt7 }
+
+$playeralias k7_con male *pain100 con_hurt
+$playersounddup k7_con male *pain75 *pain100
+$playersounddup k7_con male *pain50 *pain75
+$playersounddup k7_con male *pain25 *pain50
+$playersound k7_con male *death sound/cat/die.ogg
+
+// MASK
+
+// HarmanYoung
+
+// HeavenSmile
+vo/hslaugh1 HSLAUGH1
+vo/hslaugh2 HSLAUGH2
+vo/hslaugh3 HSLAUGH3
+vo/hslaugh4 HSLAUGH4
+$random vo/hslaugh { vo/hslaugh1 vo/hslaugh2 vo/hslaugh3 vo/hslaugh4 }
 
 // Unsorted
 weapon/getglk GETGLK

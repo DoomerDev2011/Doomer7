@@ -63,12 +63,13 @@ Class K7_Mask_M79: K7_SmithSyndicate_Weapon
 			Stop;
 		
 		Ready:
-			MASK A 1 bright A_WeaponReady(WRF_ALLOWRELOAD);
+			MASK A 1 bright A_WeaponReady( WRF_ALLOWRELOAD );
 			Loop; 
 		
 		Fire:
-			TNT1 A 0{
-				if (invoker.ammo1.amount == 1)
+			TNT1 A 0
+			{
+				if ( invoker.ammo1.amount == 1 )
 				{
 					if (invoker.singleFire == false)
 					{
@@ -98,6 +99,7 @@ Class K7_Mask_M79: K7_SmithSyndicate_Weapon
 			MASK F 1 bright A_SetPitch(pitch-1.25,SPF_INTERPOLATE);
 			MASK GHJKL 1 bright;
 			MASK OSTUA 2 bright;
+			TNT1 A 0 A_Refire();
 			Goto Ready;
 		
 		Altfire:
@@ -179,7 +181,7 @@ Class K7_Mask_M79: K7_SmithSyndicate_Weapon
 			MASK A 1 bright A_WeaponOffset (0,107,WOF_INTERPOLATE);
 			MASK A 1 bright A_WeaponOffset (0,127,WOF_INTERPOLATE);
 			TNT1 A 0 A_SetInventory( "K7_Mask_M79_Ammo", 2 );
-			TNT1 A 45;
+			TNT1 A 33;
 			MASK A 1 bright A_WeaponOffset (0,127,0);
 			MASK A 1 bright A_WeaponOffset (0,107,WOF_INTERPOLATE);
 			MASK A 1 bright A_WeaponOffset (0,87,WOF_INTERPOLATE);

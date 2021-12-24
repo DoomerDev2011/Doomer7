@@ -42,11 +42,12 @@ Class K7_Dan_Taurus : K7_SmithSyndicate_Weapon
 			{
 				SmithSyndicate( invoker.owner ).PersonaChangeReady();
 			}
+			TNT1 A 0 A_StartSound( "dan_aim", CHAN_WEAPON, CHANF_OVERLAP );
 			DANF A 1 bright A_WeaponOffset( 100, 0, 0 );
 			DANF A 1 bright A_WeaponOffset( 66, 16, WOF_INTERPOLATE);
 			DANF A 1 bright A_WeaponOffset( 33, 22, WOF_INTERPOLATE);
 			DANF A 1 bright A_WeaponOffset( 0, 28, WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset( -9, 30, WOF_INTERPOLATE);
+			DANF A 1 bright A_WeaponOffset( -8, 32 + 8, WOF_INTERPOLATE);
 			DANF A 1 bright A_WeaponOffset( 0, 32, WOF_INTERPOLATE);
 			Goto Ready;
 		
@@ -55,15 +56,10 @@ Class K7_Dan_Taurus : K7_SmithSyndicate_Weapon
 		Deselect:
 			TNT1 A 0 A_Overlay( -1, "ChangePersona" );
 			DANF A 1 bright A_WeaponOffset(0,32,0);
-			DANF A 1 bright A_WeaponOffset(0,38,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,48,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,58,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,73,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,88,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,103,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,118,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,138,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,158,WOF_INTERPOLATE);
+			DANF A 1 bright A_WeaponOffset( 0, 28, WOF_INTERPOLATE);
+			DANF A 1 bright A_WeaponOffset( 33, 22, WOF_INTERPOLATE);
+			DANF A 1 bright A_WeaponOffset( 66, 16, WOF_INTERPOLATE);
+			DANF A 1 bright A_WeaponOffset( 100, 0, WOF_INTERPOLATE );
 			Stop;
 		
 		Ready:
@@ -81,19 +77,20 @@ Class K7_Dan_Taurus : K7_SmithSyndicate_Weapon
 				}
 				return ResolveState( null );
 			}
-			TNT1 A 0 bright
+			TNT1 A 0
 			{
 				if ( invoker.ammo1.amount < 1 ){
 					return ResolveState( "Reload" );
 				}
 				return ResolveState( null );
 			}
+			TNT1 A 0 A_WeaponOffset( 0, 32, WOF_INTERPOLATE );
 			TNT1 A 0
 			{
 				SmithSyndicate( invoker.owner ).m_iPersonaCharge = 0;
 			}
 			TNT1 A 0 bright A_FireBullets( 5.6, 0, 1, SmithSyndicate( invoker.owner ).m_iPersonaPrimaryDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
-			TNT1 A 0 bright A_StartSound( "weapon/danshoot", CHAN_AUTO, CHANF_OVERLAP );
+			TNT1 A 0 bright A_StartSound( "dan_shoot", CHAN_WEAPON, CHANF_OVERLAP );
 			TNT1 A 0
 			{
 				int num = Random( 0,2 );
@@ -114,13 +111,17 @@ Class K7_Dan_Taurus : K7_SmithSyndicate_Weapon
 			DANF E 1 bright A_SetPitch( pitch - 0.25, SPF_INTERPOLATE );
 			DANF F 1 bright;
 			DANF GIMOQSUWZ 2 bright; 
-			DANF A 1 bright A_ReFire;
+			DANF A 0 bright A_ReFire();
+			TNT1 A 0 A_Refire();
 			Goto Ready;
 		
 		// COlAORAL SHOT
 		//
 		
 		AltFire:
+			TNT1 A 0 A_Overlay( -1, "ChargeTube" );
+			Goto Ready;
+			
 			TNT1 A 0
 			{
 				if ( invoker.ammo2.amount < 3 ){
@@ -142,13 +143,14 @@ Class K7_Dan_Taurus : K7_SmithSyndicate_Weapon
 			Goto Fire;
 			
 		SpecialFire:
+			TNT1 A 0 A_WeaponOffset( 0, 32, WOF_INTERPOLATE );
 			TNT1 A 0 bright A_StopSound( CHAN_5 );
 			TNT1 A 0 bright A_TakeInventory( "K7_ThinBlood", 3 );
 			TNT1 A 0
 			{
 				SmithSyndicate( invoker.owner ).m_iPersonaCharge = 0;
 			}
-			TNT1 A 0 A_StartSound( "grunt/danspecial", CHAN_VOICE, 0 );
+			TNT1 A 0 A_StartSound( "dan_special_vo", CHAN_VOICE, 0 );
 			TNT1 A 0 bright A_FireProjectile( "K7_CollateralShot", 0, 1, 0, 0 );
 			//TNT1 A 0 bright A_SetPitch( pitch - 1.5, SPF_INTERPOLATE );
 			TNT1 A 0 A_Overlay( -1, "Flash" );
@@ -190,40 +192,38 @@ Class K7_Dan_Taurus : K7_SmithSyndicate_Weapon
 		// Reload the weapon
 		// Always reload, regardless of clip/ammo
 		Reload:
+			TNT1 A 0 A_Overlay( -1, "Reload2" );
+			DANF A 0 bright A_StartSound("dan_reload");
+			DANF A 1 bright A_WeaponOffset(0,32,0);
+			DANF A 1 bright A_WeaponOffset(0,38,WOF_INTERPOLATE);
+			DANF A 1 bright A_WeaponOffset(0,58,WOF_INTERPOLATE);
+			DANF A 1 bright A_WeaponOffset(0,88,WOF_INTERPOLATE);
+			DANF A 1 bright A_WeaponOffset(0,118,WOF_INTERPOLATE);
+			DANF A 1 bright A_WeaponOffset(0,158,WOF_INTERPOLATE);
+			TNT1 A 39;
+			DANF A 1 bright A_WeaponOffset( 100, 0, 0 );
+			DANF A 1 bright A_WeaponOffset( 66, 16, WOF_INTERPOLATE);
+			DANF A 1 bright A_WeaponOffset( 33, 22, WOF_INTERPOLATE);
+			DANF A 1 bright A_WeaponOffset( 0, 28, WOF_INTERPOLATE);
+			DANF A 1 bright A_WeaponOffset( -8, 32 + 8, WOF_INTERPOLATE);
+			DANF A 1 bright A_WeaponOffset( 0, 32, WOF_INTERPOLATE);
+			Goto Ready;
+			
+		Reload2:
 			TNT1 A 0
 			{
 				SmithSyndicate( invoker.owner ).m_iPersonaCharge = 0;
 				SmithSyndicate( invoker.owner ).SetSpeed( SmithSyndicate( invoker.owner ).m_fPersonaSpeed_Reloading );
 			}
-			DANF A 0 bright A_StartSound("weapon/danreload");
-			DANF A 1 bright A_WeaponOffset(0,32,0);
-			DANF A 1 bright A_WeaponOffset(0,38,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,48,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,58,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,73,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,88,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,103,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,118,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,138,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,158,WOF_INTERPOLATE);
+			TNT1 A 30;
 			TNT1 A 0 A_SetInventory( "K7_Dan_Taurus_Ammo", SmithSyndicate( invoker.owner ).m_iPersonaClipSize );
-			TNT1 A 39;
-			DANF A 1 bright A_WeaponOffset(0,158,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,138,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,118,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,103,WOF_INTERPOLATE);
-			TNT1 A 0
+			TNT1 A 15;
+			TNT1 A 10
 			{
 				SmithSyndicate( invoker.owner ).SetSpeed( SmithSyndicate( invoker.owner ).m_fPersonaSpeed );
 			}
-			DANF A 1 bright A_WeaponOffset(0,88,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,73,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,58,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,48,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,38,WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset(0,32,WOF_INTERPOLATE);
-			DANF A 1 bright A_ReFire;
-			Goto Ready;
+			TNT1 A 0 A_Refire();
+			Stop;
 	}
 }
 
@@ -249,7 +249,7 @@ Class K7_CollateralShot : PlasmaBall
 		Radius 16;
 		Height 8;
 		Speed 20;
-		DamageFunction (375);
+		DamageFunction (450);
 		Projectile;
 		-RANDOMIZE
 		-DEHEXPLOSION
@@ -258,7 +258,8 @@ Class K7_CollateralShot : PlasmaBall
 		+FORCEPAIN
 		RenderStyle "Add";
 		Alpha 1;
-		SeeSound "weapon/danspecial";
+		SeeSound "dan_special";
+		DeathSound "dan_special_explode";
 	}
 	
 	States {

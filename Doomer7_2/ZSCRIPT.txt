@@ -1,7 +1,5 @@
 version "4.6.0"
 
-
-
 // Smith Syndicate
 #include "zscript_code/P_Syndicate.zs"
 #include "zscript_code/P0_Garcian.zs"

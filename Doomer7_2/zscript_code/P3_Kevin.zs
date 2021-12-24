@@ -4,7 +4,7 @@ Class K7_Kevin_ThrowingKnife: K7_SmithSyndicate_Weapon
 	{
 		Weapon.SlotNumber 3;
 		Weapon.SelectionOrder 800; 
-		Weapon.AmmoUse 0;
+		Weapon.AmmoUse1 1;
 	    Inventory.PickupSound "weapon/getknife";
 		Inventory.Pickupmessage "You got a Kevin's Throwing Knives.";
 	}
@@ -96,7 +96,8 @@ Class K7_Kevin_ThrowingKnife: K7_SmithSyndicate_Weapon
 			KEVI KLM 1 bright;
 			TNT1 A 5;
 			KEVI NOPQR 1 bright;
-			KEVI A 1 bright A_ReFire;
+			KEVI A 1 bright A_ReFire();
+			TNT1 A 0 A_Refire();
 			Goto Ready;
 		
 		Altfire:

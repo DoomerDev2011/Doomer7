@@ -14,12 +14,12 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 		Inventory.Pickupmessage "You got Kaede's Hardballer.";
 	}
 	
-	bool zoomedIn;
+	bool m_bZoom;
+	bool m_bZoomedIn;
 	PlayerInfo playerPointer;
-	bool staticSound;
 		
-	States{
-	
+	States
+	{
 		Spawn:
 		KPIC A -1 bright;
 		Loop;
@@ -31,10 +31,11 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 			}
 			TNT1 A 0
 			{
-				if ( SmithSyndicate( invoker.owner).PersonaChangeEnd( 2 ) ) 
+				let smith = SmithSyndicate( invoker.owner );
+				if ( smith.PersonaChangeEnd( 2 ) ) 
 				{
-					A_SetInventory( "K7_Kaede_Hardballer_Ammo", SmithSyndicate( invoker.owner ).m_iPersonaClipSize );
-					A_SetTics( SmithSyndicate( invoker.owner ).m_iPersonaFormTime );
+					A_SetInventory( "K7_Kaede_Hardballer_Ammo", smith.m_iPersonaClipSize );
+					A_SetTics( smith.m_iPersonaFormTime );
 				}
 			}
 			TNT1 A 0
@@ -46,6 +47,7 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 			KAED A 1 bright A_WeaponOffset(0,135,WOF_INTERPOLATE);
 			KAED A 1 bright A_WeaponOffset(0,105,WOF_INTERPOLATE);
 			KAED A 1 bright A_WeaponOffset(0,90,WOF_INTERPOLATE);
+			TNT1 A 0 A_StartSound( "ked_aim", CHAN_WEAPON, CHANF_OVERLAP );
 			KAED A 1 bright A_WeaponOffset(0,75,WOF_INTERPOLATE);
 			KAED A 1 bright A_WeaponOffset(0,60,WOF_INTERPOLATE);
 			KAED A 1 bright A_WeaponOffset(0,50,WOF_INTERPOLATE);
@@ -57,7 +59,7 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 		Deselect:
 			TNT1 A 0
 			{
-				invoker.zoomedIn = false;
+				invoker.m_bZoom = false;
 			}
 			TNT1 A 0 A_ZoomFactor (1);
 			TNT1 A 0 A_Overlay( -1, "ChangePersona" );
@@ -74,22 +76,25 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 			Stop;
 		
 		Ready:
-			KAED A 0 A_JumpIf( invoker.zoomedIn, "ReadyZoomed" );
-			KAED A 1 bright A_WeaponReady(WRF_ALLOWRELOAD);
+			TNT1 A 0 A_JumpIf( invoker.m_bZoomedIn, "ReadyZoomed" );
+			TNT1 A 0 A_JumpIf( invoker.m_bZoomedIn && !invoker.m_bZoom, "ZoomOut" );
+			TNT1 A 0 A_JumpIf( !invoker.m_bZoomedIn && invoker.m_bZoom, "ZoomIn" );
+			KAED A 1 bright A_WeaponReady( WRF_ALLOWRELOAD );
 			Loop;
 		
 		ReadyZoomed:
 			TNT1 A 0
 			{
-				SmithSyndicate(invoker.owner).SetStatic(true);
+				SmithSyndicate( invoker.owner ).SetStatic( true );
 			}
 			TNT1 A 1 A_WeaponReady(WRF_ALLOWRELOAD);
 			Goto Ready;
 		
 		Fire:
-			TNT1 A 0 A_JumpIf (invoker.zoomedIn, "FireZoomed");
+			TNT1 A 0 bright A_WeaponOffset( 0, 32, WOF_INTERPOLATE );
+			TNT1 A 0 A_JumpIf( invoker.m_bZoomedIn, "FireZoomed" );
 			TNT1 A 0 bright A_JumpIfNoAmmo("Reload");
-			TNT1 A 0 bright A_StartSound("weapon/firehard",CHAN_AUTO,CHANF_OVERLAP);
+			TNT1 A 0 bright A_StartSound( "ked_shoot", CHAN_WEAPON, CHANF_OVERLAP );
 			TNT1 A 0 bright A_FireBullets( 5.6, 0, 1, SmithSyndicate( invoker.owner ).m_iPersonaPrimaryDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
 			KAED B 1 bright;
 			TNT1 A 0 bright A_SetPitch( pitch - 2, SPF_INTERPOLATE );
@@ -98,12 +103,14 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 			KAED E 2 bright;
 			KAED F 2 bright;
 			KAED HJK 2 bright;
-			KAED A 1 bright A_ReFire;
+			KAED A 2 bright;
+			KAED A 1 bright A_ReFire();
+			TNT1 A 0 A_Refire();
 			Goto Ready;
 			
 		FireZoomed:
-			TNT1 A 0 A_JumpIfNoAmmo("Reload");
-			TNT1 A 0 A_StartSound("weapon/firehard",CHAN_AUTO,CHANF_OVERLAP);
+			TNT1 A 0 A_JumpIfNoAmmo( "Reload" );
+			TNT1 A 0 A_StartSound( "ked_shoot", CHAN_WEAPON, CHANF_OVERLAP );
 			TNT1 A 0 A_SetBlend("E6F63F",.25,10);
 			TNT1 A 0 A_FireBullets( 5.6, 0, 1, SmithSyndicate( invoker.owner ).m_iPersonaPrimaryDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
 			TNT1 A 2
@@ -125,37 +132,52 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 			TNT1 A 2 A_SetPitch(pitch-.25,SPF_INTERPOLATE);
 			TNT1 A 2;
 			TNT1 A 1;
-			TNT1 A 6;
+			TNT1 A 10;
 			TNT1 A 1 A_ReFire;
 			Goto Ready;
 
 		Altfire:
-			KAED A 0 A_JumpIf( invoker.zoomedIn, "UnZoom" );
-			TNT1 A 0 A_StartSound("weapon/zoomhard");
+			TNT1 A 0 A_JumpIf( invoker.m_bZoomedIn, "ZoomOut" );
+			Goto ZoomIn;
+			
+		ZoomIn:
+			TNT1 A 0 A_ZoomFactor( 4 );
+			KAED A 0
+			{
+				invoker.m_bZoom = true;
+				invoker.m_bZoomedIn = true;
+			}
+			KAED A 1 bright A_WeaponOffset( 0, 32, WOF_INTERPOLATE );
+			
+			Goto Ready;
+			
+		ZoomOut:
+			TNT1 A 0 A_StartSound( "weapon/zoomhard", CHAN_WEAPON, CHANF_OVERLAP );
+			TNT1 A 0 bright A_WeaponOffset( 0, 32, WOF_INTERPOLATE );
+			KAED A 0
+			{
+				invoker.m_bZoom = false;
+				invoker.m_bZoomedIn = false;
+			}
 			TNT1 A 0
 			{
-				invoker.zoomedIn = true;
+				SmithSyndicate( invoker.owner ).SetStatic( false );
 			}
-			KAED A 0 A_ZoomFactor(3);
-			Goto Ready;
-		
-		UnZoom:
-			KAED A 0 { invoker.zoomedIn = false; }
-			TNT1 A 0 {SmithSyndicate(invoker.owner).SetStatic(false);}
-			TNT1 A 0 A_StopSound(CHAN_5);
-			TNT1 A 0 A_ZoomFactor(1);
+			TNT1 A 0 A_ZoomFactor( 1 );
+			
 			Goto Ready;
 			
 		Reload:
 			TNT1 A 0
 			{
-				SmithSyndicate(invoker.owner).SetStatic(false);
+				SmithSyndicate( invoker.owner ).SetStatic( false );
 			}
-			TNT1 A 0 A_StopSound(CHAN_5);
-			TNT1 A 0 { invoker.zoomedIn = false; }
+			TNT1 A 0 {
+				invoker.m_bZoomedIn = false;
+			}
 			TNT1 A 0 A_ZoomFactor (1);
-			KAED A 0 bright A_StartSound("weapon/rehard");
-			KAED A 1 bright A_WeaponOffset(0,32,WOF_INTERPOLATE); 
+			KAED A 0 bright A_StartSound( "ked_reload", CHAN_WEAPON, CHANF_OVERLAP );
+			KAED A 1 bright A_WeaponOffset(0,32,0); 
 			KAED A 1 bright A_WeaponOffset(0,35,WOF_INTERPOLATE);
 			KAED A 1 bright A_WeaponOffset(0,40,WOF_INTERPOLATE);
 			KAED A 1 bright A_WeaponOffset(0,50,WOF_INTERPOLATE);
@@ -167,7 +189,7 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 			KAED A 1 bright A_WeaponOffset(0,165,WOF_INTERPOLATE);
 			TNT1 A 0 A_SetInventory( "K7_Kaede_Hardballer_Ammo", SmithSyndicate( invoker.owner ).m_iPersonaClipSize );
 			TNT1 A 104;
-			KAED A 1 bright A_WeaponOffset(0,165,WOF_INTERPOLATE);
+			KAED A 1 bright A_WeaponOffset(0,165,0);
 			KAED A 1 bright A_WeaponOffset(0,135,WOF_INTERPOLATE);
 			KAED A 1 bright A_WeaponOffset(0,105,WOF_INTERPOLATE);
 			KAED A 1 bright A_WeaponOffset(0,90,WOF_INTERPOLATE);
@@ -209,8 +231,10 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 	}
 }
 
-Class K7_Kaede_Hardballer_Ammo: Ammo{
-	default{
+Class K7_Kaede_Hardballer_Ammo: Ammo
+{
+	default
+	{
 		Inventory.MaxAmount 10;
 		+INVENTORY.IGNORESKILL;
 	}

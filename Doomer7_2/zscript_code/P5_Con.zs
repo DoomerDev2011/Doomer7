@@ -11,16 +11,6 @@ Class K7_Con_Glock: K7_SmithSyndicate_Weapon
 		Inventory.Pickupmessage "You got Con's Glocks."; 
 	}
 	
-	bool isRunning;
-	int cooldown;
-	
-	override void DoEffect()
-    {
-      super.DoEffect();
-      if (cooldown > 0 && level.time % 35 == 0) 
-          cooldown--;
-    }
-	
 	States{
 		Spawn:
 		CHED A -1 bright;
@@ -43,35 +33,25 @@ Class K7_Con_Glock: K7_SmithSyndicate_Weapon
 			{
 				SmithSyndicate( invoker.owner ).PersonaChangeReady();
 			}
-			TNT1 A 0 A_StartSound( "weapon/conaim", CHAN_BODY, CHANF_OVERLAP );
-			CONS A 1 bright A_WeaponOffset (140,32,0);
-			CONS A 1 bright A_WeaponOffset (120,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (100,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (85,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (70,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (55,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (40,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (30,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (20,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (10,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (5,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (0,32,WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 64, 32 + 128, 0);
+			CONS A 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
+			TNT1 A 0 A_StartSound( "con_aim", CHAN_BODY, CHANF_OVERLAP );
+			CONS A 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE);
 			Goto Ready;
 		
 		Deselect:
 			TNT1 A 0 A_Overlay( -1, "ChangePersona" );
-			CONS A 1 bright A_WeaponOffset (0,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (5,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (10,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (20,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (30,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (40,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (55,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (70,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (85,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (100,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (120,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (140,32,WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 0, 32, 0);
+			CONS A 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 64, 32 + 128, WOF_INTERPOLATE);
 			Stop;
 		
 		Ready:
@@ -86,9 +66,10 @@ Class K7_Con_Glock: K7_SmithSyndicate_Weapon
 				}
 				return ResolveState( null );
 			}
-			CONS A 0 bright A_FireBullets( 5.5, 0, 1, SmithSyndicate( invoker.owner).m_iPersonaPrimaryDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
-			CONS A 0 bright A_StartSound("weapon/fireglk",CHAN_AUTO,CHANF_OVERLAP);
-			TNT1 A 0 A_Overlay( -1, "Recoil" );
+			TNT1 A 0 bright A_WeaponOffset ( 0, 32, 0);
+			CONS A 0 bright A_FireBullets( 3, 0, 1, SmithSyndicate( invoker.owner).m_iPersonaPrimaryDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
+			CONS A 0 bright A_StartSound( "con_shoot", CHAN_AUTO, CHANF_OVERLAP );
+			TNT1 A 0 A_SetPitch( pitch - 2, 0 );
 			CONS B 1 bright{
 				int num = Random(0,2);
 				if(num == 0){
@@ -101,53 +82,82 @@ Class K7_Con_Glock: K7_SmithSyndicate_Weapon
 			}
 			CONS C 1 bright;
 			CONS DE 1 bright;
-			CONS F 0 bright A_FireBullets( 5.5, 0, 1, SmithSyndicate( invoker.owner).m_iPersonaPrimaryDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
-			CONS F 0 bright A_StartSound("weapon/fireglk",CHAN_AUTO,CHANF_OVERLAP);
-			TNT1 A 0 A_Overlay( -1, "Recoil" );
+			CONS F 0 bright A_FireBullets( 3, 0, 1, SmithSyndicate( invoker.owner).m_iPersonaPrimaryDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
+			CONS F 0 bright A_StartSound( "con_shoot", CHAN_AUTO, CHANF_OVERLAP );
+			TNT1 A 0 A_SetPitch( pitch + 4, SPF_INTERPOLATE );
 			CONS F 2 bright
 			{
 				int num = Random(0,2);
-				if(num == 0){
+				if(num == 0)
+				{
 					A_Overlay(-1,"BottomFlash");
-				}else if (num == 1){
+					A_SetPitch( pitch - 4, 0 );
+				}
+				else if (num == 1)
+				{
+					A_SetPitch( pitch - 2, 0 );
 					A_Overlay(-1,"BottomFlash2");
-				}else{
+				}
+				else
+				{
 					A_Overlay(-1,"BottomFlash3");
 				}
 			}
-			CONS GHI 1 bright;
-			CONS KLO 1 bright;
-			CONS RS 1 bright;
-			CONS T 1 bright A_Refire();
+			CONS GH 1 bright;
+			CONS I 1 bright A_SetPitch( pitch + 1, 0 );
+			CONS K 1 bright A_SetPitch( pitch - 1, SPF_INTERPOLATE );
+			CONS L 1 bright;
+			CONS O 1 bright;
+			CONS R 1 bright;
+			CONS ST 1 bright A_Refire();
+			TNT1 A 0 A_Refire();
 			Goto Ready;
-			
-		Recoil:
-			TNT1 A 0;
-			Stop;
-			
+		
 		Altfire:
 			TNT1 A 0
 			{
-				if(invoker.cooldown > 0){
+				if ( SmithSyndicate( invoker.owner ).m_iConSpeedTimer > 0 || invoker.ammo2.amount < 1 ){
 					return ResolveState("Ready");
 				}
-				invoker.isRunning = true;
-				invoker.cooldown = 30;
-				return ResolveState( null );
+				A_TakeInventory( "K7_ThinBlood", 1 );
+				return ResolveState( "Special" );
 			}
-			CONS A 30 bright
+		Special:
+			CONS A 1 bright
 			{
+				SmithSyndicate( invoker.owner ).SetSpeed( 0 );
 				A_StartSound( "persona_powera", CHAN_BODY, CHANF_OVERLAP );
 			}
-			CONS A 15
+			CONS A 1 bright A_WeaponOffset ( 0, 32, 0);
+			CONS A 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 64, 32 + 128, WOF_INTERPOLATE);
+			TNT1 A 30;
+			TNT1 A 30
 			{
-				A_StartSound( "vo/conspecial", CHAN_VOICE, 0 );
+				A_StartSound( "con_special_vo", CHAN_VOICE, 0 );
 			}
-			CONS A 15
+			TNT1 A 30
 			{
-				A_StartSound ( "weapon/conspecial", CHAN_BODY, CHANF_OVERLAP );
+				A_StartSound ( "con_special_pose", CHAN_BODY, CHANF_OVERLAP );
 			}
-			CONS A 1 A_GiveInventory( "K7_Con_Speed", 1 );
+			TNT1 A 0
+			{
+				let smith = SmithSyndicate( invoker.owner );
+				smith.m_fPersonaSpeed_Factor = 2;
+				smith.SetSpeed( smith.m_fPersonaSpeed );
+				smith.m_iConSpeedTimer = 35 * 20;
+			}
+			CONS A 1 bright A_WeaponOffset ( 64, 32 + 128, 0);
+			CONS A 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE);
 			Goto Ready;
 			
 		Flash:
@@ -205,46 +215,47 @@ Class K7_Con_Glock: K7_SmithSyndicate_Weapon
 			Stop;
 			
 		Reload:
-			TNT1 A 0
-			{
-				SmithSyndicate( invoker.owner ).SetSpeed( SmithSyndicate( invoker.owner ).m_fPersonaSpeed_Reloading );
-			}
-			CONS A 0 bright A_StartSound("weapon/reglk");
-			CONS A 1 bright A_WeaponOffset (0,32,0);
-			CONS A 1 bright A_WeaponOffset (5,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (10,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (20,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (30,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (40,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (55,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (70,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (85,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (100,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (120,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (140,32,WOF_INTERPOLATE);
-			TNT1 A 0 bright A_SetInventory( "K7_Con_Glock_Ammo", SmithSyndicate( invoker.owner).m_iPersonaClipSize );
-			TNT1 A 18
-			{
-				SmithSyndicate( invoker.owner ).SetSpeed( 0 );
-			}
-			TNT1 A 0
-			{
-				SmithSyndicate( invoker.owner ).SetSpeed( SmithSyndicate( invoker.owner ).m_fPersonaSpeed );
-			}
-			CONS A 1 bright A_WeaponOffset (140,32,0);
-			CONS A 1 bright A_WeaponOffset (120,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (100,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (85,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (70,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (55,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (40,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (30,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (20,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (10,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (5,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset (0,32,WOF_INTERPOLATE);
-			CONS A 1 bright A_ReFire;
+			TNT1 A 0 A_Overlay( -1, "Reload2" );
+			CONS A 0 bright A_StartSound( "con_reload" );
+			CONS A 1 bright A_WeaponOffset ( 0, 32, 0);
+			CONS A 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 64, 32 + 128, WOF_INTERPOLATE);
+			TNT1 A 30;
+			CONS A 1 bright A_WeaponOffset ( 64, 32 + 128, 0);
+			CONS A 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
+			CONS A 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE);
 			Goto Ready;
+			
+		Reload2:
+			TNT1 A 20
+			{
+				let smith = SmithSyndicate( invoker.owner );
+				smith.SetSpeed( smith.m_fPersonaSpeed_Reloading );
+			}
+			TNT1 A 10
+			{
+				let smith = SmithSyndicate( invoker.owner );
+				smith.SetSpeed( 0 );
+				smith.friction = 0.95;
+			}
+			TNT1 A 10 A_SetInventory( "K7_Con_Glock_Ammo", SmithSyndicate( invoker.owner).m_iPersonaClipSize );
+			TNT1 A 0
+			{
+				let smith = SmithSyndicate( invoker.owner );
+				smith.SetSpeed( smith.m_fPersonaSpeed );
+				smith.friction = 1;
+			}
+			TNT1 A 10;
+			TNT1 A 0 A_ReFire;
+			Stop;
 	}
 }
 
@@ -254,16 +265,5 @@ Class K7_Con_Glock_Ammo : Ammo
 	{
 		Inventory.MaxAmount 20;
 		+INVENTORY.IGNORESKILL;
-	}
-}
-
-Class K7_Con_Speed : PowerSpeed
-{
-	default
-	{
-		-POWERSPEED.NOTRAIL
-		Speed 1.66;
-		Powerup.Duration -10;
-		inventory.maxamount 1;
 	}
 }
