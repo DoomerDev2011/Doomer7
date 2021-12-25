@@ -1,3 +1,5 @@
+// Syndicate player
+
 Class SmithSyndicate : DoomPlayer
 {
 	default
@@ -7,10 +9,10 @@ Class SmithSyndicate : DoomPlayer
 		
 		// Garcian
 		Player.StartItem "K7_Garcian_PPK";
-		Player.StartItem "K7_Garcian_PPK_Ammo", 5;
 		
 		// Dan
 		Player.StartItem "K7_Dan_Taurus";
+		//Player.StartItem "K7_Dan_DemonGun";
 		
 		// Kaede
 		Player.StartItem "K7_Kaede_Hardballer";
@@ -28,17 +30,48 @@ Class SmithSyndicate : DoomPlayer
 		Player.StartItem "K7_Mask_M79";
 		
 		// HarmanYoung
-		Player.StartItem "K7_HarmanYoung_Tommygun";
+		
+		// GIVE THIS ON HARDEST MODE
+		//Player.StartItem "K7_HarmanYoung_Tommygun";
 		
 		
 	}
-	bool m_bInitSyndicate;
+	
+	Actor ptr;
+	
+	override void Tick()
+    {
+        Super.Tick();
+		m_fnSyndicateTick();
+    }
+	
+	void m_fnSyndicateTick()
+	{
+		if ( !m_bInitSyndicateReady )
+		{
+			m_bInitSyndicateReady = true;
+			int sk = G_SkillPropertyInt( SKILLP_ACSReturn );
+			if ( sk >= 4 )
+			{
+				A_SetInventory( "K7_HarmanYoung_Tommygun", 1 );
+			}
+		}
+		switch ( m_iPersonaCurrent )
+		{
+			case 2:
+				m_fnKaedeTick();
+				break;
+			case 5:
+				m_fnConTick();
+				break;
+		}
+	}
+	
+	bool m_bInitSyndicateReady;
 	
 	// Garcian Force Swap
-	//
-	
-	bool m_bPersonaSwap;
-	int m_iPersonaSwapTo;
+	bool m_bPersonaCamSwap;
+	int m_iPersonaCamSwapTo;
 	
 	// Shared
 	//
@@ -50,25 +83,6 @@ Class SmithSyndicate : DoomPlayer
 	
 	int m_iSyndicateThinBlood;
 	int m_iSyndicateThickBlood;
-	
-	void SyndicateTick()
-	{
-		if ( m_bInitSyndicate == false )
-		{
-			m_bInitSyndicate = true;
-			m_bPersonaSwap = true;
-		}
-		
-		switch ( m_iPersonaCurrent )
-		{
-			case 2:
-				m_fnKaedeTick();
-				break;
-			case 5:
-				m_fnConTick();
-				break;
-		}
-	}
 	
 	// Current Persona
 	//
@@ -92,21 +106,25 @@ Class SmithSyndicate : DoomPlayer
 	float m_fPersonaSpeed_Factor;
 	float m_fPersonaFriction;
 	float m_fPersonaVitality;
-	// Weapon Stats
-	int m_iPersonaClipSize;
-	int m_iPersonaPrimaryDamage;
-	float m_iPersonaSpread;
+	float m_fPersonaSpecialFactor;
 	
 	float m_iPersonaLVPower;
 	float m_iPersonaLVSpeed;
 	float m_iPersonaLVWaver;
 	float m_IPersonaLVCrits;
 	
+	// Weapon Stats
+	
+	int m_iPersonaGunClipSize;
+	int m_iPersonaGunDamage;
+	float m_fPersonaGunSpread;
+	int m_iPersonaGunFlags;
 	
 	// Speed
 	//
 	float m_fCurrentSpeed;
-	void SetSpeed( float new_speed )
+	
+	void m_fnSetSpeed( float new_speed )
 	{
 		m_fCurrentSpeed = new_speed * m_fPersonaSpeed_Factor;
 		forwardmove1 = m_fCurrentSpeed;
@@ -121,7 +139,7 @@ Class SmithSyndicate : DoomPlayer
 	// Scan ( Common Alt Fire )
 	// 
 	
-	void VisionRingScan()
+	void m_fnVisionRingScan()
 	{
 		A_StartSound( "persona_scan", CHAN_BODY, CHANF_OVERLAP );
 		
@@ -130,7 +148,7 @@ Class SmithSyndicate : DoomPlayer
 	// Use Special Generic ( Add vials if available )
 	//
 	
-	void UseSpecial()
+	void m_fnUseSpecial()
 	{
 		if ( m_iPersonaChargeMax > 0 )
 		{
@@ -141,18 +159,11 @@ Class SmithSyndicate : DoomPlayer
 		}
 	}
 	
-	// Called before all reloads
-	//
-	
-	void ReloadGenericPre()
-	{
-		m_iPersonaCharge = 0;
-	}
 	
 	// Switch out of personality (start lowering weapon)
 	// 
 		
-	void PersonaChangeBegin()
+	void m_fnPersonaChangeBegin()
 	{
 		if ( Health > 0 )
 		{
@@ -166,7 +177,7 @@ Class SmithSyndicate : DoomPlayer
 		m_iPersonaFormTime = 70;
 		m_iPersonaScanRange = 64;
 		
-		SetSpeed( 0 );
+		m_fnSetSpeed( 0 );
 		JumpZ = 0;
 		Friction = 0.9;
 	}
@@ -174,7 +185,7 @@ Class SmithSyndicate : DoomPlayer
 	// Start changing of personality (finished lowering weapon)
 	// 
 	
-	void PersonaChange()
+	void m_fnPersonaChange()
 	{
 		if ( m_bPersonaChange )
 		{
@@ -187,69 +198,88 @@ Class SmithSyndicate : DoomPlayer
 	// Establish persona stats
 	// Returns if persona was changed
 	
-	bool PersonaChangeEnd( int persona )
+	bool m_fnPersonaChangeEnd( int persona )
 	{
 		ViewBob = 0.66;
-		SoundClass = "player";
-		//
-		//
+		SoundClass = "k7_dan";
+		
+		// Character Stats
 		m_fPersonaVitality = 100;
 		m_iPersonaChargeMax = 0;
-		m_fPersonaSpeed = 0.975;
-		m_fPersonaSpeed_Reloading = 0.45;
+		m_fPersonaSpeed = 0.9;
+		m_fPersonaSpeed_Reloading = 0.5;
 		m_fPersonaSpeed_Factor = 1;
 		m_iPersonaHeight = 52;
-		m_iPersonaClipSize = 0;
-		m_iPersonaPrimaryDamage = 15;
-		m_iPersonaSpread = 3.15;
 		m_fPersonaJumpZ = 0;
+		m_fPersonaSpecialFactor = 1;
 		
+		// Weapon Stats
+		m_iPersonaGunClipSize = 0;
+		m_iPersonaGunDamage = 15;
+		m_fPersonaGunSpread = 3.15;
+		m_iPersonaGunFlags = FBF_USEAMMO|FBF_NORANDOM|FBF_NORANDOMPUFFZ;
 		switch( persona )
 		{
 			case 0: // Garcian
+				SoundClass = "k7_gar";
 				m_iPersonaHeight = 55;
-				m_iPersonaClipSize = 5;
-				m_iPersonaPrimaryDamage = 8;
+				m_iPersonaGunClipSize = 5;
+				m_iPersonaGunDamage = 8;
+				m_fPersonaGunSpread = 0;
 				break;
 			case 1: // Dan
-				m_iPersonaClipSize = 6;
+				SoundClass = "k7_dan";
+				m_iPersonaGunClipSize = 6;
 				m_iPersonaChargeMax = 3;
-				m_iPersonaPrimaryDamage = 40;
+				m_iPersonaGunDamage = 40;
 				break;
 			case 2: // KAEDE
+				SoundClass = "k7_ked";
 				m_iPersonaHeight = 48;
-				m_fPersonaSpeed = 0.9;
-				m_iPersonaClipSize = 10;
-				m_iPersonaPrimaryDamage = 35;
+				m_fPersonaSpeed = 0.85;
+				m_iPersonaGunClipSize = 10;
+				m_iPersonaGunDamage = 35;
 				break;
 			case 3: // Kevin
-				m_fPersonaSpeed = 1.25;
-				m_iPersonaClipSize = 1;
-				m_iPersonaPrimaryDamage = 25;
+				SoundClass = "";
+				m_fPersonaSpeed = 0.975;
+				m_iPersonaGunClipSize = 1;
+				m_fPersonaSpeed_Reloading = m_fPersonaSpeed;
+				m_iPersonaGunDamage = 25;
 				break;
 			case 4: // Coyote
+				SoundClass = "k7_cyo";
 				m_iPersonaHeight = 46;
-				m_iPersonaClipSize = 6;
-				m_iPersonaChargeMax = 1;
-				m_iPersonaPrimaryDamage = 30;
 				m_fPersonaJumpZ = 18;
+				m_iPersonaChargeMax = 1;
+				m_iPersonaGunClipSize = 6;
+				m_iPersonaGunDamage = 30;
 				break;
 			case 5: // Con
 				SoundClass = "k7_con";
 				m_iPersonaHeight = 35;
 				m_fPersonaSpeed = 1.33;
 				m_fPersonaSpeed_Reloading = 0.66;
-				m_iPersonaClipSize = 20;
-				m_iPersonaPrimaryDamage = 9;
+				m_iPersonaGunClipSize = 20;
+				m_iPersonaGunDamage = 9;
+				m_fPersonaSpecialFactor = 1.5;
 				break;
 			case 6: // MASK
-				m_fPersonaSpeed = 1.1;
-				m_iPersonaClipSize = 2;
+				SoundClass = "k7_msk";
+				m_iPersonaGunClipSize = 2;
 				break;
 			case 7: // HarmanYoung
-				m_fPersonaSpeed = 1;
-				m_iPersonaClipSize = 50;
+				SoundClass = "k7_hay";
+				m_iPersonaGunDamage = 30;
+				m_iPersonaGunClipSize = 50;
+				m_fPersonaSpeed = 0.92;
 				break;
+		}
+		
+		if ( m_bPersonaCamSwap )
+		{
+			m_bPersonaCamSwap = false;
+			return true;
 		}
 		
 		if ( m_iPersonaCurrent == persona )
@@ -262,17 +292,11 @@ Class SmithSyndicate : DoomPlayer
 		return true;
 	}
 	
-	void PersonaChangeReady()
+	void m_fnPersonaChangeReady()
 	{
-		SetSpeed( m_fPersonaSpeed );
+		m_fnSetSpeed( m_fPersonaSpeed );
 		JumpZ = m_fPersonaJumpZ;
 	}
-	
-	override void Tick()
-    {
-        Super.Tick();
-		SyndicateTick();
-    }
 	
 	// Dan
 	//
@@ -292,7 +316,7 @@ Class SmithSyndicate : DoomPlayer
 		Shader.SetUniform1i( player, "Static", "timer", level.time );
 	}
 	
-	void SetStatic( bool on )
+	void m_fnSetStatic( bool on )
 	{
 		if ( IsActorPlayingSound( CHAN_6, "weapon/statichard" ) )
 		{
@@ -301,8 +325,9 @@ Class SmithSyndicate : DoomPlayer
 				A_StopSound( CHAN_6 );
 			}
 		}
-		else
+		else if ( on == true )
 		{
+			m_iStaticStart = level.time;
 			A_StartSound( "weapon/statichard", CHAN_6, CHANF_LOOPING, 0.5 );
         }
 		Shader.SetUniform1i( player, "Static", "timer", level.time - m_iStaticStart );
@@ -328,108 +353,14 @@ Class SmithSyndicate : DoomPlayer
 				
 				if ( m_fCurrentSpeed > m_fPersonaSpeed )
 				{
-					SetSpeed( m_fPersonaSpeed );
+					m_fnSetSpeed( m_fPersonaSpeed );
 				}
 			}
 		}
 	}
 }
 
-Class K7_SmithSyndicate_Weapon : Weapon
-{
-	Default
-	{
-		// Flags
-		+WEAPON.NOAUTOAIM
-		+WEAPON.AMMO_OPTIONAL
-		+WEAPON.NOAUTOFIRE
-		// Stats
-		Weapon.AmmoUse1 1;
-		Weapon.AmmoGive1 0;
-		Weapon.AmmoType2 "K7_ThinBlood";
-		Weapon.AmmoUse2 0;
-		Weapon.AmmoGive2 0;
-	}
-	States
-	{
-		FormPersona:
-			
-			Stop;
-		ChangePersona:
-			TNT1 A 0
-			{
-				SmithSyndicate( invoker.owner ).PersonaChangeBegin();
-				A_SetTics( SmithSyndicate( invoker.owner ).m_iPersonaExplodeTime );
-			}
-			TNT1 A 0
-			{
-				SmithSyndicate( invoker.owner).PersonaChange();
-			}
-			TNT1 A 0 A_Lower( 512 );
-			Stop;
-		
-		ChargeTube:
-			TNT1 A 0
-			{
-				let smith = SmithSyndicate( invoker.owner );
-				if ( smith.m_iPersonaChargeMax > 0 && invoker.ammo2.amount > 0 )
-				{
-					smith.m_iPersonaCharge++;
-					if ( smith.m_iPersonaCharge > invoker.ammo2.amount || smith.m_iPersonaCharge > smith.m_iPersonaChargeMax )
-					{
-						smith.m_iPersonaCharge = 0;
-					}
-					switch( smith.m_iPersonaCharge )
-					{
-						case 0:
-							A_StartSound( "charge_tube", CHAN_7, CHANF_OVERLAP  );
-							break;
-						case 1:
-							A_StartSound( "charge_tubea", CHAN_7, CHANF_OVERLAP  );
-							break;
-						case 2:
-							A_StartSound( "charge_tubeb", CHAN_7, CHANF_OVERLAP  );
-							break;
-						case 3:
-							A_StartSound( "charge_tubec", CHAN_7, CHANF_OVERLAP  );
-							break;
-						default:
-							A_StartSound( "charge_tubec", CHAN_7, CHANF_OVERLAP  );
-					}
-				}
-			}
-			stop;
-	}
-}
-
-Class K7_ThinBlood : Ammo
-{
-	Default
-	{
-		Inventory.Amount 1;
-		Inventory.MaxAmount 20;
-		Inventory.PickupMessage "Picked up a tube of thin blood";
-		//Inventory.PickupSound "";
-	}
-	States
-	{
-		Spawn:
-			BLDV A 1;
-			Loop;
-	}
-}
-
-Class K7_ThickBlood : Ammo
-{
-	Default
-	{
-		Inventory.Amount 1;
-		Inventory.MaxAmount 1000;
-		//Inventory.PickupSound "";
-	}
-}
-
-Class NewBulletPuff: BulletPuff
+Class NewBulletPuff : BulletPuff
 {
 	default
 	{

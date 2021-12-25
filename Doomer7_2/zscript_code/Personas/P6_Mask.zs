@@ -6,8 +6,7 @@ Class K7_Mask_M79: K7_SmithSyndicate_Weapon
 	default
 	{
 		Weapon.SlotNumber 6;
-		Weapon.AmmoType1 "K7_Mask_M79_Ammo"; 
-	    Inventory.PickupSound "weapon/getm79";
+		Weapon.AmmoType1 "K7_Ammo"; 
 		Inventory.Pickupmessage "You got a Mask's M79";
 	}
 	
@@ -16,25 +15,22 @@ Class K7_Mask_M79: K7_SmithSyndicate_Weapon
 	States
 	{
 		Spawn:
-		MPIC A -1 bright;
-		Stop;
+			MPIC A -1 bright;
+			Stop;
 		
 		Select:
 			TNT1 A 0
 			{
-				A_SetTics( SmithSyndicate( invoker.owner).m_iPersonaChangeTime );
-			}
-			TNT1 A 0
-			{
-				if ( SmithSyndicate( invoker.owner).PersonaChangeEnd( 6 ) ) 
+				let smith = SmithSyndicate( invoker.owner );
+				if ( smith.m_fnPersonaChangeEnd( 6 ) ) 
 				{
-					A_SetInventory( "K7_Mask_M79_Ammo", SmithSyndicate( invoker.owner ).m_iPersonaClipSize );
-					A_SetTics( SmithSyndicate( invoker.owner ).m_iPersonaFormTime );
+					A_SetInventory( "K7_Ammo", smith.m_iPersonaGunClipSize );
+					A_SetTics( smith.m_iPersonaFormTime );
 				}
 			}
 			TNT1 A 0
 			{
-				SmithSyndicate( invoker.owner ).PersonaChangeReady();
+				SmithSyndicate( invoker.owner ).m_fnPersonaChangeReady();
 			}
 			MASK A 1 bright A_WeaponOffset (0,127,0);
 			MASK A 1 bright A_WeaponOffset (0,107,WOF_INTERPOLATE);
@@ -180,7 +176,7 @@ Class K7_Mask_M79: K7_SmithSyndicate_Weapon
 			MASK A 1 bright A_WeaponOffset (0,87,WOF_INTERPOLATE);
 			MASK A 1 bright A_WeaponOffset (0,107,WOF_INTERPOLATE);
 			MASK A 1 bright A_WeaponOffset (0,127,WOF_INTERPOLATE);
-			TNT1 A 0 A_SetInventory( "K7_Mask_M79_Ammo", 2 );
+			TNT1 A 0 A_SetInventory( "K7_Ammo", SmithSyndicate( invoker.owner ).m_iPersonaGunClipSize );
 			TNT1 A 33;
 			MASK A 1 bright A_WeaponOffset (0,127,0);
 			MASK A 1 bright A_WeaponOffset (0,107,WOF_INTERPOLATE);
@@ -203,12 +199,11 @@ Class K7_Mask_M79: K7_SmithSyndicate_Weapon
 	}
 }
 
-Class K7_Mask_M79_Ammo: Ammo
+Class K7_Mask_M79_Ammo : K7_Ammo
 {
-	default
+	Default
 	{
 		Inventory.MaxAmount 2;
-		+INVENTORY.IGNORESKILL;
 	}
 }
 

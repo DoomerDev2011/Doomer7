@@ -1,3 +1,40 @@
 gameinfo{
 	playerclasses = "SmithSyndicate"
+	titlemusic = "music/Title.ogg"
+}
+
+clearskills
+skill normal
+{
+	name = "Normal"
+	MustConfirm = "Helpful hints and other features make the game proceed relatively smoothly"
+	Key = "1"
+	textcolor = "blue"
+	
+	SpawnFilter = Normal
+	ACSReturn = 2
+	
+	EasyKey
+}
+skill deadly
+{
+	name = "Deadly"
+	MustConfirm = "In addition to limitations on hints, expect some extreme combat"
+	key = "2"
+	textcolor = "purple"
+	
+	SpawnFilter = Hard
+	ACSReturn = 3
+}
+// KILLER8
+skill bloodbath
+{
+	name = "Bloodbath"
+	
+	MustConfirm = "A new personality will awaken."
+	key = "3"
+	textcolor = "darkred"
+	
+	SpawnFilter = Nightmare
+	ACSReturn = 4
 }

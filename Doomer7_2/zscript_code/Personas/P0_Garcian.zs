@@ -2,6 +2,7 @@ Class K7_Garcian_PPK: K7_SmithSyndicate_Weapon
 {
 	default
 	{
+		+WEAPON.NOALERT
 		Weapon.SlotNumber 0;
 		Weapon.SelectionOrder 0;
 		Weapon.AmmoType1 "K7_Garcian_PPK_Ammo";
@@ -19,19 +20,16 @@ Class K7_Garcian_PPK: K7_SmithSyndicate_Weapon
 		Select:
 			TNT1 A 0
 			{
-				A_SetTics( SmithSyndicate( invoker.owner).m_iPersonaChangeTime );
-			}
-			TNT1 A 0
-			{
-				if ( SmithSyndicate( invoker.owner).PersonaChangeEnd( 0 ) ) 
+				let smith = SmithSyndicate( invoker.owner );
+				if ( smith.m_fnPersonaChangeEnd( 0 ) ) 
 				{
-					A_SetInventory( "K7_Garcian_PPK_Ammo", SmithSyndicate( invoker.owner ).m_iPersonaClipSize );
-					A_SetTics( SmithSyndicate( invoker.owner ).m_iPersonaFormTime );
+					A_SetInventory( "K7_Ammo", smith.m_iPersonaGunClipSize );
+					A_SetTics( smith.m_iPersonaFormTime );
 				}
 			}
 			TNT1 A 0
 			{
-				SmithSyndicate( invoker.owner ).PersonaChangeReady();
+				SmithSyndicate( invoker.owner ).m_fnPersonaChangeReady();
 			}
 			FRAM A 1 bright A_WeaponOffset(0,105,0);
 			#### A 1 bright A_WeaponOffset(0,92,WOF_INTERPOLATE);
@@ -57,19 +55,6 @@ Class K7_Garcian_PPK: K7_SmithSyndicate_Weapon
 			#### A 1 bright A_WeaponOffset(0,92,WOF_INTERPOLATE);
 			#### A 1 bright A_WeaponOffset(0,105,WOF_INTERPOLATE);
 			Stop;
-		
-		ChangePersona:
-			TNT1 A 0
-			{
-				SmithSyndicate( invoker.owner ).PersonaChangeBegin();
-				A_SetTics( SmithSyndicate( invoker.owner ).m_iPersonaExplodeTime );
-			}
-			TNT1 A 0
-			{
-				SmithSyndicate( invoker.owner).PersonaChange();
-			}
-			TNT1 A 0 A_Lower( 512 );
-			Stop;
 			
 		KeepLowering:
 			TNT1 A 0 bright A_Lower;
@@ -83,7 +68,7 @@ Class K7_Garcian_PPK: K7_SmithSyndicate_Weapon
 		Fire:
 			FRAM A 1 bright A_JumpIfNoAmmo("Reload");
 			FRAM B 0 bright A_StartSound("weapon/fireppk",CHAN_AUTO,CHANF_OVERLAP);
-			FRAM B 0 bright A_FireBullets( 0, 0, 1, SmithSyndicate( invoker.owner ).m_iPersonaPrimaryDamage, "NewBulletPuff" );
+			FRAM B 0 bright A_FireBullets( 0, 0, 1, SmithSyndicate( invoker.owner ).m_iPersonaGunDamage, "NewBulletPuff" );
 			FRAM B 0 bright A_SetPitch(pitch-.6);
 			FRAM B 1 bright A_SetPitch(pitch-.3);
 			FRAM B 1 bright A_SetPitch(pitch-.15);
@@ -105,7 +90,7 @@ Class K7_Garcian_PPK: K7_SmithSyndicate_Weapon
 			#### A 1 bright A_WeaponOffset(0,82,WOF_INTERPOLATE);
 			#### A 1 bright A_WeaponOffset(0,92,WOF_INTERPOLATE);
 			#### A 1 bright A_WeaponOffset(0,105,WOF_INTERPOLATE);
-			TNT1 A 0 A_SetInventory( "K7_Garcian_PPK_Ammo", SmithSyndicate( invoker.owner ).m_iPersonaClipSize );
+			TNT1 A 0 A_SetInventory( "K7_Garcian_PPK_Ammo", SmithSyndicate( invoker.owner ).m_iPersonaGunClipSize );
 			TNT1 A 10; 
 			FRAM A 1 bright A_WeaponOffset(0,105,0);
 			#### A 1 bright A_WeaponOffset(0,92,WOF_INTERPOLATE);
@@ -134,8 +119,10 @@ Class K7_Garcian_PPK: K7_SmithSyndicate_Weapon
 	
 }
 
-Class K7_Garcian_PPK_Ammo : Ammo{
-	default{
+Class K7_Garcian_PPK_Ammo : K7_Ammo
+{
+	default
+	{
 		Inventory.MaxAmount 5;
 		+INVENTORY.IGNORESKILL
 	}

@@ -1,7 +1,3 @@
-// Tick while currently dan
-//
-
-
 // Taurus weapon
 //
 
@@ -10,7 +6,6 @@ Class K7_Dan_Taurus : K7_SmithSyndicate_Weapon
 	default
 	{
 		Weapon.SlotNumber 1;
-		Weapon.AmmoType1 "K7_Dan_Taurus_Ammo";
 	    Inventory.PickupSound "weapon/getdan";
 		Inventory.Pickupmessage "You got Dan's Taurus.";
 	}
@@ -28,19 +23,16 @@ Class K7_Dan_Taurus : K7_SmithSyndicate_Weapon
 		Select:
 			TNT1 A 0
 			{
-				A_SetTics( SmithSyndicate( invoker.owner).m_iPersonaChangeTime );
-			}
-			TNT1 A 0
-			{
-				if ( SmithSyndicate( invoker.owner).PersonaChangeEnd( 1 ) ) 
+				let smith = SmithSyndicate( invoker.owner );
+				if ( smith.m_fnPersonaChangeEnd( 1 ) ) 
 				{
-					A_SetInventory( "K7_Dan_Taurus_Ammo", SmithSyndicate( invoker.owner ).m_iPersonaClipSize );
-					A_SetTics( SmithSyndicate( invoker.owner ).m_iPersonaFormTime );
+					A_SetInventory( "K7_Ammo", smith.m_iPersonaGunClipSize );
+					A_SetTics( smith.m_iPersonaFormTime );
 				}
 			}
 			TNT1 A 0
 			{
-				SmithSyndicate( invoker.owner ).PersonaChangeReady();
+				SmithSyndicate( invoker.owner ).m_fnPersonaChangeReady();
 			}
 			TNT1 A 0 A_StartSound( "dan_aim", CHAN_WEAPON, CHANF_OVERLAP );
 			DANF A 1 bright A_WeaponOffset( 100, 0, 0 );
@@ -85,11 +77,7 @@ Class K7_Dan_Taurus : K7_SmithSyndicate_Weapon
 				return ResolveState( null );
 			}
 			TNT1 A 0 A_WeaponOffset( 0, 32, WOF_INTERPOLATE );
-			TNT1 A 0
-			{
-				SmithSyndicate( invoker.owner ).m_iPersonaCharge = 0;
-			}
-			TNT1 A 0 bright A_FireBullets( 5.6, 0, 1, SmithSyndicate( invoker.owner ).m_iPersonaPrimaryDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
+			TNT1 A 0 bright A_FireBullets( 5.6, 0, 1, SmithSyndicate( invoker.owner ).m_iPersonaGunDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
 			TNT1 A 0 bright A_StartSound( "dan_shoot", CHAN_WEAPON, CHANF_OVERLAP );
 			TNT1 A 0
 			{
@@ -150,9 +138,9 @@ Class K7_Dan_Taurus : K7_SmithSyndicate_Weapon
 			{
 				SmithSyndicate( invoker.owner ).m_iPersonaCharge = 0;
 			}
-			TNT1 A 0 A_StartSound( "dan_special_vo", CHAN_VOICE, 0 );
-			TNT1 A 0 bright A_FireProjectile( "K7_CollateralShot", 0, 1, 0, 0 );
-			//TNT1 A 0 bright A_SetPitch( pitch - 1.5, SPF_INTERPOLATE );
+			TNT1 A 0 A_StartSound( "dan_special", CHAN_WEAPON, CHANF_OVERLAP );
+			TNT1 A 0 A_StartSound( "dan_special_vo", CHAN_VOICE );
+			TNT1 A 0 bright A_FireProjectile( "K7_Dan_CollateralShot", 0, 1, 0, 0 );
 			TNT1 A 0 A_Overlay( -1, "Flash" );
 			DANF B 1 bright;
 			DANF C 1 bright;
@@ -189,8 +177,7 @@ Class K7_Dan_Taurus : K7_SmithSyndicate_Weapon
 			TNT1 A 1 A_Light(1);
 			TNT1 A 1 A_Light(0);
 			Stop;
-		// Reload the weapon
-		// Always reload, regardless of clip/ammo
+		
 		Reload:
 			TNT1 A 0 A_Overlay( -1, "Reload2" );
 			DANF A 0 bright A_StartSound("dan_reload");
@@ -205,51 +192,72 @@ Class K7_Dan_Taurus : K7_SmithSyndicate_Weapon
 			DANF A 1 bright A_WeaponOffset( 66, 16, WOF_INTERPOLATE);
 			DANF A 1 bright A_WeaponOffset( 33, 22, WOF_INTERPOLATE);
 			DANF A 1 bright A_WeaponOffset( 0, 28, WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset( -8, 32 + 8, WOF_INTERPOLATE);
+			DANF A 1 bright A_WeaponOffset( -8, 32 + 4, WOF_INTERPOLATE);
 			DANF A 1 bright A_WeaponOffset( 0, 32, WOF_INTERPOLATE);
-			Goto Ready;
+			DANF A -1;
+			Stop;
 			
 		Reload2:
 			TNT1 A 0
 			{
-				SmithSyndicate( invoker.owner ).m_iPersonaCharge = 0;
-				SmithSyndicate( invoker.owner ).SetSpeed( SmithSyndicate( invoker.owner ).m_fPersonaSpeed_Reloading );
+				let smith = SmithSyndicate( invoker.owner );
+				smith.m_iPersonaCharge = 0;
+				smith.m_fnSetSpeed( smith.m_fPersonaSpeed_Reloading );
 			}
 			TNT1 A 30;
-			TNT1 A 0 A_SetInventory( "K7_Dan_Taurus_Ammo", SmithSyndicate( invoker.owner ).m_iPersonaClipSize );
-			TNT1 A 15;
+			TNT1 A 0 A_SetInventory( "K7_Ammo", SmithSyndicate( invoker.owner ).m_iPersonaGunClipSize );
+			TNT1 A 30;
 			TNT1 A 10
 			{
-				SmithSyndicate( invoker.owner ).SetSpeed( SmithSyndicate( invoker.owner ).m_fPersonaSpeed );
+				let smith = SmithSyndicate( invoker.owner );
+				smith.m_fnSetSpeed( smith.m_fPersonaSpeed );
 			}
 			TNT1 A 0 A_Refire();
-			Stop;
+			Goto Ready;
 	}
 }
-
-// Taurus Ammo
-//
-
-Class K7_Dan_Taurus_Ammo : Ammo
+Class K7_Dan_Taurus_Ammo : K7_Ammo
 {
-	default
+	Default
 	{
 		Inventory.MaxAmount 6;
 		+INVENTORY.IGNORESKILL;
 	}
 }
 
+// DemonGun
+//
+
+Class K7_Dan_DemonGun : K7_Dan_Taurus
+{
+	Default
+	{
+		Weapon.SlotNumber 1;
+		Weapon.AmmoType1 "K7_Dan_DemonGun_Ammo";
+	    Inventory.PickupSound "weapon/getdan";
+		Inventory.Pickupmessage "You got Dan's Taurus.";
+	}
+}
+
+Class K7_Dan_DemonGun_Ammo : K7_Dan_Taurus_Ammo
+{
+	Default
+	{
+		Inventory.MaxAmount 12;
+	}
+}
+
 // Collateral Shot Projectile
 // 
 
-Class K7_CollateralShot : PlasmaBall
+Class K7_Dan_CollateralShot : PlasmaBall
 {
 	Default
 	{
 		Radius 16;
 		Height 8;
 		Speed 20;
-		DamageFunction (450);
+		DamageFunction (400);
 		Projectile;
 		-RANDOMIZE
 		-DEHEXPLOSION
@@ -258,7 +266,7 @@ Class K7_CollateralShot : PlasmaBall
 		+FORCEPAIN
 		RenderStyle "Add";
 		Alpha 1;
-		SeeSound "dan_special";
+		SeeSound "";
 		DeathSound "dan_special_explode";
 	}
 	

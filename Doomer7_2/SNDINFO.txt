@@ -1,16 +1,19 @@
 // Shared
-charge_tube K7_TUBE
-charge_tubea K7_TUBEA
-charge_tubeb K7_TUBEB
-charge_tubec K7_TUBEC
+charge_tube_cancel sound/shared/tube0.ogg
+charge_tubea sound/shared/tube1.ogg
+charge_tubeb sound/shared/tube2.ogg
+charge_tubec sound/shared/tube3.ogg
+charge_tubed sound/shared/tube4.ogg
+charge_tubee sound/shared/tube5.ogg
 
-persona_swap K7_CSWAP
-persona_explode K7_PDISA
-persona_disperse K7_PDISB
-persona_reform K7_PREFM
-persona_scan K7_SCAN
-persona_powera K7_POWA
-persona_powerb K7_POWB
+persona_camswap sound/shared/persona_camswap.ogg
+persona_explode sound/shared/persona_explode.ogg
+persona_disperse sound/shared/persona_disperse.ogg
+persona_reform sound/shared/persona_reform.ogg
+persona_scan sound/shared/scan.ogg
+persona_powera sound/shared/special1.ogg
+persona_powerb sound/shared/special2.ogg
+persona_usefail sound/shared/usefail.ogg
 
 // Garcian
 weapon/getppk GETPPK
@@ -24,6 +27,41 @@ dan_reload sound/dan/reload.ogg
 dan_special sound/dan/special.ogg
 dan_special_vo sound/dan/special_vo.ogg
 dan_special_explode sound/dan/special_explode.ogg
+
+dan_die sound/dan/die.ogg
+dan_hurt1 sound/dan/hurt1.ogg
+dan_hurt2 sound/dan/hurt2.ogg
+dan_hurt3 sound/dan/hurt3.ogg
+dan_hurt4 sound/dan/hurt4.ogg
+dan_hurt5 sound/dan/hurt5.ogg
+dan_hurt6 sound/dan/hurt6.ogg
+dan_hurt7 sound/dan/hurt7.ogg
+dan_hurt8 sound/dan/hurt8.ogg
+dan_hurt9 sound/dan/hurt9.ogg
+dan_hurt10 sound/dan/hurt10.ogg
+dan_hurt11 sound/dan/hurt11.ogg
+dan_hurt12 sound/dan/hurt12.ogg
+$random dan_hurt {
+	dan_hurt1
+	dan_hurt2
+	dan_hurt3
+	dan_hurt4
+	dan_hurt5
+	dan_hurt6
+	dan_hurt7
+	dan_hurt8
+	dan_hurt9
+	dan_hurt10
+	dan_hurt11
+	dan_hurt12
+}
+
+$playeralias k7_dan male *usefail persona_usefail
+$playeralias k7_dan male *pain100 dan_hurt
+$playersounddup k7_dan male *pain75 *pain100
+$playersounddup k7_dan male *pain50 *pain75
+$playersounddup k7_dan male *pain25 *pain50
+$playeralias k7_dan male *death dan_die
 
 // KAEDE
 ked_aim sound/ked/aim.ogg
@@ -59,22 +97,56 @@ con_hurt6 sound/cat/hurt6.ogg
 con_hurt7 sound/cat/hurt7.ogg
 $random con_hurt { con_hurt1 con_hurt2 con_hurt3 con_hurt4 con_hurt5 con_hurt6 con_hurt7 }
 
+$playeralias k7_con male *usefail persona_usefail
 $playeralias k7_con male *pain100 con_hurt
 $playersounddup k7_con male *pain75 *pain100
 $playersounddup k7_con male *pain50 *pain75
 $playersounddup k7_con male *pain25 *pain50
-$playersound k7_con male *death sound/cat/die.ogg
+$playeralias k7_con male *death con_die
+
 
 // MASK
 
 // HarmanYoung
+hay_aim sound/hay/aim.ogg
+
+hay_die sound/hay/die.ogg
+hay_hurt1 sound/hay/hurt1.ogg
+hay_hurt2 sound/hay/hurt2.ogg
+hay_hurt3 sound/hay/hurt3.ogg
+hay_hurt4 sound/hay/hurt4.ogg
+hay_hurt5 sound/hay/hurt5.ogg
+hay_hurt6 sound/hay/hurt6.ogg
+hay_hurt7 sound/hay/hurt7.ogg
+$random hay_hurt {
+	hay_hurt1
+	hay_hurt2
+	hay_hurt3
+	hay_hurt4
+	hay_hurt5
+	hay_hurt6
+	hay_hurt7
+}
+
+$playeralias k7_hay male *usefail persona_usefail
+$playeralias k7_hay male *pain100 hay_hurt
+$playersounddup k7_hay male *pain75 *pain100
+$playersounddup k7_hay male *pain50 *pain75
+$playersounddup k7_hay male *pain25 *pain50
+$playeralias k7_hay male *death hay_die
 
 // HeavenSmile
-vo/hslaugh1 HSLAUGH1
-vo/hslaugh2 HSLAUGH2
-vo/hslaugh3 HSLAUGH3
-vo/hslaugh4 HSLAUGH4
-$random vo/hslaugh { vo/hslaugh1 vo/hslaugh2 vo/hslaugh3 vo/hslaugh4 }
+hs_alert sound/hs/alert.ogg
+hs_hurt1 sound/hs/hurt1.ogg
+hs_snicker1 sound/hs/snicker1.ogg
+hs_snicker2 sound/hs/snicker2.ogg
+hs_snicker3 sound/hs/snicker3.ogg
+hs_laugh1 sound/hs/laugh1.ogg
+hs_laugh2 sound/hs/laugh2.ogg
+hs_laugh3 sound/hs/laugh3.ogg
+hs_laugh4 sound/hs/laugh4.ogg
+
+$random hs_laugh { hs_laugh1 hs_laugh2 hs_laugh3 hs_laugh4 }
 
 // Unsorted
 weapon/getglk GETGLK
@@ -100,7 +172,11 @@ weapon/fireknife FIRKN
 grunt/newAttack NEWATK
 weapon/MaskExplosion MGRS
 
+// Pickups
 
+// Music
+music/title music/title.ogg
+$musicvolume music/title 0.75
 
 meme title
 level1 					raveon

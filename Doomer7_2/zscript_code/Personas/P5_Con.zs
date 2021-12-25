@@ -6,32 +6,29 @@ Class K7_Con_Glock: K7_SmithSyndicate_Weapon
 	default
 	{
 		Weapon.SlotNumber 5;
-		Weapon.AmmoType1 "K7_Con_Glock_Ammo";
-	    Inventory.PickupSound "weapon/getglk";
+		Weapon.AmmoType1 "K7_Ammo";
 		Inventory.Pickupmessage "You got Con's Glocks."; 
 	}
 	
 	States{
 		Spawn:
-		CHED A -1 bright;
-		Loop;
+			CHED A -1 bright;
+			Loop;
 		
 		Select:
 			TNT1 A 0
 			{
-				A_SetTics( SmithSyndicate( invoker.owner).m_iPersonaChangeTime );
-			}
-			TNT1 A 0
-			{
-				if ( SmithSyndicate( invoker.owner).PersonaChangeEnd( 5 ) ) 
+				let smith = SmithSyndicate( invoker.owner );
+				if ( smith.m_fnPersonaChangeEnd( 5 ) ) 
 				{
-					A_SetInventory( "K7_Con_Glock_Ammo", SmithSyndicate( invoker.owner).m_iPersonaClipSize );
-					A_SetTics( SmithSyndicate( invoker.owner ).m_iPersonaFormTime );
+					A_SetInventory( "K7_Ammo", smith.m_iPersonaGunClipSize );
+					A_SetTics( smith.m_iPersonaFormTime );
+					smith.m_iConSpeedTimer = 0;
 				}
 			}
 			TNT1 A 0
 			{
-				SmithSyndicate( invoker.owner ).PersonaChangeReady();
+				SmithSyndicate( invoker.owner ).m_fnPersonaChangeReady();
 			}
 			CONS A 1 bright A_WeaponOffset ( 64, 32 + 128, 0);
 			CONS A 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
@@ -67,8 +64,8 @@ Class K7_Con_Glock: K7_SmithSyndicate_Weapon
 				return ResolveState( null );
 			}
 			TNT1 A 0 bright A_WeaponOffset ( 0, 32, 0);
-			CONS A 0 bright A_FireBullets( 3, 0, 1, SmithSyndicate( invoker.owner).m_iPersonaPrimaryDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
-			CONS A 0 bright A_StartSound( "con_shoot", CHAN_AUTO, CHANF_OVERLAP );
+			CONS A 0 bright A_FireBullets( 3, 0, 1, SmithSyndicate( invoker.owner).m_iPersonaGunDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
+			CONS A 0 bright A_StartSound( "con_shoot", CHAN_WEAPON, CHANF_OVERLAP );
 			TNT1 A 0 A_SetPitch( pitch - 2, 0 );
 			CONS B 1 bright{
 				int num = Random(0,2);
@@ -82,8 +79,8 @@ Class K7_Con_Glock: K7_SmithSyndicate_Weapon
 			}
 			CONS C 1 bright;
 			CONS DE 1 bright;
-			CONS F 0 bright A_FireBullets( 3, 0, 1, SmithSyndicate( invoker.owner).m_iPersonaPrimaryDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
-			CONS F 0 bright A_StartSound( "con_shoot", CHAN_AUTO, CHANF_OVERLAP );
+			CONS F 0 bright A_FireBullets( 3, 0, 1, SmithSyndicate( invoker.owner).m_iPersonaGunDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
+			CONS F 0 bright A_StartSound( "con_shoot", CHAN_WEAPON, CHANF_OVERLAP );
 			TNT1 A 0 A_SetPitch( pitch + 4, SPF_INTERPOLATE );
 			CONS F 2 bright
 			{
@@ -116,16 +113,19 @@ Class K7_Con_Glock: K7_SmithSyndicate_Weapon
 		Altfire:
 			TNT1 A 0
 			{
-				if ( SmithSyndicate( invoker.owner ).m_iConSpeedTimer > 0 || invoker.ammo2.amount < 1 ){
+				let smith = SmithSyndicate( invoker.owner );
+				if ( smith.m_iConSpeedTimer > 0 || invoker.ammo2.amount < 1 )
+				{
 					return ResolveState("Ready");
 				}
 				A_TakeInventory( "K7_ThinBlood", 1 );
+				smith.m_iConSpeedTimer = 35 * 5;
 				return ResolveState( "Special" );
 			}
 		Special:
 			CONS A 1 bright
 			{
-				SmithSyndicate( invoker.owner ).SetSpeed( 0 );
+				SmithSyndicate( invoker.owner ).m_fnSetSpeed( 0 );
 				A_StartSound( "persona_powera", CHAN_BODY, CHANF_OVERLAP );
 			}
 			CONS A 1 bright A_WeaponOffset ( 0, 32, 0);
@@ -147,8 +147,8 @@ Class K7_Con_Glock: K7_SmithSyndicate_Weapon
 			TNT1 A 0
 			{
 				let smith = SmithSyndicate( invoker.owner );
-				smith.m_fPersonaSpeed_Factor = 2;
-				smith.SetSpeed( smith.m_fPersonaSpeed );
+				smith.m_fPersonaSpeed_Factor = smith.m_fPersonaSpecialFactor;
+				smith.m_fnSetSpeed( smith.m_fPersonaSpeed );
 				smith.m_iConSpeedTimer = 35 * 20;
 			}
 			CONS A 1 bright A_WeaponOffset ( 64, 32 + 128, 0);
@@ -238,20 +238,20 @@ Class K7_Con_Glock: K7_SmithSyndicate_Weapon
 			TNT1 A 20
 			{
 				let smith = SmithSyndicate( invoker.owner );
-				smith.SetSpeed( smith.m_fPersonaSpeed_Reloading );
+				smith.m_fnSetSpeed( smith.m_fPersonaSpeed_Reloading );
 			}
 			TNT1 A 10
 			{
 				let smith = SmithSyndicate( invoker.owner );
-				smith.SetSpeed( 0 );
+				smith.m_fnSetSpeed( 0 );
 				smith.friction = 0.95;
 			}
-			TNT1 A 10 A_SetInventory( "K7_Con_Glock_Ammo", SmithSyndicate( invoker.owner).m_iPersonaClipSize );
+			TNT1 A 0 A_SetInventory( "K7_Ammo", SmithSyndicate( invoker.owner ).m_iPersonaGunClipSize );
+			TNT1 A 10;
 			TNT1 A 0
 			{
 				let smith = SmithSyndicate( invoker.owner );
-				smith.SetSpeed( smith.m_fPersonaSpeed );
-				smith.friction = 1;
+				smith.m_fnSetSpeed( smith.m_fPersonaSpeed );
 			}
 			TNT1 A 10;
 			TNT1 A 0 A_ReFire;
@@ -259,9 +259,9 @@ Class K7_Con_Glock: K7_SmithSyndicate_Weapon
 	}
 }
 
-Class K7_Con_Glock_Ammo : Ammo
+Class K7_Con_Glock_Ammo : K7_Ammo
 {
-	default
+	Default
 	{
 		Inventory.MaxAmount 20;
 		+INVENTORY.IGNORESKILL;

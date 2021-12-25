@@ -5,15 +5,11 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 {
 	default{
 		Weapon.SlotNumber 4;
-		Weapon.AmmoType1 "K7_Coyote_Enfield2_Ammo";
 	    Inventory.PickupSound "weapon/getrev";
 		Inventory.Pickupmessage "You got Coyote's Modified Enfield No.2."; 
 	}
 	
-	void DoubleTap()
-	{
-		
-	}
+	int m_iRefireLevel;
 		
 	States
 	{
@@ -23,19 +19,16 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 		Select:
 			TNT1 A 0
 			{
-				A_SetTics( SmithSyndicate( invoker.owner).m_iPersonaChangeTime );
-			}
-			TNT1 A 0
-			{
-				if ( SmithSyndicate( invoker.owner).PersonaChangeEnd( 4 ) ) 
+				let smith = SmithSyndicate( invoker.owner );
+				if ( smith.m_fnPersonaChangeEnd( 4 ) ) 
 				{
-					A_SetInventory( "K7_Coyote_Enfield2_Ammo", 6 );
-					A_SetTics( SmithSyndicate( invoker.owner).m_iPersonaFormTime );
+					A_SetInventory( "K7_Ammo", smith.m_iPersonaGunClipSize );
+					A_SetTics( smith.m_iPersonaFormTime );
 				}
 			}
 			TNT1 A 0
 			{
-				SmithSyndicate( invoker.owner ).PersonaChangeReady();
+				SmithSyndicate( invoker.owner ).m_fnPersonaChangeReady();
 			}
 			COYO A 1 bright A_WeaponOffset ( 180, 100, 0 );
 			COYO A 1 bright A_WeaponOffset ( 150, 70, WOF_INTERPOLATE );
@@ -85,7 +78,7 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 				}
 				else
 				{
-					A_FireBullets( 5.6, 0, 1, smith.m_iPersonaPrimaryDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
+					A_FireBullets( 5.6, 0, 1, smith.m_iPersonaGunDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
 					A_StartSound("weapon/coyoteshoot",CHAN_AUTO,CHANF_OVERLAP);
 				}
 				smith.m_iPersonaCharge = 0;
@@ -194,14 +187,14 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 			COYO A 1 bright A_WeaponOffset (50,32,WOF_INTERPOLATE);
 			TNT1 A 0
 			{
-				SmithSyndicate( invoker.owner ).SetSpeed( SmithSyndicate( invoker.owner ).m_fPersonaSpeed_Reloading );
+				SmithSyndicate( invoker.owner ).m_fnSetSpeed( SmithSyndicate( invoker.owner ).m_fPersonaSpeed_Reloading );
 			}
 			COYO A 1 bright A_WeaponOffset (70,32,WOF_INTERPOLATE);
 			COYO A 1 bright A_WeaponOffset (90,32,WOF_INTERPOLATE);
 			COYO A 1 bright A_WeaponOffset (120,32,WOF_INTERPOLATE);
 			COYO A 1 bright A_WeaponOffset (150,32,WOF_INTERPOLATE);
 			COYO A 1 bright A_WeaponOffset (180,32,WOF_INTERPOLATE);
-			TNT1 A 0 A_SetInventory( "K7_Coyote_Enfield2_Ammo", 6 ) ;
+			TNT1 A 0 A_SetInventory( "K7_Ammo", SmithSyndicate( invoker.owner ).m_iPersonaGunClipSize );
 			TNT1 A 20;
 			COYO A 1 bright A_WeaponOffset (180,32,WOF_INTERPOLATE);
 			COYO A 1 bright A_WeaponOffset (150,32,WOF_INTERPOLATE);
@@ -213,7 +206,7 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 			COYO A 1 bright A_WeaponOffset (20,32,WOF_INTERPOLATE);
 			TNT1 A 0
 			{
-				SmithSyndicate( invoker.owner ).SetSpeed( SmithSyndicate( invoker.owner ).m_fPersonaSpeed );
+				SmithSyndicate( invoker.owner ).m_fnSetSpeed( SmithSyndicate( invoker.owner ).m_fPersonaSpeed );
 			}
 			COYO A 1 bright A_WeaponOffset (10,32,WOF_INTERPOLATE);
 			COYO A 1 bright A_WeaponOffset (0,32,WOF_INTERPOLATE);
@@ -222,9 +215,10 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 	}
 }
 
-Class K7_Coyote_Enfield2_Ammo: Ammo{
-	default{
+Class K7_Coyote_Enfield2_Ammo: K7_Ammo
+{
+	Default
+	{
 		Inventory.MaxAmount 6;
-		+INVENTORY.IGNORESKILL;
 	}
 }

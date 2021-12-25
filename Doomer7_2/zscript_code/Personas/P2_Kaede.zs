@@ -1,6 +1,3 @@
-// Tick while currently KAEDE
-//
-
 // Hardballer weapon
 //
 
@@ -9,7 +6,6 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 	default
 	{
 		Weapon.SlotNumber 2;
-		Weapon.AmmoType1 "K7_Kaede_Hardballer_Ammo";
 	    Inventory.PickupSound "weapon/gethar";
 		Inventory.Pickupmessage "You got Kaede's Hardballer.";
 	}
@@ -27,20 +23,18 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 		Select:
 			TNT1 A 0
 			{
-				A_SetTics( SmithSyndicate( invoker.owner).m_iPersonaChangeTime );
-			}
-			TNT1 A 0
-			{
+				invoker.m_bZoom = false;
+				invoker.m_bZoomedIn = false;
 				let smith = SmithSyndicate( invoker.owner );
-				if ( smith.PersonaChangeEnd( 2 ) ) 
+				if ( smith.m_fnPersonaChangeEnd( 2 ) ) 
 				{
-					A_SetInventory( "K7_Kaede_Hardballer_Ammo", smith.m_iPersonaClipSize );
+					A_SetInventory( "K7_Ammo", smith.m_iPersonaGunClipSize );
 					A_SetTics( smith.m_iPersonaFormTime );
 				}
 			}
 			TNT1 A 0
 			{
-				SmithSyndicate( invoker.owner ).PersonaChangeReady();
+				SmithSyndicate( invoker.owner ).m_fnPersonaChangeReady();
 			}
 			TNT1 A 0 bright A_Raise;
 			KAED A 1 bright A_WeaponOffset(0,165,0);
@@ -60,6 +54,8 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 			TNT1 A 0
 			{
 				invoker.m_bZoom = false;
+				invoker.m_bZoomedIn = false;
+				SmithSyndicate( invoker.owner ).m_fnSetStatic( false );
 			}
 			TNT1 A 0 A_ZoomFactor (1);
 			TNT1 A 0 A_Overlay( -1, "ChangePersona" );
@@ -85,7 +81,7 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 		ReadyZoomed:
 			TNT1 A 0
 			{
-				SmithSyndicate( invoker.owner ).SetStatic( true );
+				SmithSyndicate( invoker.owner ).m_fnSetStatic( true );
 			}
 			TNT1 A 1 A_WeaponReady(WRF_ALLOWRELOAD);
 			Goto Ready;
@@ -95,7 +91,7 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 			TNT1 A 0 A_JumpIf( invoker.m_bZoomedIn, "FireZoomed" );
 			TNT1 A 0 bright A_JumpIfNoAmmo("Reload");
 			TNT1 A 0 bright A_StartSound( "ked_shoot", CHAN_WEAPON, CHANF_OVERLAP );
-			TNT1 A 0 bright A_FireBullets( 5.6, 0, 1, SmithSyndicate( invoker.owner ).m_iPersonaPrimaryDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
+			TNT1 A 0 bright A_FireBullets( 5.6, 0, 1, SmithSyndicate( invoker.owner ).m_iPersonaGunDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
 			KAED B 1 bright;
 			TNT1 A 0 bright A_SetPitch( pitch - 2, SPF_INTERPOLATE );
 			KAED C 2 bright A_SetPitch( pitch - 1, SPF_INTERPOLATE );
@@ -112,7 +108,7 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 			TNT1 A 0 A_JumpIfNoAmmo( "Reload" );
 			TNT1 A 0 A_StartSound( "ked_shoot", CHAN_WEAPON, CHANF_OVERLAP );
 			TNT1 A 0 A_SetBlend("E6F63F",.25,10);
-			TNT1 A 0 A_FireBullets( 5.6, 0, 1, SmithSyndicate( invoker.owner ).m_iPersonaPrimaryDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
+			TNT1 A 0 A_FireBullets( 0, 0, 1, SmithSyndicate( invoker.owner ).m_iPersonaGunDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
 			TNT1 A 2
 			{
 				int num = Random( 0,2 );
@@ -161,16 +157,15 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 			}
 			TNT1 A 0
 			{
-				SmithSyndicate( invoker.owner ).SetStatic( false );
+				SmithSyndicate( invoker.owner ).m_fnSetStatic( false );
 			}
 			TNT1 A 0 A_ZoomFactor( 1 );
-			
 			Goto Ready;
 			
 		Reload:
 			TNT1 A 0
 			{
-				SmithSyndicate( invoker.owner ).SetStatic( false );
+				SmithSyndicate( invoker.owner ).m_fnSetStatic( false );
 			}
 			TNT1 A 0 {
 				invoker.m_bZoomedIn = false;
@@ -187,7 +182,7 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 			KAED A 1 bright A_WeaponOffset(0,105,WOF_INTERPOLATE);
 			KAED A 1 bright A_WeaponOffset(0,135,WOF_INTERPOLATE);
 			KAED A 1 bright A_WeaponOffset(0,165,WOF_INTERPOLATE);
-			TNT1 A 0 A_SetInventory( "K7_Kaede_Hardballer_Ammo", SmithSyndicate( invoker.owner ).m_iPersonaClipSize );
+			TNT1 A 0 A_SetInventory( "K7_Ammo", SmithSyndicate( invoker.owner ).m_iPersonaGunClipSize );
 			TNT1 A 104;
 			KAED A 1 bright A_WeaponOffset(0,165,0);
 			KAED A 1 bright A_WeaponOffset(0,135,WOF_INTERPOLATE);
@@ -231,11 +226,10 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 	}
 }
 
-Class K7_Kaede_Hardballer_Ammo: Ammo
+Class K7_Kaede_Hardballer_Ammo: K7_Ammo
 {
 	default
 	{
 		Inventory.MaxAmount 10;
-		+INVENTORY.IGNORESKILL;
 	}
 }

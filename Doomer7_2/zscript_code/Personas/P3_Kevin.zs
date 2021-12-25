@@ -3,8 +3,6 @@ Class K7_Kevin_ThrowingKnife: K7_SmithSyndicate_Weapon
 	default
 	{
 		Weapon.SlotNumber 3;
-		Weapon.SelectionOrder 800; 
-		Weapon.AmmoUse1 1;
 	    Inventory.PickupSound "weapon/getknife";
 		Inventory.Pickupmessage "You got a Kevin's Throwing Knives.";
 	}
@@ -27,19 +25,16 @@ Class K7_Kevin_ThrowingKnife: K7_SmithSyndicate_Weapon
 		Select:
 			TNT1 A 0
 			{
-				A_SetTics( SmithSyndicate( invoker.owner).m_iPersonaChangeTime );
-			}
-			TNT1 A 0
-			{
-				if ( SmithSyndicate( invoker.owner).PersonaChangeEnd( 3 ) ) 
+				let smith = SmithSyndicate( invoker.owner );
+				if ( smith.m_fnPersonaChangeEnd( 3 ) ) 
 				{
-					A_SetInventory( "K7_Dan_Taurus_Ammo", SmithSyndicate( invoker.owner ).m_iPersonaClipSize );
-					A_SetTics( SmithSyndicate( invoker.owner ).m_iPersonaFormTime );
+					A_SetInventory( "K7_Ammo", smith.m_iPersonaGunClipSize );
+					A_SetTics( smith.m_iPersonaFormTime );
 				}
 			}
 			TNT1 A 0
 			{
-				SmithSyndicate( invoker.owner ).PersonaChangeReady();
+				SmithSyndicate( invoker.owner ).m_fnPersonaChangeReady();
 			}
 			TNT1 A 0 bright A_Raise;
 			KEVI A 1 bright A_WeaponOffset(0,145,0);
@@ -88,7 +83,7 @@ Class K7_Kevin_ThrowingKnife: K7_SmithSyndicate_Weapon
 			KEVI BCS 1 bright;
 			TNT1 A 4;
 			KEVI DEFG 1 bright;
-			KEVI H 0 bright A_FireBullets( 3, 0, 1, SmithSyndicate( invoker.owner ).m_iPersonaPrimaryDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
+			KEVI H 0 bright A_FireBullets( 3, 0, 1, SmithSyndicate( invoker.owner ).m_iPersonaGunDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
 			TNT1 A 0 bright A_SetBlend("E6F63F",.25,7);
 			KEVI H 0 bright A_StartSound("weapon/fireknife",CHAN_AUTO,CHANF_OVERLAP);
 			KEVI H 1 bright A_Overlay(-1,"Flash");
@@ -125,7 +120,8 @@ Class K7_Kevin_ThrowingKnife: K7_SmithSyndicate_Weapon
 }
 
 Class KevinInvisibility: PowerInvisibility{
-	default{
+	Default
+	{
 		Powerup.Duration -15;
 		inventory.maxamount 1; 
 	}

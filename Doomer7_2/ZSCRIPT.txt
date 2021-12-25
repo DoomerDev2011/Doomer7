@@ -1,17 +1,18 @@
 version "4.6.0"
 
-// Smith Syndicate
-#include "zscript_code/P_Syndicate.zs"
-#include "zscript_code/P0_Garcian.zs"
-#include "zscript_code/P1_Dan.zs"
-#include "zscript_code/P2_Kaede.zs"
-#include "zscript_code/P3_Kevin.zs"
-#include "zscript_code/P4_Coyote.zs"
-#include "zscript_code/P5_Con.zs"
-#include "zscript_code/P6_Mask.zs"
-#include "zscript_code/P7_HarmanYoung.zs"
+#include "zscript_code/BaseWeapon.zs"
+#include "zscript_code/Blood.zs"
 
-#include "zscript_code/SniperGun.zs"
+// Smith Syndicate
+#include "zscript_code/SmithSyndicate.zs"
+#include "zscript_code/Personas/P0_Garcian.zs"
+#include "zscript_code/Personas/P1_Dan.zs"
+#include "zscript_code/Personas/P2_Kaede.zs"
+#include "zscript_code/Personas/P3_Kevin.zs"
+#include "zscript_code/Personas/P4_Coyote.zs"
+#include "zscript_code/Personas/P5_Con.zs"
+#include "zscript_code/Personas/P6_Mask.zs"
+#include "zscript_code/Personas/P7_HarmanYoung.zs"
 
 #include "zscript_code/Models.zs"
 #include "zscript_code/pickups.zs"
