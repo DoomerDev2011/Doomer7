@@ -6,6 +6,7 @@ gameinfo{
 clearskills
 skill normal
 {
+	DefaultSkill
 	name = "Normal"
 	MustConfirm = "Helpful hints and other features make the game proceed relatively smoothly"
 	Key = "1"
@@ -23,6 +24,8 @@ skill deadly
 	key = "2"
 	textcolor = "purple"
 	
+	DamageFactor = 1.25
+	
 	SpawnFilter = Hard
 	ACSReturn = 3
 }
@@ -34,6 +37,8 @@ skill bloodbath
 	MustConfirm = "A new personality will awaken."
 	key = "3"
 	textcolor = "darkred"
+	
+	DamageFactor = 1.5
 	
 	SpawnFilter = Nightmare
 	ACSReturn = 4

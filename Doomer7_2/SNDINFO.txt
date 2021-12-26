@@ -5,7 +5,6 @@ charge_tubeb sound/shared/tube2.ogg
 charge_tubec sound/shared/tube3.ogg
 charge_tubed sound/shared/tube4.ogg
 charge_tubee sound/shared/tube5.ogg
-
 persona_camswap sound/shared/persona_camswap.ogg
 persona_explode sound/shared/persona_explode.ogg
 persona_disperse sound/shared/persona_disperse.ogg
@@ -67,6 +66,8 @@ $playeralias k7_dan male *death dan_die
 ked_aim sound/ked/aim.ogg
 ked_shoot sound/ked/shoot.ogg
 ked_reload sound/ked/reload.ogg
+ked_zoomin sound/ked/zoom_in.ogg
+ked_zoomout sound/ked/zoom_out.ogg
 
 // Kevin
 
@@ -76,10 +77,43 @@ weapon/coyotereload RREV
 weapon/coyoteaim CYOAIM
 weapon/coyotespecial CYOSP
 weapon/coyotecharge CYOSPOK
-
 vo/cyocrit CYOCRIT
 
+cyo_aim sound/cyo/aim.ogg
+cyo_shoot sound/cyo/shoot.ogg
+cyo_reload RREV //sound/cyo/reload.ogg <- make ogg of rrev pls
+cyo_special sound/cyo/special.ogg
+cyo_reloading1 sound/cyo/reloading1.ogg
+cyo_reloading2 sound/cyo/reloading2.ogg
+cyo_reloading3 sound/cyo/reloading3.ogg
+cyo_reloading4 sound/cyo/reloading4.ogg
+cyo_reloading5 sound/cyo/reloading5.ogg
+
+cyo_die sound/cyo/die.ogg
 cyo_hurt1 sound/cyo/hurt1.ogg
+cyo_hurt2 sound/cyo/hurt2.ogg
+cyo_hurt3 sound/cyo/hurt3.ogg
+cyo_hurt4 sound/cyo/hurt4.ogg
+cyo_hurt5 sound/cyo/hurt5.ogg
+cyo_hurt6 sound/cyo/hurt6.ogg
+cyo_hurt7 sound/cyo/hurt7.ogg
+$random cyo_hurt {
+	cyo_hurt1
+	cyo_hurt2
+	cyo_hurt3
+	cyo_hurt4
+	cyo_hurt5
+	cyo_hurt6
+	cyo_hurt7
+}
+
+$playeralias k7_cyo male *usefail persona_usefail
+$playeralias k7_cyo male *pain100 cyo_hurt
+$playersounddup k7_cyo male *pain75 *pain100
+$playersounddup k7_cyo male *pain50 *pain75
+$playersounddup k7_cyo male *pain25 *pain50
+$playeralias k7_cyo male *death cyo_die
+
 
 // Con
 con_aim sound/cat/aim.ogg
@@ -107,8 +141,24 @@ $playeralias k7_con male *death con_die
 
 // MASK
 
+
 // HarmanYoung
 hay_aim sound/hay/aim.ogg
+hay_shoot1 sound/hay/shoot1.ogg
+hay_shoot2 sound/hay/shoot2.ogg
+hay_shoot3 sound/hay/shoot3.ogg
+$random hay_shoot {
+	hay_shoot1
+	hay_shoot2
+	hay_shoot3
+}
+hay_shell sound/hay/shell.ogg
+hay_reload_fast sound/hay/reload_fast.ogg
+hay_reloading1 sound/hay/reloading1.ogg
+hay_reloading2 sound/hay/reloading2.ogg
+hay_reloading3 sound/hay/reloading3.ogg
+hay_reloading4 sound/hay/reloading4.ogg
+hay_reloading_done sound/hay/reloading_done.ogg
 
 hay_die sound/hay/die.ogg
 hay_hurt1 sound/hay/hurt1.ogg
@@ -141,11 +191,11 @@ hs_hurt1 sound/hs/hurt1.ogg
 hs_snicker1 sound/hs/snicker1.ogg
 hs_snicker2 sound/hs/snicker2.ogg
 hs_snicker3 sound/hs/snicker3.ogg
+$random hs_snicker { hs_snicker1 hs_snicker2 hs_snicker3 }
 hs_laugh1 sound/hs/laugh1.ogg
 hs_laugh2 sound/hs/laugh2.ogg
 hs_laugh3 sound/hs/laugh3.ogg
 hs_laugh4 sound/hs/laugh4.ogg
-
 $random hs_laugh { hs_laugh1 hs_laugh2 hs_laugh3 hs_laugh4 }
 
 // Unsorted

@@ -98,24 +98,18 @@ Class K7_Mask_M79: K7_SmithSyndicate_Weapon
 			TNT1 A 0 A_Refire();
 			Goto Ready;
 		
-		Altfire:
+		AltFire:
+		UseSpecial:
+			TNT1 A 0 A_Overlay( -1, "ChargeTube" );
 			Goto Ready;
+			
 			TNT1 A 0
 			{
-				if (invoker.singleFire == false)
-				{
-					invoker.singleFire = true;
-					return ResolveState("LeftFire");
+				if ( invoker.ammo2.amount < 3 ){
+					return ResolveState( "Ready" );
 				}
-				else
-				{
-					invoker.singleFire = false;
-					return ResolveState("RightFire");
-					
-				}
-				return ResolveState(null);
+				return ResolveState( null );
 			}
-			Goto Ready;
 		
 		LeftFire:
 			MASL A 0 bright A_JumpIfNoAmmo( "Reload" );
@@ -213,7 +207,7 @@ Class K7_Mask_M79_Grenade: Actor
 	{
 		PROJECTILE;
 		+HEXENBOUNCE
-		-NOGRAVITY
+		//-NOGRAVITY
 		+EXPLODEONWATER
 		Radius 11;
 		Height 8;

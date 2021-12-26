@@ -61,10 +61,11 @@ Class K7_HarmanYoung_Tommygun: K7_SmithSyndicate_Weapon
 		
 		Fire: 
 			YHAR A 0 A_JumpIfNoAmmo( "Reload" );
-			#### # 0 A_StartSound( "weapon/firetmg", CHAN_AUTO, CHANF_OVERLAP );
+			#### # 0 A_StartSound( "hay_shoot", CHAN_AUTO, CHANF_OVERLAP );
 			#### # 0 A_Overlay( -1, "Fire_Bullet" );
-			#### # 0 A_Overlay( -1, "Recoil" );
-			#### B 1 bright {
+			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
+			#### B 1 bright
+			{
 				int num = Random(0,2);
 				if(num == 0){
 					A_Overlay(-1,"Flash1");
@@ -79,12 +80,9 @@ Class K7_HarmanYoung_Tommygun: K7_SmithSyndicate_Weapon
 			Goto Ready;
 		
 		Recoil:
-			TNT1 A 0 A_SetPitch( pitch + Random( -2, 1 ), SPF_INTERPOLATE );
-			TNT1 A 0 A_SetAngle( angle + Random( -1, 1 ), SPF_INTERPOLATE );
-			TNT1 A 1;
-			TNT1 A 1 A_SetPitch( pitch - 1.5 );
-			TNT1 A 1 A_SetPitch( Pitch + 3 );
-			TNT1 A 1 A_SetPitch( Pitch - 1.5 );
+			TNT1 A 0 A_SetPitch( pitch + frandom( -2, 1 ), 0 );
+			TNT1 A 1 A_SetAngle( angle + frandom( -1.2, 1.2 ), 0 );
+			TNT1 A 1 A_Overlay( LAYER_RECOIL, "Recoil_Generic" );
 			Stop;
 		
 		Flash1:

@@ -14,19 +14,26 @@ highp float rand(vec2 co)
 
 void kaede_static()
 {
+	float in_ratio = clamp( timer / 35, 0, 1 );
+	float scale = 8;
     vec2 coords = TexCoord;
-    coords.x = round( coords.x * resX ) / resX;
-    coords.y = round( coords.y * resY ) / resY;
+    coords.x = ( round( coords.x * ( resX ) ) / ( resX ) ) * scale;
+    coords.y = ( round( coords.y * ( resY ) ) / ( resY ) ) * scale;
     float noise = rand( coords.xy * timer );
-	float alpha = clamp( ( 1 - ( timer / 10 ) ), 0.33, 1.0 );
-    vec4 stat = vec4(1,1,1,1) * mod( timer * noise.x, 1 );
+	float alpha = mix( 0.9, 0.33, in_ratio );
+    vec4 stat = vec4( 1, 1, 1, 1 ) * mod( timer * noise.x + ( TexCoord.y ), 1 );
+	
+	stat[0] = mod( noise.x * 45, 1 );
+	stat[1] = mod( noise.x + 0.33, 1 );
+	stat[3] = mod( noise.x + 0.66, 1 );
 	
     FragColor = mix( vec4( texture( InputTexture, TexCoord ) ), stat, alpha );
 }
 
 void main()
 {
-	if ( true )
+	FragColor = vec4( texture( InputTexture, TexCoord ) );
+	if ( timer > 0 )
 	{
 		kaede_static();
 	}

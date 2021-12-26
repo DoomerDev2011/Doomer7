@@ -30,14 +30,10 @@ Class SmithSyndicate : DoomPlayer
 		Player.StartItem "K7_Mask_M79";
 		
 		// HarmanYoung
-		
-		// GIVE THIS ON HARDEST MODE
-		//Player.StartItem "K7_HarmanYoung_Tommygun";
+		// Given on Deadly difficulty
 		
 		
 	}
-	
-	Actor ptr;
 	
 	override void Tick()
     {
@@ -47,14 +43,25 @@ Class SmithSyndicate : DoomPlayer
 	
 	void m_fnSyndicateTick()
 	{
+		// Init
 		if ( !m_bInitSyndicateReady )
 		{
 			m_bInitSyndicateReady = true;
+			m_fnPersonaChangeEnd( m_iPersonaCurrent );
+			m_fnPersonaChangeReady();
 			int sk = G_SkillPropertyInt( SKILLP_ACSReturn );
 			if ( sk >= 4 )
 			{
 				A_SetInventory( "K7_HarmanYoung_Tommygun", 1 );
 			}
+			A_SetInventory( "K7_Ammo", m_iPersonaGunClipSize );
+		}
+		if ( false && m_iPersonaCurrent != 3 )
+		{
+			// Breathing
+			float breather = ( level.time * 2 );
+			A_SetAngle( angle + cos( breather ) / 20, SPF_INTERPOLATE );
+			A_SetPitch( pitch + sin( breather * 0.5 ) / 16, SPF_INTERPOLATE );
 		}
 		switch ( m_iPersonaCurrent )
 		{
@@ -117,8 +124,16 @@ Class SmithSyndicate : DoomPlayer
 	
 	int m_iPersonaGunClipSize;
 	int m_iPersonaGunDamage;
+	float m_fPersonaGunDamage_Factor;
 	float m_fPersonaGunSpread;
+	float m_fPersonaGunSpread_Factor ;
+	int m_iPersonaGunReloadTime;
+	int m_fPersonaGunReloadTime_Factor;
+	float m_fPersonaGunRecoil;
+	float m_fPersonaGunRecoil_Factor;
 	int m_iPersonaGunFlags;
+	bool m_bPersonaGunSilenced;
+	
 	
 	// Speed
 	//
@@ -200,24 +215,31 @@ Class SmithSyndicate : DoomPlayer
 	
 	bool m_fnPersonaChangeEnd( int persona )
 	{
-		ViewBob = 0.66;
+		ViewBob = 1;
 		SoundClass = "k7_dan";
 		
 		// Character Stats
 		m_fPersonaVitality = 100;
 		m_iPersonaChargeMax = 0;
-		m_fPersonaSpeed = 0.9;
-		m_fPersonaSpeed_Reloading = 0.5;
+		m_fPersonaSpeed = 1.1;
+		m_fPersonaSpeed_Reloading = m_fPersonaSpeed * 0.66;
 		m_fPersonaSpeed_Factor = 1;
-		m_iPersonaHeight = 52;
+		m_iPersonaHeight = 64;
 		m_fPersonaJumpZ = 0;
 		m_fPersonaSpecialFactor = 1;
 		
 		// Weapon Stats
+		m_bPersonaGunSilenced = false;
 		m_iPersonaGunClipSize = 0;
 		m_iPersonaGunDamage = 15;
+		m_fPersonaGunDamage_Factor = 1;
 		m_fPersonaGunSpread = 3.15;
+		m_fPersonaGunSpread_Factor = 1;
+		m_iPersonaGunReloadTime = 47;
+		m_fPersonaGunReloadTime_Factor = 1;
 		m_iPersonaGunFlags = FBF_USEAMMO|FBF_NORANDOM|FBF_NORANDOMPUFFZ;
+		
+		
 		switch( persona )
 		{
 			case 0: // Garcian
@@ -226,23 +248,25 @@ Class SmithSyndicate : DoomPlayer
 				m_iPersonaGunClipSize = 5;
 				m_iPersonaGunDamage = 8;
 				m_fPersonaGunSpread = 0;
+				m_bPersonaGunSilenced = true;
 				break;
 			case 1: // Dan
 				SoundClass = "k7_dan";
 				m_iPersonaGunClipSize = 6;
 				m_iPersonaChargeMax = 3;
 				m_iPersonaGunDamage = 40;
+				m_fPersonaGunSpread = 0.33;
 				break;
 			case 2: // KAEDE
 				SoundClass = "k7_ked";
 				m_iPersonaHeight = 48;
-				m_fPersonaSpeed = 0.85;
+				m_fPersonaSpeed *= 0.85;
 				m_iPersonaGunClipSize = 10;
 				m_iPersonaGunDamage = 35;
 				break;
 			case 3: // Kevin
 				SoundClass = "";
-				m_fPersonaSpeed = 0.975;
+				m_fPersonaSpeed *= 0.975;
 				m_iPersonaGunClipSize = 1;
 				m_fPersonaSpeed_Reloading = m_fPersonaSpeed;
 				m_iPersonaGunDamage = 25;
@@ -258,11 +282,12 @@ Class SmithSyndicate : DoomPlayer
 			case 5: // Con
 				SoundClass = "k7_con";
 				m_iPersonaHeight = 35;
-				m_fPersonaSpeed = 1.33;
-				m_fPersonaSpeed_Reloading = 0.66;
+				m_fPersonaSpeed *= 1.33;
+				m_fPersonaSpeed_Reloading = m_fPersonaSpeed * 0.75;
 				m_iPersonaGunClipSize = 20;
-				m_iPersonaGunDamage = 9;
-				m_fPersonaSpecialFactor = 1.5;
+				m_iPersonaGunDamage = 11;
+				m_iPersonaGunReloadTime = 35;
+				m_fPersonaSpecialFactor = 2.25;
 				break;
 			case 6: // MASK
 				SoundClass = "k7_msk";
@@ -272,7 +297,7 @@ Class SmithSyndicate : DoomPlayer
 				SoundClass = "k7_hay";
 				m_iPersonaGunDamage = 30;
 				m_iPersonaGunClipSize = 50;
-				m_fPersonaSpeed = 0.92;
+				m_fPersonaSpeed *= 0.92;
 				break;
 		}
 		
@@ -294,8 +319,15 @@ Class SmithSyndicate : DoomPlayer
 	
 	void m_fnPersonaChangeReady()
 	{
+		m_fnPersonaApplyStats();
+	}
+	
+	void m_fnPersonaApplyStats()
+	{
 		m_fnSetSpeed( m_fPersonaSpeed );
 		JumpZ = m_fPersonaJumpZ;
+		Height = m_iPersonaHeight;
+		FullHeight = m_iPersonaHeight;
 	}
 	
 	// Dan
@@ -313,7 +345,9 @@ Class SmithSyndicate : DoomPlayer
 	
 	void m_fnKaedeTick()
 	{
-		Shader.SetUniform1i( player, "Static", "timer", level.time );
+		Shader.SetUniform1i( player, "Static", "timer", level.time - m_iStaticStart );
+		Shader.SetUniform1i( player, "Static", "resX", Screen.GetWidth() / 1 );
+		Shader.SetUniform1i( player, "Static", "resY", Screen.GetHeight() / 1 );
 	}
 	
 	void m_fnSetStatic( bool on )
@@ -327,10 +361,11 @@ Class SmithSyndicate : DoomPlayer
 		}
 		else if ( on == true )
 		{
-			m_iStaticStart = level.time;
 			A_StartSound( "weapon/statichard", CHAN_6, CHANF_LOOPING, 0.5 );
+			m_iStaticStart = level.time;
         }
-		Shader.SetUniform1i( player, "Static", "timer", level.time - m_iStaticStart );
+		int time = ( level.time - m_iStaticStart );
+		Shader.SetUniform1i( player, "Static", "timer", time - m_iStaticStart );
 		Shader.SetUniform1i( player, "Static", "resX", Screen.GetWidth() / 1 );
 		Shader.SetUniform1i( player, "Static", "resY", Screen.GetHeight() / 1 );
 		Shader.SetEnabled( player, "Static", on );
