@@ -5,6 +5,10 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 {
 	default{
 		Weapon.SlotNumber 4;
+		Weapon.BobSpeed 1.7;
+		Weapon.BobRangeX 0.4;
+		Weapon.BobRangeY 2;
+		
 	    Inventory.PickupSound "weapon/getrev";
 		Inventory.Pickupmessage "You got Coyote's Modified Enfield No.2."; 
 	}
@@ -53,10 +57,10 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 			#### # 0
 			{
 				let smith = SmithSyndicate( invoker.owner );
-				if ( smith.m_iPersonaCharge > 0 && invoker.ammo2.amount > 0 )
+				if ( smith.m_iPersonaGunCharge > 0 && invoker.ammo2.amount > 0 )
 				{
 					float spread = smith.m_fPersonaGunSpread * 0.5;
-					A_FireBullets( spread, spread, 1, 150, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
+					A_FireBullets( spread, spread, 1, 175, "K7_BulletPuff", FBF_USEAMMO|FBF_NORANDOM );
 					A_Overlay( LAYER_RECOIL, "Recoil" );
 					A_StartSound( "cyo_special", CHAN_WEAPON, CHANF_OVERLAP );
 					A_TakeInventory( "K7_ThinBlood", 1 );
@@ -67,7 +71,7 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 					A_Overlay( LAYER_RECOIL, "Recoil" );
 					A_StartSound( "cyo_shoot", CHAN_WEAPON, CHANF_OVERLAP );
 				}
-				smith.m_iPersonaCharge = 0;
+				smith.m_iPersonaGunCharge = 0;
 			}
 			#### # 0 bright{
 				int num = Random(0,2);
@@ -89,16 +93,22 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 			#### D 1 bright;
 			#### E 1 bright;
 			TNT1 A 15;
-			#### AAAAAAAAAAAAAAAAAAAAAAAAAAA 1 A_Refire();
-			COYO FGHI 1 bright A_Refire();
-			#### JJKKLL 1 bright A_Refire();
-			#### A 1 bright A_Refire();
+			#### AAAAAAAAAAAAAAAAAAAAAAAAAAA 1
+			{
+				A_Refire();
+				A_WeaponReady( WRF_NOPRIMARY | WRF_ALLOWRELOAD | WRF_NOBOB );
+			}
+			COYO FGHI 1 bright
+			{
+				A_Refire();
+				A_WeaponReady( WRF_NOPRIMARY | WRF_ALLOWRELOAD | WRF_NOBOB );
+			}
+			#### JJKKLLA 1 bright
+			{
+				A_Refire();
+				A_WeaponReady( WRF_NOPRIMARY | WRF_ALLOWRELOAD | WRF_NOBOB );
+			}
 			#### A 0 A_Refire();
-			Goto Ready;
-		
-		AltFire:
-		UseSpecial:
-			#### # 0 A_Overlay( -1, "ChargeTube" );
 			Goto Ready;
 			
 		Recoil:
@@ -137,7 +147,12 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 			TNT1 A 1 A_Light(1);
 			TNT1 A 1 A_Light(0);
 			Stop;
-			
+
+		AltFire:
+		UseSpecial:
+			#### # 0 A_Overlay( LAYER_FUNC, "ChargeTube" );
+			Goto Ready;
+
 		Reload_Start:
 			TNT1 A 0;
 			#### # 5 A_StartSound( "cyo_reload", CHAN_WEAPON, CHANF_OVERLAP );
@@ -151,17 +166,19 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 			#### # 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE);
 			#### # 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
 			#### # 1 bright A_WeaponOffset ( 64, 32 + 128, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 128, 32 + 256, WOF_INTERPOLATE);
 			Stop;
 			
 		Reload_Up:
 			#### # 0 bright A_StartSound( "cyo_aim", CHAN_WEAPON, CHANF_OVERLAP );
-			COYO A 1 bright A_WeaponOffset ( 64, 32 + 128, 0);
-			#### # 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
-			#### # 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE);
-			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
-			#### # 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE);
-			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
-			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE);
+			COYO A 1 bright A_WeaponOffset ( 128, 32 + 256, 0 );
+			#### # 1 bright A_WeaponOffset ( 64, 32 + 128, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
 			#### # 0 A_Overlay( LAYER_FUNC, "Reload_Done" );
 			#### # 0 A_ReFire;
 			Goto Ready;

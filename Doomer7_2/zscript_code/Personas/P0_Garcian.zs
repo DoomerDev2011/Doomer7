@@ -4,6 +4,10 @@ Class K7_Garcian_PPK: K7_SmithSyndicate_Weapon
 	{
 		Weapon.SlotNumber 0;
 		Weapon.SelectionOrder 0;
+		Weapon.BobSpeed 1.66;
+		Weapon.BobRangeX 0.2;
+		Weapon.BobRangeY 0.5;
+		
 	    Inventory.PickupSound "weapon/getppk";
 		Inventory.Pickupmessage "You got Garcian's Walther PPK.";
 	}					
@@ -31,16 +35,15 @@ Class K7_Garcian_PPK: K7_SmithSyndicate_Weapon
 			{
 				SmithSyndicate( invoker.owner ).m_fnPersonaChangeReady();
 			}
-			FRAM A 1 bright A_WeaponOffset(0,105,0);
-			#### A 1 bright A_WeaponOffset(0,92,WOF_INTERPOLATE);
-			#### A 1 bright A_WeaponOffset(0,82,WOF_INTERPOLATE);
-			#### A 1 bright A_WeaponOffset(0,72,WOF_INTERPOLATE);
-			#### A 1 bright A_WeaponOffset(0,62,WOF_INTERPOLATE);
-			#### A 1 bright A_WeaponOffset(0,52,WOF_INTERPOLATE);
-			#### A 1 bright A_WeaponOffset(0,44,WOF_INTERPOLATE);
-			#### A 1 bright A_WeaponOffset(0,38,WOF_INTERPOLATE);
-			#### A 1 bright A_WeaponOffset(0,35,WOF_INTERPOLATE);
-			#### A 1 bright A_WeaponOffset(0,32,WOF_INTERPOLATE);
+			FRAM A 1 bright A_WeaponOffset ( 128, 32 + 256, 0);
+			#### # 1 bright A_WeaponOffset ( 64, 32 + 128, WOF_INTERPOLATE );
+			#### # 0 A_StartSound( "gar_aim", CHAN_BODY, CHANF_OVERLAP );
+			#### # 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE);
 			Goto Ready;
 		
 		Fire:
@@ -55,34 +58,31 @@ Class K7_Garcian_PPK: K7_SmithSyndicate_Weapon
 			#### # 1 bright A_JumpIfNoAmmo( "Ready" );
 			TNT1 A 0 A_Refire();
 			Goto Ready;
-		
-		Reload:
-			FRAM A 0 bright A_StartSound("weapon/reppk");
-			FRAM A 1 bright A_WeaponOffset(0,32,0); 
-			#### A 1 bright A_WeaponOffset(0,35,WOF_INTERPOLATE);
-			#### A 1 bright A_WeaponOffset(0,38,WOF_INTERPOLATE);
-			#### A 1 bright A_WeaponOffset(0,44,WOF_INTERPOLATE);
-			#### A 1 bright A_WeaponOffset(0,52,WOF_INTERPOLATE);
-			#### A 1 bright A_WeaponOffset(0,72,WOF_INTERPOLATE);
-			#### A 1 bright A_WeaponOffset(0,82,WOF_INTERPOLATE);
-			#### A 1 bright A_WeaponOffset(0,92,WOF_INTERPOLATE);
-			#### A 1 bright A_WeaponOffset(0,105,WOF_INTERPOLATE);
-			TNT1 A 0 A_SetInventory( "K7_Ammo", SmithSyndicate( invoker.owner ).m_iPersonaGunClipSize );
-			#### A 10; 
-			FRAM A 1 bright A_WeaponOffset(0,105,0);
-			#### A 1 bright A_WeaponOffset(0,92,WOF_INTERPOLATE);
-			#### A 1 bright A_WeaponOffset(0,82,WOF_INTERPOLATE);
-			#### A 1 bright A_WeaponOffset(0,72,WOF_INTERPOLATE);
-			#### A 1 bright A_WeaponOffset(0,62,WOF_INTERPOLATE);
-			#### A 1 bright A_WeaponOffset(0,52,WOF_INTERPOLATE);
-			#### A 1 bright A_WeaponOffset(0,44,WOF_INTERPOLATE);
-			#### A 1 bright A_WeaponOffset(0,38,WOF_INTERPOLATE);
-			#### A 1 bright A_WeaponOffset(0,35,WOF_INTERPOLATE);
-			#### A 1 bright A_WeaponOffset(0,32,WOF_INTERPOLATE);
-			#### A 1 bright;
-			#### A 0 A_Refire();
-			
+
+		Reload_Up:
+			FRAM A 1 bright A_WeaponOffset ( 128, 32 + 256, 0);
+			#### # 1 bright A_WeaponOffset ( 64, 32 + 128, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE);
+			#### # 0 A_Overlay( LAYER_FUNC, "Reload_Done" );
+			#### # 0 A_Refire();
 			Goto Ready;
+
+		Reload_Down:
+			#### # 0 bright A_StartSound("gar_reload");
+			FRAM A 1 bright A_WeaponOffset(0,32,0); 
+			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 64, 32 + 128, WOF_INTERPOLATE);
+			#### A 1 bright A_WeaponOffset ( 128, 32 + 256, WOF_INTERPOLATE);
+			Stop;
 		
 		Flash: 
 			TNT1 A 1 A_Light(7);
@@ -94,8 +94,6 @@ Class K7_Garcian_PPK: K7_SmithSyndicate_Weapon
 			Stop;
 		
 	}
-	
-	
 }
 
 Class K7_Garcian_PPK_Ammo : K7_Ammo

@@ -12,6 +12,8 @@ skill normal
 	Key = "1"
 	textcolor = "blue"
 	
+	DamageFactor = 1
+	
 	SpawnFilter = Normal
 	ACSReturn = 2
 	

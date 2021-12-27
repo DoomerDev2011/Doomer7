@@ -19,6 +19,10 @@ weapon/getppk GETPPK
 weapon/fireppk FIREPPK
 weapon/reppk RPPK
 
+gar_aim sound/gar/aim.ogg
+gar_shoot sound/gar/shoot.ogg
+gar_reload sound/gar/reload.ogg
+
 // Dan
 dan_aim sound/dan/aim.ogg
 dan_shoot sound/dan/shoot.ogg

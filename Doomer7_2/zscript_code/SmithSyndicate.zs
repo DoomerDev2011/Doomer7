@@ -1,5 +1,7 @@
 // Syndicate player
 
+
+
 Class SmithSyndicate : DoomPlayer
 {
 	default
@@ -95,17 +97,15 @@ Class SmithSyndicate : DoomPlayer
 	//
 	
 	bool m_bPersonaChange;
-	// Tics after changing weapons before they are raised
 	int m_iPersonaChangeTime;
-	// Tics between the fade in sound and deploying the weapon
 	int m_iPersonaFormTime;
 	int m_iPersonaExplodeTime;
 	int m_iPersonaCurrent;
-	int m_iPersonaChargeMax;
-	int m_iPersonaCharge;
+
 	
 	int m_iPersonaScanRange;
 	int m_iPersonaHeight;
+	
 	// Character Stats
 	float m_fPersonaJumpZ;
 	float m_fPersonaSpeed;
@@ -121,18 +121,19 @@ Class SmithSyndicate : DoomPlayer
 	float m_IPersonaLVCrits;
 	
 	// Weapon Stats
-	
-	int m_iPersonaGunClipSize;
-	int m_iPersonaGunDamage;
-	float m_fPersonaGunDamage_Factor;
-	float m_fPersonaGunSpread;
-	float m_fPersonaGunSpread_Factor ;
-	int m_iPersonaGunReloadTime;
-	int m_fPersonaGunReloadTime_Factor;
-	float m_fPersonaGunRecoil;
-	float m_fPersonaGunRecoil_Factor;
-	int m_iPersonaGunFlags;
-	bool m_bPersonaGunSilenced;
+	int  	m_iPersonaGunFlags;
+	bool  	m_bPersonaGunSilenced;
+	int 	m_iPersonaGunCharge;
+	int 	m_iPersonaGunCharge_Max;
+	int  	m_iPersonaGunClipSize;
+	int  	m_iPersonaGunDamage;
+	float  	m_fPersonaGunDamage_Factor;
+	float  	m_fPersonaGunSpread;
+	float  	m_fPersonaGunSpread_Factor ;
+	int  	m_iPersonaGunReloadTime;
+	int  	m_fPersonaGunReloadTime_Factor;
+	float  	m_fPersonaGunRecoil;
+	float  	m_fPersonaGunRecoil_Factor;
 	
 	
 	// Speed
@@ -165,11 +166,11 @@ Class SmithSyndicate : DoomPlayer
 	
 	void m_fnUseSpecial()
 	{
-		if ( m_iPersonaChargeMax > 0 )
+		if ( m_iPersonaGunCharge_Max > 0 )
 		{
-			if ( m_iPersonaCharge = m_iPersonaChargeMax )
+			if ( m_iPersonaGunCharge = m_iPersonaGunCharge_Max )
 			{
-				m_iPersonaCharge = 0;
+				m_iPersonaGunCharge = 0;
 			}
 		}
 	}
@@ -185,8 +186,8 @@ Class SmithSyndicate : DoomPlayer
 			A_StartSound( "persona_explode", CHAN_BODY, CHANF_OVERLAP );
 			m_bPersonaChange = true;
 		}
-		m_iPersonaChargeMax = 0;
-		m_iPersonaCharge = 0;
+		m_iPersonaGunCharge_Max = 0;
+		m_iPersonaGunCharge = 0;
 		m_iPersonaExplodeTime = 9;
 		m_iPersonaChangeTime = 18;
 		m_iPersonaFormTime = 70;
@@ -194,7 +195,7 @@ Class SmithSyndicate : DoomPlayer
 		
 		m_fnSetSpeed( 0 );
 		JumpZ = 0;
-		Friction = 0.9;
+		Thing_Stop( 0 );
 	}
 	
 	// Start changing of personality (finished lowering weapon)
@@ -215,20 +216,22 @@ Class SmithSyndicate : DoomPlayer
 	
 	bool m_fnPersonaChangeEnd( int persona )
 	{
-		ViewBob = 1;
+		ViewBob = 0.75;
 		SoundClass = "k7_dan";
 		
 		// Character Stats
 		m_fPersonaVitality = 100;
-		m_iPersonaChargeMax = 0;
 		m_fPersonaSpeed = 1.1;
 		m_fPersonaSpeed_Reloading = m_fPersonaSpeed * 0.66;
 		m_fPersonaSpeed_Factor = 1;
 		m_iPersonaHeight = 64;
-		m_fPersonaJumpZ = 0;
+		m_fPersonaJumpZ = 8;
 		m_fPersonaSpecialFactor = 1;
 		
 		// Weapon Stats
+		m_iPersonaGunFlags = FBF_USEAMMO|FBF_NORANDOM|FBF_NORANDOMPUFFZ;
+		
+		m_iPersonaGunCharge_Max = 0;
 		m_bPersonaGunSilenced = false;
 		m_iPersonaGunClipSize = 0;
 		m_iPersonaGunDamage = 15;
@@ -237,67 +240,85 @@ Class SmithSyndicate : DoomPlayer
 		m_fPersonaGunSpread_Factor = 1;
 		m_iPersonaGunReloadTime = 47;
 		m_fPersonaGunReloadTime_Factor = 1;
-		m_iPersonaGunFlags = FBF_USEAMMO|FBF_NORANDOM|FBF_NORANDOMPUFFZ;
-		
 		
 		switch( persona )
 		{
 			case 0: // Garcian
 				SoundClass = "k7_gar";
+				
 				m_iPersonaHeight = 55;
+				
 				m_iPersonaGunClipSize = 5;
 				m_iPersonaGunDamage = 8;
 				m_fPersonaGunSpread = 0;
 				m_bPersonaGunSilenced = true;
+				m_iPersonaGunReloadTime = 30;
 				break;
 			case 1: // Dan
 				SoundClass = "k7_dan";
+				
+				m_iPersonaGunCharge_Max = 3;
 				m_iPersonaGunClipSize = 6;
-				m_iPersonaChargeMax = 3;
-				m_iPersonaGunDamage = 40;
+				m_iPersonaGunDamage = 45;
 				m_fPersonaGunSpread = 0.33;
 				break;
 			case 2: // KAEDE
 				SoundClass = "k7_ked";
+				
 				m_iPersonaHeight = 48;
 				m_fPersonaSpeed *= 0.85;
+				
 				m_iPersonaGunClipSize = 10;
-				m_iPersonaGunDamage = 35;
+				m_iPersonaGunDamage = 40;
 				break;
 			case 3: // Kevin
 				SoundClass = "";
+				
 				m_fPersonaSpeed *= 0.975;
 				m_iPersonaGunClipSize = 1;
 				m_fPersonaSpeed_Reloading = m_fPersonaSpeed;
-				m_iPersonaGunDamage = 25;
+				
+				m_iPersonaGunCharge_Max = 1;
+				m_iPersonaGunDamage = 30;
 				break;
 			case 4: // Coyote
 				SoundClass = "k7_cyo";
+				
 				m_iPersonaHeight = 46;
 				m_fPersonaJumpZ = 18;
-				m_iPersonaChargeMax = 1;
+				
+				m_iPersonaGunCharge_Max = 1;
 				m_iPersonaGunClipSize = 6;
-				m_iPersonaGunDamage = 30;
+				m_iPersonaGunDamage = 37;
 				break;
 			case 5: // Con
 				SoundClass = "k7_con";
+				
 				m_iPersonaHeight = 35;
 				m_fPersonaSpeed *= 1.33;
 				m_fPersonaSpeed_Reloading = m_fPersonaSpeed * 0.75;
-				m_iPersonaGunClipSize = 20;
-				m_iPersonaGunDamage = 11;
-				m_iPersonaGunReloadTime = 35;
 				m_fPersonaSpecialFactor = 2.25;
+				
+				m_iPersonaGunDamage = 11;
+				m_iPersonaGunClipSize = 20;
+				m_iPersonaGunReloadTime = 35;
 				break;
 			case 6: // MASK
 				SoundClass = "k7_msk";
+				
+				m_iPersonaGunDamage = 30;
 				m_iPersonaGunClipSize = 2;
+				m_iPersonaGunCharge_Max = 3;
+				m_iPersonaGunReloadTime = 40;
 				break;
 			case 7: // HarmanYoung
 				SoundClass = "k7_hay";
-				m_iPersonaGunDamage = 30;
-				m_iPersonaGunClipSize = 50;
+				
 				m_fPersonaSpeed *= 0.92;
+				
+				m_iPersonaGunClipSize = 50;
+				m_iPersonaGunDamage = 30;
+				m_iPersonaGunReloadTime = 50;
 				break;
 		}
 		
@@ -313,7 +334,7 @@ Class SmithSyndicate : DoomPlayer
 		}
 		A_StartSound( "persona_reform", CHAN_BODY, CHANF_OVERLAP );
 		m_iPersonaCurrent = persona;
-		m_iPersonaCharge = 0;
+		m_iPersonaGunCharge = 0;
 		return true;
 	}
 	
@@ -326,8 +347,6 @@ Class SmithSyndicate : DoomPlayer
 	{
 		m_fnSetSpeed( m_fPersonaSpeed );
 		JumpZ = m_fPersonaJumpZ;
-		Height = m_iPersonaHeight;
-		FullHeight = m_iPersonaHeight;
 	}
 	
 	// Dan
@@ -392,13 +411,5 @@ Class SmithSyndicate : DoomPlayer
 				}
 			}
 		}
-	}
-}
-
-Class NewBulletPuff : BulletPuff
-{
-	default
-	{
-		+NOEXTREMEDEATH
 	}
 }

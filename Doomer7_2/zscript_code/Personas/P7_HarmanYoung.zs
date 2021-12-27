@@ -80,9 +80,9 @@ Class K7_HarmanYoung_Tommygun: K7_SmithSyndicate_Weapon
 			Goto Ready;
 		
 		Recoil:
-			TNT1 A 0 A_SetPitch( pitch + frandom( -2, 1 ), 0 );
+			TNT1 A 0 A_SetPitch( pitch + frandom( -4, 1 ), 0 );
 			TNT1 A 1 A_SetAngle( angle + frandom( -1.2, 1.2 ), 0 );
-			TNT1 A 1 A_Overlay( LAYER_RECOIL, "Recoil_Generic" );
+			TNT1 A 0 A_Overlay( LAYER_RECOIL, "Recoil_Generic" );
 			Stop;
 		
 		Flash1:

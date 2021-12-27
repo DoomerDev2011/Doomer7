@@ -72,7 +72,7 @@ Class K7_Kevin_ThrowingKnife: K7_SmithSyndicate_Weapon
 			Loop; 
 		
 		Fire:
-			TNT1 A 0
+			KEVI A 0
 			{
 				if (invoker.isInvisible == true){
 					invoker.isInvisible = false;
@@ -80,31 +80,31 @@ Class K7_Kevin_ThrowingKnife: K7_SmithSyndicate_Weapon
 					A_TakeInventory("KevinInvisibility",1);
 				}
 			}
-			KEVI BCS 1 bright;
-			TNT1 A 4;
-			KEVI DEFG 1 bright;
-			KEVI H 0 bright A_FireBullets( 3, 0, 1, SmithSyndicate( invoker.owner ).m_iPersonaGunDamage, "NewBulletPuff", FBF_USEAMMO|FBF_NORANDOM );
-			TNT1 A 0 bright A_SetBlend("E6F63F",.25,7);
-			KEVI H 0 bright A_StartSound("weapon/fireknife",CHAN_AUTO,CHANF_OVERLAP);
-			KEVI H 1 bright A_Overlay(-1,"Flash");
-			KEVI IJ 1 bright;
-			KEVI KLM 1 bright;
+			#### BCS 1 bright;
+			#### A 4;
+			#### DEFG 1 bright;
+			#### H 0 bright 
+			{
+				
+				let smith = SmithSyndicate( invoker.owner );
+				A_Overlay( LAYER_FUNC, "Fire_Bullet" );
+				smith.m_iPersonaGunCharge = 0;
+				
+			}
+			#### A 0 bright A_SetBlend("E6F63F",.25,7);
+			#### H 0 bright A_StartSound("weapon/fireknife",CHAN_AUTO,CHANF_OVERLAP);
+			#### H 1 bright A_Overlay(-1,"Flash");
+			#### IJ 1 bright;
+			#### KLM 1 bright;
 			TNT1 A 5;
 			KEVI NOPQR 1 bright;
-			KEVI A 1 bright A_ReFire();
-			TNT1 A 0 A_Refire();
+			#### A 1 bright A_ReFire();
+			#### A 0 A_Refire();
 			Goto Ready;
 		
-		Altfire:
-			TNT1 A 0{
-				if(invoker.cooldown > 0){
-					return ResolveState("Ready");
-				}
-				invoker.isInvisible = true;
-				invoker.cooldown = 30;
-				return ResolveState(null);
-			}
-			KEVI A 0 A_GiveInventory("KevinInvisibility",1);
+		AltFire:
+		UseSpecial:
+			#### # 0 A_Overlay( LAYER_FUNC, "ChargeTube" );
 			Goto Ready;
 		
 		Flash: 
