@@ -86,13 +86,14 @@ Class K7_Mask_M79: K7_SmithSyndicate_Weapon
 			MASK A 0 bright A_StartSound("weapon/firem79",CHAN_AUTO,CHANF_OVERLAP);
 			MASK A 1 bright
 			{
-				A_Overlay(-1,"Flash");
-				A_FireProjectile( "K7_Mask_M79_Grenade" ,0 , 1, -10, 0 );
-				A_FireProjectile( "K7_Mask_M79_Grenade" ,0 , 1, 10, 0 );
+				A_Overlay( -1, "Flash" );
+				A_FireProjectile( "K7_Mask_M79_Grenade" ,0 , 1, -5, 0 );
+				A_FireProjectile( "K7_Mask_M79_Grenade" ,0 , 1, 5, 0 );
 			}
 			MASK C 1 bright A_SetPitch(pitch-3.5,SPF_INTERPOLATE);
 			MASK E 1 bright A_SetPitch(pitch-2.75,SPF_INTERPOLATE);
 			MASK F 1 bright A_SetPitch(pitch-1.25,SPF_INTERPOLATE);
+			#### # 0 bright A_Overlay( -1, "Recoil_Generic" );
 			MASK GHJKL 1 bright;
 			MASK OSTUA 2 bright;
 			TNT1 A 0 A_Refire();

@@ -78,7 +78,7 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil_Generic" );
 			#### # 0 A_StartSound( "ked_shoot", CHAN_WEAPON, CHANF_OVERLAP );
 			#### B 1 bright;
-			#### # 0 A_SetPitch( pitch - 2, SPF_INTERPOLATE );
+			#### # 0 A_SetPitch( pitch - 2, 0 );
 			#### C 2 bright;
 			#### D 2 bright;
 			#### E 2 bright;
@@ -95,7 +95,7 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 			#### # 0 A_SetBlend("E6F63F",.25,10);
 			#### # 0 bright A_Overlay( -1, "Fire_Bullet" );
 			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil_Generic" );
-			#### # 0 A_SetPitch(pitch-1,SPF_INTERPOLATE);
+			#### # 0 A_SetPitch( pitch - 1, 0 );
 			#### # 2;
 			#### # 2;
 			#### # 2;

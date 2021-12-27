@@ -190,17 +190,49 @@ $playersounddup k7_hay male *pain25 *pain50
 $playeralias k7_hay male *death hay_die
 
 // HeavenSmile
+hs_run1 sound/hs/run1.ogg
+hs_run2 sound/hs/run2.ogg
+hs_run3 sound/hs/run3.ogg
+$random hs_run { hs_run1 hs_run2 hs_run3 }
 hs_alert sound/hs/alert.ogg
 hs_hurt1 sound/hs/hurt1.ogg
+$random hs_hurt { hs_hurt1 }
+
+hs_hurt2 sound/hs/hurt2.ogg
+
 hs_snicker1 sound/hs/snicker1.ogg
 hs_snicker2 sound/hs/snicker2.ogg
 hs_snicker3 sound/hs/snicker3.ogg
 $random hs_snicker { hs_snicker1 hs_snicker2 hs_snicker3 }
+
 hs_laugh1 sound/hs/laugh1.ogg
 hs_laugh2 sound/hs/laugh2.ogg
 hs_laugh3 sound/hs/laugh3.ogg
 hs_laugh4 sound/hs/laugh4.ogg
 $random hs_laugh { hs_laugh1 hs_laugh2 hs_laugh3 hs_laugh4 }
+
+hs_trigger sound/hs/trigger.ogg
+
+hs_explode sound/hs/explode.ogg
+hs_explosion1 sound/hs/explosion1.ogg
+hs_explosion2 sound/hs/explosion2.ogg
+hs_explosion3 sound/hs/explosion3.ogg
+hs_explosion4 sound/hs/explosion4.ogg
+hs_explosion5 sound/hs/explosion5.ogg
+hs_explosion6 sound/hs/explosion6.ogg
+hs_explosion7 sound/hs/explosion7.ogg
+hs_explosion8 sound/hs/explosion8.ogg
+$random hs_explosion  {
+	hs_explosion1
+	hs_explosion2
+	hs_explosion3
+	hs_explosion4
+	hs_explosion5
+	hs_explosion6
+	hs_explosion7
+	hs_explosion8
+}
+
 
 // Unsorted
 weapon/getglk GETGLK

@@ -105,12 +105,7 @@ Class K7_Con_Glock: K7_SmithSyndicate_Weapon
 					A_Overlay(-1,"BottomFlash3");
 				}
 			}
-			#### GH 1 bright;
-			#### I 1 bright A_SetPitch( pitch + 1, 0 );
-			#### K 1 bright A_SetPitch( pitch - 1, SPF_INTERPOLATE );
-			#### L 1 bright;
-			#### O 1 bright;
-			#### R 1 bright;
+			#### GHIKLOR 1 bright;
 			#### ST 1 bright A_Refire();
 			#### A 0 A_Refire();
 			Goto Ready;

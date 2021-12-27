@@ -1,18 +1,27 @@
 version "4.6.0"
 
-#include "zscript_code/BaseWeapon.zs"
-#include "zscript_code/Blood.zs"
+
+#include "scripts/blood_pickups.zs"
 
 // Smith Syndicate
-#include "zscript_code/SmithSyndicate.zs"
-#include "zscript_code/Personas/P0_Garcian.zs"
-#include "zscript_code/Personas/P1_Dan.zs"
-#include "zscript_code/Personas/P2_Kaede.zs"
-#include "zscript_code/Personas/P3_Kevin.zs"
-#include "zscript_code/Personas/P4_Coyote.zs"
-#include "zscript_code/Personas/P5_Con.zs"
-#include "zscript_code/Personas/P6_Mask.zs"
-#include "zscript_code/Personas/P7_HarmanYoung.zs"
+#include "scripts/smith/weapon_base.zs"
 
-#include "zscript_code/Models.zs"
-#include "zscript_code/pickups.zs"
+#include "scripts/smith/syndicate.zs"
+#include "scripts/smith/P0_Garcian.zs"
+#include "scripts/smith/P1_Dan.zs"
+#include "scripts/smith/P2_Kaede.zs"
+#include "scripts/smith/P3_Kevin.zs"
+#include "scripts/smith/P4_Coyote.zs"
+#include "scripts/smith/P5_Con.zs"
+#include "scripts/smith/P6_Mask.zs"
+#include "scripts/smith/P7_HarmanYoung.zs"
+
+// Heaven Smile
+#include "scripts/heavensmile/hs_common.zs"
+
+
+// Misc
+#include "scripts/pickups.zs"
+
+
+#include "scripts/Models.zs"

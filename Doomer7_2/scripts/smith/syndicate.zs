@@ -1,7 +1,6 @@
 // Syndicate player
 
 
-
 Class SmithSyndicate : DoomPlayer
 {
 	default
@@ -43,28 +42,44 @@ Class SmithSyndicate : DoomPlayer
 		m_fnSyndicateTick();
     }
 	
+	int m_iThinBloodLimit;
+	
 	void m_fnSyndicateTick()
 	{
 		// Init
+		int sk = G_SkillPropertyInt( SKILLP_ACSReturn );
 		if ( !m_bInitSyndicateReady )
 		{
 			m_bInitSyndicateReady = true;
 			m_fnPersonaChangeEnd( m_iPersonaCurrent );
 			m_fnPersonaChangeReady();
-			int sk = G_SkillPropertyInt( SKILLP_ACSReturn );
 			if ( sk >= 4 )
 			{
 				A_SetInventory( "K7_HarmanYoung_Tommygun", 1 );
 			}
 			A_SetInventory( "K7_Ammo", m_iPersonaGunClipSize );
+			
+			if ( sk >= 4 )
+			{
+				m_iThinBloodLimit = 5;
+			}
+			else if ( sk >= 3 )
+			{
+				m_iThinBloodLimit = 10;
+			}
+			else
+				m_iThinBloodLimit = 20;
+			// FIND CODE TO LIMIT K7_ThinBlood to m_iThinBloodLimit
 		}
-		if ( false && m_iPersonaCurrent != 3 )
+		// Breathing
+		if ( true && m_iPersonaCurrent != 3 )
 		{
-			// Breathing
 			float breather = ( level.time * 2 );
-			A_SetAngle( angle + cos( breather ) / 20, SPF_INTERPOLATE );
-			A_SetPitch( pitch + sin( breather * 0.5 ) / 16, SPF_INTERPOLATE );
+			//A_SetAngle( angle + cos( breather ) / 20, SPF_INTERPOLATE );
+			//A_SetPitch( pitch + sin( breather * 0.5 ) / 16, SPF_INTERPOLATE );
 		}
+		
+		// Persona Tick
 		switch ( m_iPersonaCurrent )
 		{
 			case 2:
@@ -221,7 +236,7 @@ Class SmithSyndicate : DoomPlayer
 		
 		// Character Stats
 		m_fPersonaVitality = 100;
-		m_fPersonaSpeed = 1.1;
+		m_fPersonaSpeed = 0.8;
 		m_fPersonaSpeed_Reloading = m_fPersonaSpeed * 0.66;
 		m_fPersonaSpeed_Factor = 1;
 		m_iPersonaHeight = 64;

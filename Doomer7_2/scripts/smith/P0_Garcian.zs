@@ -1,4 +1,4 @@
-Class K7_Garcian_PPK: K7_SmithSyndicate_Weapon
+Class K7_Garcian_PPK : K7_SmithSyndicate_Weapon
 {
 	default
 	{

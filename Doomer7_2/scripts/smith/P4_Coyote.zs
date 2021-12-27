@@ -60,7 +60,7 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 				if ( smith.m_iPersonaGunCharge > 0 && invoker.ammo2.amount > 0 )
 				{
 					float spread = smith.m_fPersonaGunSpread * 0.5;
-					A_FireBullets( spread, spread, 1, 175, "K7_BulletPuff", FBF_USEAMMO|FBF_NORANDOM );
+					A_FireBullets( spread, spread, 1, 180, "K7_BulletPuff", FBF_USEAMMO|FBF_NORANDOM );
 					A_Overlay( LAYER_RECOIL, "Recoil" );
 					A_StartSound( "cyo_special", CHAN_WEAPON, CHANF_OVERLAP );
 					A_TakeInventory( "K7_ThinBlood", 1 );

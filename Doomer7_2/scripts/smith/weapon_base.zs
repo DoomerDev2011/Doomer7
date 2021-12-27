@@ -5,6 +5,7 @@ const LAYER_RECOIL2 = -11;
 const LAYER_RELOAD_FUNC = -20;
 const LAYER_FUNC = -32;
 
+const CHAN_CHARGE = CHAN_6;
 
 Class K7_SmithSyndicate_Weapon : Weapon
 {
@@ -22,6 +23,7 @@ Class K7_SmithSyndicate_Weapon : Weapon
 		Weapon.AmmoUse1 1;
 		Weapon.AmmoType2 "K7_ThinBlood";
 		Weapon.AmmoUse2 0;
+		Weapon.KickBack 0;
 		Weapon.BobSpeed 1.5;
 		Weapon.BobRangeX 1;
 		Weapon.BobRangeY 0.25;
