@@ -198,14 +198,17 @@ Class SmithSyndicate : DoomPlayer
 	{
 		if ( Health > 0 )
 		{
-			A_StartSound( "persona_explode", CHAN_BODY, CHANF_OVERLAP );
-			m_bPersonaChange = true;
+			if ( m_iPersonaCurrent == 0 )
+				A_StartSound( "persona_camswap", CHAN_BODY, CHANF_OVERLAP );
+			else {
+				A_StartSound( "persona_explode", CHAN_BODY, CHANF_OVERLAP );
+				m_bPersonaChange = true;
+			}
 		}
 		m_iPersonaGunCharge_Max = 0;
 		m_iPersonaGunCharge = 0;
 		m_iPersonaExplodeTime = 9;
 		m_iPersonaChangeTime = 18;
-		m_iPersonaFormTime = 70;
 		m_iPersonaScanRange = 64;
 		
 		m_fnSetSpeed( 0 );
@@ -221,7 +224,6 @@ Class SmithSyndicate : DoomPlayer
 		if ( m_bPersonaChange )
 		{
 			A_StartSound( "persona_disperse", CHAN_BODY, CHANF_OVERLAP );
-			m_bPersonaChange = false;
 		}
 	}
 	
@@ -231,7 +233,7 @@ Class SmithSyndicate : DoomPlayer
 	
 	bool m_fnPersonaChangeEnd( int persona )
 	{
-		ViewBob = 0.75;
+		ViewBob = 0.33;
 		SoundClass = "k7_dan";
 		
 		// Character Stats
@@ -274,7 +276,7 @@ Class SmithSyndicate : DoomPlayer
 				
 				m_iPersonaGunCharge_Max = 3;
 				m_iPersonaGunClipSize = 6;
-				m_iPersonaGunDamage = 45;
+				m_iPersonaGunDamage = 55;
 				m_fPersonaGunSpread = 0.33;
 				break;
 			case 2: // KAEDE
@@ -284,7 +286,7 @@ Class SmithSyndicate : DoomPlayer
 				m_fPersonaSpeed *= 0.85;
 				
 				m_iPersonaGunClipSize = 10;
-				m_iPersonaGunDamage = 40;
+				m_iPersonaGunDamage = 45;
 				break;
 			case 3: // Kevin
 				SoundClass = "";
@@ -304,7 +306,7 @@ Class SmithSyndicate : DoomPlayer
 				
 				m_iPersonaGunCharge_Max = 1;
 				m_iPersonaGunClipSize = 6;
-				m_iPersonaGunDamage = 37;
+				m_iPersonaGunDamage = 42;
 				break;
 			case 5: // Con
 				SoundClass = "k7_con";
@@ -337,6 +339,8 @@ Class SmithSyndicate : DoomPlayer
 				break;
 		}
 		
+		m_iPersonaFormTime = 70;
+		
 		if ( m_bPersonaCamSwap )
 		{
 			m_bPersonaCamSwap = false;
@@ -347,9 +351,16 @@ Class SmithSyndicate : DoomPlayer
 		{
 			return false;
 		}
-		A_StartSound( "persona_reform", CHAN_BODY, CHANF_OVERLAP );
+		if ( m_bPersonaChange )
+		{
+			A_StartSound( "persona_reform", CHAN_BODY, CHANF_OVERLAP );
+		}
+		else {
+			m_iPersonaFormTime = 35;
+		}
 		m_iPersonaCurrent = persona;
 		m_iPersonaGunCharge = 0;
+		m_bPersonaChange = false;
 		return true;
 	}
 	
