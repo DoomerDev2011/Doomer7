@@ -196,7 +196,8 @@ hs_run3 sound/hs/run3.ogg
 $random hs_run { hs_run1 hs_run2 hs_run3 }
 
 hs_alert sound/hs/alert.ogg
-$rolloff hs_alert linear 200 400
+$rolloff hs_alert linear 200 300
+$volume hs_alert 0.75
 
 hs_hurt1 sound/hs/hurt1.ogg
 $random hs_hurt { hs_hurt1 }

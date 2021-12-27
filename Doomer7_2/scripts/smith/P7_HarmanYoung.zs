@@ -62,7 +62,7 @@ Class K7_HarmanYoung_Tommygun: K7_SmithSyndicate_Weapon
 		Fire: 
 			YHAR A 0 A_JumpIfNoAmmo( "Reload" );
 			#### # 0 A_StartSound( "hay_shoot", CHAN_AUTO, CHANF_OVERLAP );
-			#### # 0 A_Overlay( -1, "Fire_Bullet" );
+			#### # 0 A_Overlay( LAYER_FUNC, "Fire_Bullet" );
 			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
 			#### B 1 bright
 			{

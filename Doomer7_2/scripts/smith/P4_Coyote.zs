@@ -64,6 +64,7 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 					A_Overlay( LAYER_RECOIL, "Recoil" );
 					A_StartSound( "cyo_special", CHAN_WEAPON, CHANF_OVERLAP );
 					A_TakeInventory( "K7_ThinBlood", 1 );
+					A_AlertMonsters();
 				}
 				else
 				{

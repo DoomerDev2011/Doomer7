@@ -6,7 +6,7 @@ Class K7_HeavenSmile : Actor
 		SeeSound "hs_snicker";
 		PainSound "hs_hurt";
 		DeathSound "hs_laugh";
-		ActiveSound "hs_alert";
+		ActiveSound "";
 		
 		Health 175;
 		Radius 20;
@@ -23,7 +23,9 @@ Class K7_HeavenSmile : Actor
 	States
 	{
 		Spawn:
-			TROO AB 10 A_Look();
+			TROO AB 10 A_StartSound( "hs_alert", CHAN_6, CHANF_LOOP );
+		Idle:
+			#### # 1 A_Look();
 			Loop;
 		See:
 			#### # 0;
@@ -43,6 +45,7 @@ Class K7_HeavenSmile : Actor
 				Return ResolveState( "See" );
 			}
 		Death:
+			#### # 0 A_StopSound( CHAN_6 );
 			TROO I 8;
 			TROO J 8 A_Scream();
 			TROO K 6;
@@ -50,6 +53,7 @@ Class K7_HeavenSmile : Actor
 			TROO M -1;
 			Stop;
 		Explode:
+			#### # 0 A_StopSound( CHAN_6 );
 			#### # 6 bright A_StartSound( "hs_trigger", CHAN_WEAPON, CHANF_OVERLAP );
 			#### # 0 A_Explode( 45, 250, XF_NOTMISSILE, false, 75 );
 			#### # 0 A_StartSound( "hs_explode", CHAN_WEAPON, CHANF_OVERLAP );

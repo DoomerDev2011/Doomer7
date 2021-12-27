@@ -266,7 +266,7 @@ Class SmithSyndicate : DoomPlayer
 				m_iPersonaHeight = 55;
 				
 				m_iPersonaGunClipSize = 5;
-				m_iPersonaGunDamage = 8;
+				m_iPersonaGunDamage = 15;
 				m_fPersonaGunSpread = 0;
 				m_bPersonaGunSilenced = true;
 				m_iPersonaGunReloadTime = 30;
@@ -316,7 +316,7 @@ Class SmithSyndicate : DoomPlayer
 				m_fPersonaSpeed_Reloading = m_fPersonaSpeed * 0.75;
 				m_fPersonaSpecialFactor = 2.25;
 				
-				m_iPersonaGunDamage = 11;
+				m_iPersonaGunDamage = 14;
 				m_iPersonaGunClipSize = 20;
 				m_iPersonaGunReloadTime = 35;
 				break;

@@ -35,17 +35,17 @@ Class K7_Dan_Taurus : K7_SmithSyndicate_Weapon
 					A_SetTics( smith.m_iPersonaFormTime );
 				}
 			}
-			TNT1 A 0
+			DANF # 0
 			{
 				SmithSyndicate( invoker.owner ).m_fnPersonaChangeReady();
 			}
-			TNT1 A 0 A_StartSound( "dan_aim", CHAN_WEAPON, CHANF_OVERLAP );
-			DANF A 1 bright A_WeaponOffset( 100, 0, 0 );
-			DANF A 1 bright A_WeaponOffset( 66, 16, WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset( 33, 22, WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset( 0, 28, WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset( -8, 32 + 8, WOF_INTERPOLATE);
-			DANF A 1 bright A_WeaponOffset( 0, 32, WOF_INTERPOLATE);
+			#### # 0 A_StartSound( "dan_aim", CHAN_WEAPON, CHANF_OVERLAP );
+			#### # 1 bright A_WeaponOffset( 100, 0, 0 );
+			#### # 1 bright A_WeaponOffset( 66, 16, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset( 33, 22, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset( 0, 28, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset( -8, 32 + 8, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset( 0, 32, WOF_INTERPOLATE);
 			Goto Ready;
 		
 		// Lower weapon
@@ -111,24 +111,25 @@ Class K7_Dan_Taurus : K7_SmithSyndicate_Weapon
 		//
 		
 		SpecialFire:
-			TNT1 A 0 A_WeaponOffset( 0, 32, WOF_INTERPOLATE );
-			TNT1 A 0 bright A_StopSound( CHAN_5 );
-			TNT1 A 0 bright A_TakeInventory( "K7_ThinBlood", 3 );
-			TNT1 A 0
+			DANF A 0 A_WeaponOffset( 0, 32, WOF_INTERPOLATE );
+			#### A 0 bright A_StopSound( CHAN_5 );
+			#### A 0 bright A_TakeInventory( "K7_ThinBlood", 3 );
+			#### A 0
 			{
 				SmithSyndicate( invoker.owner ).m_iPersonaGunCharge = 0;
 			}
-			TNT1 A 0 A_StartSound( "dan_special", CHAN_WEAPON, CHANF_OVERLAP );
-			TNT1 A 0 A_StartSound( "dan_special_vo", CHAN_VOICE );
-			TNT1 A 0 bright A_FireProjectile( "K7_Dan_CollateralShot", 0, false, 0, 0 );
-			TNT1 A 0 A_Overlay( -1, "Flash" );
-			DANF B 1 bright;
-			DANF C 1 bright;
-			DANF CDEF 1 bright;
-			DANF GHIJ 2 bright;
-			DANF KLMN 3 bright;
-			DANF QSUW 4 bright;
-			DANF Z 3 bright;
+			#### A 0 A_StartSound( "dan_special", CHAN_WEAPON, CHANF_OVERLAP );
+			#### A 0 A_StartSound( "dan_special_vo", CHAN_VOICE );
+			#### A 0 bright A_FireProjectile( "K7_Dan_CollateralShot", 0, false, 0, 0 );
+			#### # 0 A_AlertMonsters();
+			#### A 0 A_Overlay( -1, "Flash" );
+			#### B 1 bright;
+			#### C 1 bright;
+			#### CDEF 1 bright;
+			#### GHIJ 2 bright;
+			#### KLMN 3 bright;
+			#### QSUW 4 bright;
+			#### Z 3 bright;
 			Goto Ready;
 		
 		Flash1:
@@ -160,7 +161,7 @@ Class K7_Dan_Taurus : K7_SmithSyndicate_Weapon
 		
 		
 		Reload_Start:
-			TNT1 A 0;
+			#### # 0;
 			#### # 0 A_StartSound( "dan_reload", CHAN_WEAPON, CHANF_OVERLAP );
 			Stop;
 		

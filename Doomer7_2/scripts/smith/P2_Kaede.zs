@@ -74,7 +74,7 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 			KAED A 0 A_WeaponOffset( 0, 32, WOF_INTERPOLATE );
 			#### # 0 A_JumpIf( invoker.m_bZoomedIn, "FireZoomed" );
 			#### # 0 A_JumpIfNoAmmo("Reload");
-			#### # 0 A_Overlay( -1, "Fire_Bullet" );
+			#### # 0 A_Overlay( LAYER_FUNC, "Fire_Bullet" );
 			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil_Generic" );
 			#### # 0 A_StartSound( "ked_shoot", CHAN_WEAPON, CHANF_OVERLAP );
 			#### B 1 bright;
@@ -93,7 +93,7 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 			TNT1 A 0 A_JumpIfNoAmmo( "Reload" );
 			#### # 0 A_StartSound( "ked_shoot", CHAN_WEAPON, CHANF_OVERLAP );
 			#### # 0 A_SetBlend("E6F63F",.25,10);
-			#### # 0 bright A_Overlay( -1, "Fire_Bullet" );
+			#### # 0 bright A_Overlay( LAYER_FUNC, "Fire_Bullet" );
 			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil_Generic" );
 			#### # 0 A_SetPitch( pitch - 1, 0 );
 			#### # 2;

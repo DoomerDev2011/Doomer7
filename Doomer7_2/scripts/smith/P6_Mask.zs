@@ -19,7 +19,7 @@ Class K7_Mask_M79: K7_SmithSyndicate_Weapon
 			Stop;
 		
 		Select:
-			TNT1 A 0
+			MASK A 0
 			{
 				let smith = SmithSyndicate( invoker.owner );
 				if ( smith.m_fnPersonaChangeEnd( 6 ) ) 
@@ -28,34 +28,34 @@ Class K7_Mask_M79: K7_SmithSyndicate_Weapon
 					A_SetTics( smith.m_iPersonaFormTime );
 				}
 			}
-			TNT1 A 0
+			#### # 0
 			{
 				SmithSyndicate( invoker.owner ).m_fnPersonaChangeReady();
 			}
-			MASK A 1 bright A_WeaponOffset (0,127,0);
-			MASK A 1 bright A_WeaponOffset (0,107,WOF_INTERPOLATE);
-			MASK A 1 bright A_WeaponOffset (0,87,WOF_INTERPOLATE);
-			MASK A 1 bright A_WeaponOffset (0,76,WOF_INTERPOLATE);
-			MASK A 1 bright A_WeaponOffset (0,65,WOF_INTERPOLATE);
-			MASK A 1 bright A_WeaponOffset (0,53,WOF_INTERPOLATE);
-			MASK A 1 bright A_WeaponOffset (0,48,WOF_INTERPOLATE);
-			MASK A 1 bright A_WeaponOffset (0,43,WOF_INTERPOLATE);
-			MASK A 1 bright A_WeaponOffset (0,38,WOF_INTERPOLATE);
-			MASK A 1 bright A_WeaponOffset (0,32,WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset (0,127,0);
+			#### # 1 bright A_WeaponOffset (0,107,WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset (0,87,WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset (0,76,WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset (0,65,WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset (0,53,WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset (0,48,WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset (0,43,WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset (0,38,WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset (0,32,WOF_INTERPOLATE);
 			Goto Ready;
 		
 		Deselect:
-			TNT1 A 0 A_Overlay( -1, "ChangePersona" );
-			MASK A 1 bright A_WeaponOffset (0,32,0);
-			MASK A 1 bright A_WeaponOffset (0,38,WOF_INTERPOLATE);
-			MASK A 1 bright A_WeaponOffset (0,43,WOF_INTERPOLATE);
-			MASK A 1 bright A_WeaponOffset (0,48,WOF_INTERPOLATE);
-			MASK A 1 bright A_WeaponOffset (0,53,WOF_INTERPOLATE);
-			MASK A 1 bright A_WeaponOffset (0,65,WOF_INTERPOLATE);
-			MASK A 1 bright A_WeaponOffset (0,76,WOF_INTERPOLATE);
-			MASK A 1 bright A_WeaponOffset (0,87,WOF_INTERPOLATE);
-			MASK A 1 bright A_WeaponOffset (0,107,WOF_INTERPOLATE);
-			MASK A 1 bright A_WeaponOffset (0,127,WOF_INTERPOLATE);
+			MASK A 0 A_Overlay( -1, "ChangePersona" );
+			#### # 1 bright A_WeaponOffset (0,32,0);
+			#### # 1 bright A_WeaponOffset (0,38,WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset (0,43,WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset (0,48,WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset (0,53,WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset (0,65,WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset (0,76,WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset (0,87,WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset (0,107,WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset (0,127,WOF_INTERPOLATE);
 			Stop;
 		
 		Ready:
@@ -63,7 +63,7 @@ Class K7_Mask_M79: K7_SmithSyndicate_Weapon
 			Loop; 
 		
 		Fire:
-			TNT1 A 0
+			MASK A 0
 			{
 				if ( invoker.ammo1.amount == 1 )
 				{
@@ -81,22 +81,24 @@ Class K7_Mask_M79: K7_SmithSyndicate_Weapon
 				}
 				return ResolveState(null);
 			}
-			MASK A 0 bright A_JumpIfNoAmmo("Reload");
-			TNT1 A 0 bright A_SetBlend("E6F63F",.25,7);
-			MASK A 0 bright A_StartSound("weapon/firem79",CHAN_AUTO,CHANF_OVERLAP);
-			MASK A 1 bright
+			#### A 0 bright A_JumpIfNoAmmo("Reload");
+			#### A 0 bright A_SetBlend("E6F63F",.25,7);
+			#### A 0 bright A_StartSound("weapon/firem79",CHAN_AUTO,CHANF_OVERLAP);
+			#### A 1 bright
 			{
 				A_Overlay( -1, "Flash" );
-				A_FireProjectile( "K7_Mask_M79_Grenade" ,0 , 1, -5, 0 );
-				A_FireProjectile( "K7_Mask_M79_Grenade" ,0 , 1, 5, 0 );
+				A_FireProjectile( "K7_Mask_M79_Grenade" ,0 , 1, -7, 0 );
+				A_FireProjectile( "K7_Mask_M79_Grenade" ,0 , 1, 7, 0 );
+				A_AlertMonsters();
 			}
-			MASK C 1 bright A_SetPitch(pitch-3.5,SPF_INTERPOLATE);
-			MASK E 1 bright A_SetPitch(pitch-2.75,SPF_INTERPOLATE);
-			MASK F 1 bright A_SetPitch(pitch-1.25,SPF_INTERPOLATE);
+			#### C 1 bright A_SetPitch(pitch-3.5,SPF_INTERPOLATE);
+			#### E 1 bright A_SetPitch(pitch-2.75,SPF_INTERPOLATE);
+			#### F 1 bright A_SetPitch(pitch-1.25,SPF_INTERPOLATE);
 			#### # 0 bright A_Overlay( -1, "Recoil_Generic" );
-			MASK GHJKL 1 bright;
-			MASK OSTUA 2 bright;
-			TNT1 A 0 A_Refire();
+			#### GHJKL 1 bright;
+			#### OSTUA 2 bright;
+			#### A 15 bright;
+			#### A 0 A_Refire();
 			Goto Ready;
 		
 		AltFire:

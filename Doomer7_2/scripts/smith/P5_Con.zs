@@ -61,18 +61,19 @@ Class K7_Con_Glock: K7_SmithSyndicate_Weapon
 			Loop;
 		
 		Fire:
-			CONS A 0 bright
+			CONS A 0 A_WeaponOffset ( 0, 32, 0);
+			#### A 0 bright
 			{
 				if ( invoker.ammo1.amount < 1 ){
 					return ResolveState( "Reload" );
 				}
 				return ResolveState( null );
 			}
-			#### A 0 A_WeaponOffset ( 0, 32, 0);
-			#### A 0 A_Overlay( -1, "Fire_Bullet" );
+			#### A 0 bright A_StartSound( "con_shoot", CHAN_WEAPON, CHANF_OVERLAP );
+			#### A 0 A_Overlay( LAYER_FUNC, "Fire_Bullet" );
 			#### A 0 A_SetPitch( pitch + frandom( -2, 2 ) );
 			#### A 0 A_Overlay( LAYER_RECOIL, "Recoil_Generic" );
-			#### A 0 bright A_StartSound( "con_shoot", CHAN_WEAPON, CHANF_OVERLAP );
+			
 			#### B 1 bright{
 				int num = Random(0,2);
 				if(num == 0){
@@ -85,7 +86,7 @@ Class K7_Con_Glock: K7_SmithSyndicate_Weapon
 			}
 			#### C 1 bright;
 			#### DE 1 bright;
-			#### # 0 A_Overlay( -1, "Fire_Bullet" );
+			#### # 0 A_Overlay( LAYER_FUNC, "Fire_Bullet" );
 			#### # 0 A_SetPitch( pitch + frandom( -2, 2 ) );
 			#### # 0 A_Overlay( LAYER_RECOIL2, "Recoil_Generic" );
 			#### F 0 bright A_StartSound( "con_shoot", CHAN_WEAPON, CHANF_OVERLAP );
