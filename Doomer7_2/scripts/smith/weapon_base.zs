@@ -6,6 +6,11 @@ const LAYER_RELOAD_FUNC = -20;
 const LAYER_FUNC = -32;
 
 const CHAN_CHARGE = CHAN_6;
+const USE_HOLD_AIM = 0;
+
+CONST WEAPON_FLAGS = ( WRF_ALLOWRELOAD | WRF_ALLOWUSER2 | WRF_ALLOWUSER3 );
+CONST WEAPON_FLAGS_REFIRE1 = ( WEAPON_FLAGS | WRF_NOPRIMARY );
+CONST WEAPON_FLAGS_REFIRE2 = ( WEAPON_FLAGS | WRF_NOSECONDARY );
 
 Class K7_SmithSyndicate_Weapon : Weapon
 {
@@ -30,18 +35,88 @@ Class K7_SmithSyndicate_Weapon : Weapon
 		Weapon.BobStyle "Smooth";
 	}
 	
+	bool m_bAiming;
+	bool m_bPressedSpecial;
+	
 	States
 	{
 		Select:
-			Goto Ready;
-			
+			TNT1 A 0
+			{
+				return ResolveState( "Ready" );
+			}
+		
 		Ready:
-			#### # 1 bright A_WeaponReady( WRF_ALLOWRELOAD | WRF_NOBOB );
+			TNT1 A 0;
+			Goto Ready_Generic;
+		
+		Ready_Generic:
+			#### A 0 A_JumpIf( ( USE_HOLD_AIM ), "Ready_HoldAim" );
+			#### # 0 A_WeaponReady( WEAPON_FLAGS );
+			#### # 1 bright;
+			#### # 0
+			{
+				invoker.m_bPressedSpecial = false;
+			}
 			Loop;
+			
+		Ready_HoldAim:
+			#### A 0 A_JumpIf( ( invoker.m_bAiming ), "Aiming" );
+			#### # 0 A_JumpIf( (GetPlayerInput( INPUT_BUTTONS, 0 ) & BT_USER1), "Aim_In_Clapper" );
+			#### # 0 A_WeaponReady( WEAPON_FLAGS | WRF_NOFIRE );
+			#### # 0
+			{
+				invoker.m_bPressedSpecial = false;
+			}
+			#### # 1 Offset( 400, 400 );
+			Loop;
+			
+		Aiming:
+			#### A 0 A_JumpIf( !(GetPlayerInput( INPUT_BUTTONS, 0 ) & BT_USER1), "Aim_Out" );
+			#### # 1 A_WeaponReady( WRF_ALLOWRELOAD | WRF_NOSWITCH | WRF_DISABLESWITCH );
+			Loop;
+		
+		
+		Aim_In_Clapper: // Black Bars that come down when aiming
+			#### # 0
+			{
+				let smith = SmithSyndicate( invoker.owner );
+				smith.m_fnSetSpeed( smith.m_fPersonaSpeed_Aiming );
+				smith.JumpZ = 0;
+				invoker.m_bAiming = true;
+			}
+			#### # 7;
+			#### # 0 A_ZoomFactor( 1.75, ZOOM_INSTANT );
+			#### # 0;
+			#### # 0
+			{
+				invoker.LookScale = 0.5;
+				return ResolveState( "Aim_In" );
+			}
+			
+
+		Aim_Out:
+			TNT1 A 0
+			{
+				A_ZoomFactor( 1, ZOOM_INSTANT );
+				invoker.LookScale = 1;
+				let smith = SmithSyndicate( invoker.owner );
+				smith.m_fnPersonaApplyStats();
+				smith.m_iPersonaGunCharge = 0;
+				A_StopSound( CHAN_CHARGE );
+				invoker.m_bAiming = false;
+			}
+			#### # 0 ResolveState( "Ready_HoldAim" );
 		
 		Deselect:
 			#### A 0 A_Overlay( LAYER_FUNC, "DisableProperties" );
 			#### A 0 A_Overlay( LAYER_FUNC, "ChangePersona" );
+			#### # 0
+			{
+				A_ZoomFactor( 1, ZOOM_INSTANT );
+				invoker.LookScale = 1;
+				invoker.m_bAiming = false;
+			}
 			#### A 1 bright A_WeaponOffset( 0, 32, 0);
 			#### A 1 bright A_WeaponOffset( 1, 32 + ( 33 * 1 ), WOF_INTERPOLATE);
 			#### A 1 bright A_WeaponOffset( 2, 32 + ( 33 * 2 ), WOF_INTERPOLATE);
@@ -84,22 +159,24 @@ Class K7_SmithSyndicate_Weapon : Weapon
 			#### # 0 bright
 			{
 				let smith = SmithSyndicate( invoker.owner );
-				smith.m_fnSetSpeed( smith.m_fPersonaSpeed_Reloading );
+				smith.m_fnSetSpeed( min( smith.m_fPersonaSpeed_Reloading, smith.m_fCurrentSpeed ) );
 				smith.JumpZ = 0;
 				A_Overlay( LAYER_FUNC , "Reload_Start" );
 				A_Overlay( LAYER_RELOAD , "Reload_Down" );
-			}
-			#### # 0 bright
-			{
-				let smith = smithSyndicate( invoker.owner );
 				A_SetTics( floor( smith.m_iPersonaGunReloadTime * smith.m_fPersonaGunReloadTime_Factor ) );
+				A_ZoomFactor ( 1 ); //, ZOOM_INSTANT );
+				invoker.LookScale = 1;
 			}
 			#### # 0 bright
 			{
 				let smith = SmithSyndicate( invoker.owner );
-				A_SetInventory( "K7_Ammo", smith.m_iPersonaGunClipSize );
 				smith.m_fnPersonaApplyStats();
-				return ResolveState( "Reload_Up" );
+				A_SetInventory( "K7_Ammo", smith.m_iPersonaGunClipSize );
+				
+				if ( invoker.m_bAiming )
+					return ResolveState( "Aim_In_Clapper" );
+				else
+					return ResolveState( "Reload_Up" );
 			}
 			
 		FormPersona:
@@ -111,6 +188,7 @@ Class K7_SmithSyndicate_Weapon : Weapon
 				let smith = SmithSyndicate( invoker.owner );
 				smith.m_fnPersonaChangeBegin();
 				A_SetTics( smith.m_iPersonaExplodeTime );
+				A_ZoomFactor ( 1, ZOOM_INSTANT );
 			}
 			#### # 0
 			{
@@ -122,6 +200,24 @@ Class K7_SmithSyndicate_Weapon : Weapon
 			}
 			#### # 0 A_Lower( 512 );
 			Stop;
+		
+		User2:
+			#### # 0
+			{
+				if ( invoker.m_bPressedSpecial )
+				{
+					return ResolveState( "Ready" );
+				}
+				invoker.m_bPressedSpecial = true;
+				Return ResolveState( "UseSpecial" );
+			}
+			
+		UseSpecial:
+			#### # 0 A_Overlay( LAYER_FUNC, "ChargeTube" );
+			#### # 0
+			{
+				return ResolveState( "Ready" );
+			}
 		
 		ChargeTube:
 			#### # 0

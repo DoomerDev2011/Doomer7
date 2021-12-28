@@ -1,25 +1,28 @@
-Class ClipReplacer: K7_ThinBlood replaces Clip {
+Class EmptyPickup : Actor {}
+
+
+Class ClipReplacer: EmptyPickup replaces Clip {
 }
 
-Class ClipBoxReplacer: K7_ThinBlood replaces ClipBox {
+Class ClipBoxReplacer: EmptyPickup replaces ClipBox {
 }
 
-Class ShellReplacer: K7_ThinBlood replaces Shell {
+Class ShellReplacer: EmptyPickup replaces Shell {
 }
 
-Class ShellBoxReplacer: K7_ThinBlood replaces ShellBox {
+Class ShellBoxReplacer: EmptyPickup replaces ShellBox {
 }
 
-Class CellReplacer: K7_ThinBlood replaces Cell {
+Class CellReplacer: EmptyPickup replaces Cell {
 }
 
-Class CellPackReplacer: K7_ThinBlood replaces Cellpack {
+Class CellPackReplacer: EmptyPickup replaces Cellpack {
 }
 
-Class RocketAmmoReplacer: K7_ThinBlood replaces RocketAmmo {
+Class RocketAmmoReplacer: EmptyPickup replaces RocketAmmo {
 }
 
-Class RocketBoxReplacer: K7_ThinBlood replaces RocketBox {
+Class RocketBoxReplacer: EmptyPickup replaces RocketBox {
 }
 
 Class BackpackReplacer: Megasphere replaces Backpack {

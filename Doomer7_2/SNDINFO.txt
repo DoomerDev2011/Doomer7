@@ -30,6 +30,7 @@ dan_reload sound/dan/reload.ogg
 dan_special sound/dan/special.ogg
 dan_special_vo sound/dan/special_vo.ogg
 dan_special_explode sound/dan/special_explode.ogg
+dan_crit sound/dan/crit_vo.ogg
 
 dan_die sound/dan/die.ogg
 dan_hurt1 sound/dan/hurt1.ogg
@@ -190,14 +191,24 @@ $playersounddup k7_hay male *pain25 *pain50
 $playeralias k7_hay male *death hay_die
 
 // HeavenSmile
+hs_step1 sound/hs/step1.ogg
+hs_step2 sound/hs/step2.ogg
+hs_step3 sound/hs/step3.ogg
+hs_step4 sound/hs/step4.ogg
+hs_step5 sound/hs/step5.ogg
+hs_step6 sound/hs/step6.ogg
+$random hs_step { hs_step1 hs_step2 hs_step3 hs_step4 hs_step5 hs_step6 }
+$rolloff hs_step linear 250 500
+
 hs_run1 sound/hs/run1.ogg
 hs_run2 sound/hs/run2.ogg
 hs_run3 sound/hs/run3.ogg
 $random hs_run { hs_run1 hs_run2 hs_run3 }
 
+
 hs_alert sound/hs/alert.ogg
-$rolloff hs_alert linear 200 300
-$volume hs_alert 0.75
+$rolloff hs_alert linear 100 400
+$volume hs_alert 0.8
 
 hs_hurt1 sound/hs/hurt1.ogg
 $random hs_hurt { hs_hurt1 }
@@ -209,13 +220,14 @@ hs_snicker2 sound/hs/snicker2.ogg
 hs_snicker3 sound/hs/snicker3.ogg
 $random hs_snicker { hs_snicker1 hs_snicker2 hs_snicker3 }
 
-$rolloff hs_snicker linear 1000 1200
+$rolloff hs_snicker linear 800 1600
 
 hs_laugh1 sound/hs/laugh1.ogg
 hs_laugh2 sound/hs/laugh2.ogg
 hs_laugh3 sound/hs/laugh3.ogg
 hs_laugh4 sound/hs/laugh4.ogg
 $random hs_laugh { hs_laugh1 hs_laugh2 hs_laugh3 hs_laugh4 }
+$volume hs_laugh 0.95
 
 hs_trigger sound/hs/trigger.ogg
 
@@ -239,6 +251,14 @@ $random hs_explosion  {
 	hs_explosion8
 }
 
+
+hs_death sound/hs/death.ogg
+hs_death_bomb sound/hs/death_bomb.ogg
+hs_disperse sound/hs/disperse.ogg
+$rolloff hs_disperse linear 250 1500
+hs_down sound/hs/down.ogg
+hs_blood sound/hs/blood.ogg
+$volume hs_blood 0.7
 
 // Unsorted
 weapon/getglk GETGLK

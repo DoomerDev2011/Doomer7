@@ -15,15 +15,10 @@ Class K7_Dan_Taurus : K7_SmithSyndicate_Weapon
 		Inventory.Pickupmessage "You got Dan's Taurus.";
 	}
 	
-	bool ChargeSoundStart;
-	
 	States{
 		Spawn:
 			DHED A -1 bright;
 			Stop;
-		
-		// Raise weapon
-		// Bring the weapon up
 		
 		Select:
 			TNT1 A 0
@@ -35,28 +30,40 @@ Class K7_Dan_Taurus : K7_SmithSyndicate_Weapon
 					A_SetTics( smith.m_iPersonaFormTime );
 				}
 			}
-			DANF # 0
+			DANF A 0
 			{
 				SmithSyndicate( invoker.owner ).m_fnPersonaChangeReady();
 			}
-			#### # 0 A_StartSound( "dan_aim", CHAN_WEAPON, CHANF_OVERLAP );
+			#### # 0
+			{
+				if ( USE_HOLD_AIM )
+					return ResolveState( "Ready" );
+				else
+					return ResolveState( "Aim_In" );
+			}
+
+		Ready:
+			DANF A 0
+			{
+				return ResolveState( "Ready_Generic" );
+			}
+
+		Aim_In:
+			DANF A 0 A_StartSound( "dan_aim", CHAN_WEAPON, CHANF_OVERLAP );
 			#### # 1 bright A_WeaponOffset( 100, 0, 0 );
 			#### # 1 bright A_WeaponOffset( 66, 16, WOF_INTERPOLATE);
 			#### # 1 bright A_WeaponOffset( 33, 22, WOF_INTERPOLATE);
 			#### # 1 bright A_WeaponOffset( 0, 28, WOF_INTERPOLATE);
 			#### # 1 bright A_WeaponOffset( -8, 32 + 8, WOF_INTERPOLATE);
 			#### # 1 bright A_WeaponOffset( 0, 32, WOF_INTERPOLATE);
-			Goto Ready;
+			#### # 0
+			{
+				if ( invoker.m_bAiming )
+					return ResolveState( "Aiming" );
+				else
+					return ResolveState( "Ready" );
+			}
 		
-		// Lower weapon
-		// Put the weapon down
-		
-		Ready:
-			DANF A 1 bright A_WeaponReady( WRF_ALLOWRELOAD );
-			Loop;
-		
-		// Primary Fire
-		// Shoot the gun
 		Fire:
 			DANF A 0
 			{
@@ -94,21 +101,15 @@ Class K7_Dan_Taurus : K7_SmithSyndicate_Weapon
 					A_Overlay( -1, "Flash3" );
 				}
 			}
-			#### B 1 bright A_SetPitch( pitch - 3, 0 ); 
-			#### F 1 bright A_SetPitch( pitch - 1.5, 0 ); 
+			#### B 1 bright A_SetPitch( pitch - 2, 0 ); 
 			#### GIMOQSUWZ 2 bright; 
 			#### A 0 bright;
 			#### # 0 bright A_JumpIfNoAmmo( "Ready" );
 			#### # 0 A_Refire();
-			Goto Ready;
-
-		AltFire:
-		UseSpecial:
-			#### # 0 A_Overlay( LAYER_FUNC, "ChargeTube" );
-			Goto Ready;
-
-		// COlAORAL SHOT
-		//
+			#### # 0
+			{
+				return ResolveState( "Ready" );
+			}
 		
 		SpecialFire:
 			DANF A 0 A_WeaponOffset( 0, 32, WOF_INTERPOLATE );
@@ -130,7 +131,10 @@ Class K7_Dan_Taurus : K7_SmithSyndicate_Weapon
 			#### KLMN 3 bright;
 			#### QSUW 4 bright;
 			#### Z 3 bright;
-			Goto Ready;
+			#### # 0
+			{
+				return ResolveState( "Ready" );
+			}
 		
 		Flash1:
 			DFLA A 1 bright A_Light(7);
@@ -185,7 +189,10 @@ Class K7_Dan_Taurus : K7_SmithSyndicate_Weapon
 			#### A 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE);
 			
 			#### # 0 bright A_Refire();
-			Goto Ready;
+			#### # 0
+			{
+				return ResolveState( "Ready" );
+			}
 	}
 }
 

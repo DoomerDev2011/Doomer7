@@ -97,22 +97,9 @@ Class K7_Mask_M79: K7_SmithSyndicate_Weapon
 			#### # 0 bright A_Overlay( -1, "Recoil_Generic" );
 			#### GHJKL 1 bright;
 			#### OSTUA 2 bright;
-			#### A 15 bright;
+			#### A 2 bright;
 			#### A 0 A_Refire();
 			Goto Ready;
-		
-		AltFire:
-		UseSpecial:
-			TNT1 A 0 A_Overlay( -1, "ChargeTube" );
-			Goto Ready;
-			
-			TNT1 A 0
-			{
-				if ( invoker.ammo2.amount < 3 ){
-					return ResolveState( "Ready" );
-				}
-				return ResolveState( null );
-			}
 		
 		LeftFire:
 			MASL A 0 bright A_JumpIfNoAmmo( "Reload" );

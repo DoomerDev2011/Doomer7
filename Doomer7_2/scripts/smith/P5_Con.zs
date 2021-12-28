@@ -46,6 +46,11 @@ Class K7_Con_Glock: K7_SmithSyndicate_Weapon
 		
 		Deselect:
 			CONS A 0 A_Overlay( -1, "ChangePersona" );
+			#### # 0
+			{
+				let smith = SmithSyndicate( invoker.owner );
+				smith.m_iConSpeedTimer = 0;
+			}
 			#### A 1 bright A_WeaponOffset ( 0, 32, 0);
 			#### A 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
 			#### A 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE);
@@ -57,8 +62,10 @@ Class K7_Con_Glock: K7_SmithSyndicate_Weapon
 			Stop;
 		
 		Ready:
-			CONS A 1 bright A_WeaponReady( WRF_ALLOWRELOAD );
-			Loop;
+			CONS A 0
+			{
+				return ResolveState( "Ready_Generic" );
+			}
 		
 		Fire:
 			CONS A 0 A_WeaponOffset ( 0, 32, 0);
@@ -111,13 +118,6 @@ Class K7_Con_Glock: K7_SmithSyndicate_Weapon
 			#### A 0 A_Refire();
 			Goto Ready;
 		
-		Altfire:
-			Goto UseSpecial;
-			#### # 0
-			{
-				SmithSyndicate( invoker.owner ).m_fnVisionRingScan();
-			}
-			Goto Ready;
 			
 		UseSpecial:
 			#### # 0
@@ -131,42 +131,45 @@ Class K7_Con_Glock: K7_SmithSyndicate_Weapon
 				smith.m_iConSpeedTimer = 35 * 5;
 				return ResolveState( "Special" );
 			}
+			
 		Special:
-			CONS A 1 bright
+			#### A 0 A_ZoomFactor( 0.7 );
+			CONS # 1 bright
 			{
 				SmithSyndicate( invoker.owner ).m_fnSetSpeed( 0 );
 				A_StartSound( "persona_powera", CHAN_BODY, CHANF_OVERLAP );
 			}
-			CONS A 1 bright A_WeaponOffset ( 0, 32, 0);
-			CONS A 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset ( 64, 32 + 128, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 0, 32, 0);
+			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 64, 32 + 128, WOF_INTERPOLATE);
 			TNT1 A 30;
-			TNT1 A 25
+			#### # 25
 			{
 				A_StartSound( "con_special_vo", CHAN_VOICE, 0 );
 			}
-			TNT1 A 20
+			#### # 20
 			{
 				A_StartSound ( "con_special_pose", CHAN_BODY, CHANF_OVERLAP );
 			}
-			TNT1 A 0
+			#### # 0
 			{
 				let smith = SmithSyndicate( invoker.owner );
 				smith.m_fPersonaSpeed_Factor = smith.m_fPersonaSpecialFactor;
 				smith.m_fnSetSpeed( smith.m_fPersonaSpeed );
 				smith.m_iConSpeedTimer = 35 * 20;
 			}
+			#### A 0 A_ZoomFactor( 1 );
 			CONS A 1 bright A_WeaponOffset ( 64, 32 + 128, 0);
-			CONS A 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
-			CONS A 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE);
 			Goto Ready;
 			
 		Flash:

@@ -110,7 +110,7 @@ Class SmithSyndicate : DoomPlayer
 	
 	// Current Persona
 	//
-	
+	bool m_bPersonaCanSprint;
 	bool m_bPersonaChange;
 	int m_iPersonaChangeTime;
 	int m_iPersonaFormTime;
@@ -125,6 +125,8 @@ Class SmithSyndicate : DoomPlayer
 	float m_fPersonaJumpZ;
 	float m_fPersonaSpeed;
 	float m_fPersonaSpeed_Reloading;
+	float m_fPersonaSpeed_Shooting;
+	float m_fPersonaSpeed_Aiming;
 	float m_fPersonaSpeed_Factor;
 	float m_fPersonaFriction;
 	float m_fPersonaVitality;
@@ -159,7 +161,7 @@ Class SmithSyndicate : DoomPlayer
 	{
 		m_fCurrentSpeed = new_speed * m_fPersonaSpeed_Factor;
 		forwardmove1 = m_fCurrentSpeed;
-		sidemove1 = forwardmove1 * 0.7;
+		sidemove1 = forwardmove1 * 0.65;
 		forwardmove2 = forwardmove1 * 0.5;
 		sidemove2 = sidemove1 * 0.5;
 		
@@ -238,12 +240,15 @@ Class SmithSyndicate : DoomPlayer
 		
 		// Character Stats
 		m_fPersonaVitality = 100;
-		m_fPersonaSpeed = 0.8;
+		m_fPersonaSpeed = 1.1;
 		m_fPersonaSpeed_Reloading = m_fPersonaSpeed * 0.66;
+		m_fPersonaSpeed_Aiming = 0;//m_fPersonaSpeed;
+		m_fPersonaSpeed_Shooting = m_fPersonaSpeed * 0.5;
 		m_fPersonaSpeed_Factor = 1;
 		m_iPersonaHeight = 64;
 		m_fPersonaJumpZ = 8;
 		m_fPersonaSpecialFactor = 1;
+		m_bPersonaCanSprint = false;
 		
 		// Weapon Stats
 		m_iPersonaGunFlags = FBF_USEAMMO|FBF_NORANDOM|FBF_NORANDOMPUFFZ;
@@ -255,7 +260,7 @@ Class SmithSyndicate : DoomPlayer
 		m_fPersonaGunDamage_Factor = 1;
 		m_fPersonaGunSpread = 3.15;
 		m_fPersonaGunSpread_Factor = 1;
-		m_iPersonaGunReloadTime = 47;
+		m_iPersonaGunReloadTime = 55;
 		m_fPersonaGunReloadTime_Factor = 1;
 		
 		switch( persona )
@@ -266,7 +271,7 @@ Class SmithSyndicate : DoomPlayer
 				m_iPersonaHeight = 55;
 				
 				m_iPersonaGunClipSize = 5;
-				m_iPersonaGunDamage = 15;
+				m_iPersonaGunDamage = 33;
 				m_fPersonaGunSpread = 0;
 				m_bPersonaGunSilenced = true;
 				m_iPersonaGunReloadTime = 30;
@@ -307,6 +312,7 @@ Class SmithSyndicate : DoomPlayer
 				m_iPersonaGunCharge_Max = 1;
 				m_iPersonaGunClipSize = 6;
 				m_iPersonaGunDamage = 42;
+				m_iPersonaGunReloadTime = 35;
 				break;
 			case 5: // Con
 				SoundClass = "k7_con";
@@ -325,7 +331,7 @@ Class SmithSyndicate : DoomPlayer
 				
 				m_iPersonaGunDamage = 30;
 				m_iPersonaGunClipSize = 2;
-				m_iPersonaGunCharge_Max = 3;
+				m_iPersonaGunCharge_Max = 1;
 				m_iPersonaGunReloadTime = 40;
 				break;
 			case 7: // HarmanYoung

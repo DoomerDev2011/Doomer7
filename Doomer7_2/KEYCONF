@@ -1,6 +1,10 @@
 addkeysection "Doomer7 key bindings" Doomer7
-addmenukey "Use Special" +k7_special
-defaultbind q +k7_special
 
-addmenukey "Restore Health" +k7_heal
-defaultbind h +k7_heal
+addmenukey "Aim" +user1
+defaultbind space +user1
+
+addmenukey "Use Special" +user2
+defaultbind q +user2
+
+addmenukey "Restore Health" +user3
+defaultbind h +user3

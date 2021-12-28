@@ -5,9 +5,10 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 {
 	default{
 		Weapon.SlotNumber 4;
-		Weapon.BobSpeed 1.7;
-		Weapon.BobRangeX 0.4;
-		Weapon.BobRangeY 2;
+		Weapon.BobStyle "Alpha";
+		Weapon.BobSpeed 1.85;
+		Weapon.BobRangeX 0.6;
+		Weapon.BobRangeY 2.66;
 		
 	    Inventory.PickupSound "weapon/getrev";
 		Inventory.Pickupmessage "You got Coyote's Modified Enfield No.2."; 
@@ -35,6 +36,15 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 			{
 				SmithSyndicate( invoker.owner ).m_fnPersonaChangeReady();
 			}
+			#### # 0
+			{
+				if ( USE_HOLD_AIM )
+					return ResolveState( "Ready" );
+				else
+					return ResolveState( "Aim_In" );
+			}
+		
+		Aim_In:
 			COYO A 1 bright A_WeaponOffset ( 180, 100, 0 );
 			#### # 1 bright A_WeaponOffset ( 150, 70, WOF_INTERPOLATE );
 			#### # 1 bright A_WeaponOffset ( 120, 60, WOF_INTERPOLATE );
@@ -45,11 +55,19 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 			#### # 1 bright A_WeaponOffset (0,36,WOF_INTERPOLATE);
 			#### # 1 bright A_WeaponOffset ( -10, 34, WOF_INTERPOLATE );
 			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
-			Goto Ready;
+			#### # 0
+			{
+				if ( invoker.m_bAiming )
+					return ResolveState( "Aiming" );
+				else
+					return ResolveState( "Ready" );
+			}
 			
 		Ready:
-			COYO A 1 bright A_WeaponReady( WRF_ALLOWRELOAD );
-			Loop;
+			COYO A 0
+			{
+				return ResolveState( "Ready_Generic" );
+			}
 			
 		Fire:
 			COYO A 0 A_JumpIfNoAmmo( "Reload" );
@@ -96,18 +114,18 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 			TNT1 A 15;
 			#### AAAAAAAAAAAAAAAAAAAAAAAAAAA 1
 			{
+				A_WeaponReady( WEAPON_FLAGS_REFIRE1 );
 				A_Refire();
-				A_WeaponReady( WRF_NOPRIMARY | WRF_ALLOWRELOAD | WRF_NOBOB );
 			}
 			COYO FGHI 1 bright
-			{
+				{
+				A_WeaponReady( WEAPON_FLAGS_REFIRE1 );
 				A_Refire();
-				A_WeaponReady( WRF_NOPRIMARY | WRF_ALLOWRELOAD | WRF_NOBOB );
 			}
 			#### JJKKLLA 1 bright
 			{
+				A_WeaponReady( WEAPON_FLAGS_REFIRE1 );
 				A_Refire();
-				A_WeaponReady( WRF_NOPRIMARY | WRF_ALLOWRELOAD | WRF_NOBOB );
 			}
 			#### A 0 A_Refire();
 			Goto Ready;
@@ -148,11 +166,6 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 			TNT1 A 1 A_Light(1);
 			TNT1 A 1 A_Light(0);
 			Stop;
-
-		AltFire:
-		UseSpecial:
-			#### # 0 A_Overlay( LAYER_FUNC, "ChargeTube" );
-			Goto Ready;
 
 		Reload_Start:
 			TNT1 A 0;

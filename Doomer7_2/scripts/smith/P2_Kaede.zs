@@ -104,8 +104,8 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 			#### # 0 A_JumpIfNoAmmo( "Ready" );
 			#### # 0 A_Refire();
 			Goto Ready;
-
-		Altfire:
+		
+		UseSpecial:
 			#### # 0 A_JumpIf( invoker.m_bZoomedIn, "ZoomOut" );
 			Goto ZoomIn;
 			

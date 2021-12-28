@@ -18,10 +18,13 @@ version "4.6.0"
 
 // Heaven Smile
 #include "scripts/heavensmile/hs_common.zs"
+#include "scripts/heavensmile/hs_fast.zs"
 
+#include "scripts/heavensmile/replace.zs"
 
 // Misc
 #include "scripts/pickups.zs"
 
 
 #include "scripts/Models.zs"
+
