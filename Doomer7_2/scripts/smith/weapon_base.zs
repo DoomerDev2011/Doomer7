@@ -23,6 +23,8 @@ Class K7_SmithSyndicate_Weapon : Weapon
 		+WEAPON.AMMO_OPTIONAL
 		+WEAPON.ALT_AMMO_OPTIONAL
 		+WEAPON.NOAUTOFIRE
+		+INVENTORY.UNDROPPABLE
+		+INVENTORY.UNTOSSABLE
 		// Stats
 		Weapon.AmmoType1 "K7_Ammo";
 		Weapon.AmmoUse1 1;
@@ -59,7 +61,10 @@ Class K7_SmithSyndicate_Weapon : Weapon
 				if ( !(GetPlayerInput( INPUT_BUTTONS, 0 ) & BT_USER2) )
 					invoker.m_bPressedSpecial = false;
 			}
-			Loop;
+			#### # 0
+			{
+				return ResolveState( "Ready" );
+			}
 			
 		Ready_HoldAim:
 			#### A 0 A_JumpIf( ( invoker.m_bAiming ), "Aiming" );
