@@ -52,6 +52,7 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 		DisableProperties:
 			#### # 0
 			{
+				invoker.LookScale = 1;
 				invoker.m_bZoom = false;
 				invoker.m_bZoomedIn = false;
 				SmithSyndicate( invoker.owner ).m_fnSetStatic( false );
@@ -63,13 +64,14 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 			KAED A 0;
 			#### # 0 A_JumpIf( invoker.m_bZoomedIn && !invoker.m_bZoom, "ZoomOut" );
 			#### # 0 A_JumpIf( !invoker.m_bZoomedIn && invoker.m_bZoom, "ZoomIn" );
-			//#### # 0 A_JumpIf( invoker.m_bZoomedIn, "ReadyZoomed" );
-			#### # 1 bright A_WeaponReady( WEAPON_FLAGS );
+			#### # 0 A_JumpIf( invoker.m_bZoomedIn, "ReadyZoomed" );
+			//#### # 1 bright A_WeaponReady( WEAPON_FLAGS );
+			#### # 0 ResolveState( "Ready_Generic" );
 			Loop;
 		
 		ReadyZoomed:
 			TNT1 A 1 A_WeaponReady( WEAPON_FLAGS );
-			Goto Ready;
+			#### # 0 ResolveState( "Ready_Generic" );
 		
 		Fire:
 			KAED A 0 A_WeaponOffset( 0, 32, WOF_INTERPOLATE );
@@ -111,10 +113,11 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 			Goto ZoomIn;
 			
 		ZoomIn:
-			TNT1 # 0 A_ZoomFactor( 4 );
+			TNT1 # 0 A_ZoomFactor( 6 );
 			#### # 0 A_StartSound( "ked_zoomin", CHAN_WEAPON, CHANF_OVERLAP );
 			#### # 0
 			{
+				invoker.LookScale = 0.5;
 				invoker.m_bZoom = true;
 				invoker.m_bZoomedIn = true;
 				SmithSyndicate( invoker.owner ).m_fnSetStatic( true );
@@ -129,6 +132,7 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 			#### # 0 bright A_WeaponOffset( 0, 32, WOF_INTERPOLATE );
 			#### # 0
 			{
+				invoker.LookScale = 1;
 				invoker.m_bZoom = false;
 				invoker.m_bZoomedIn = false;
 				SmithSyndicate( invoker.owner ).m_fnSetStatic( false );
@@ -144,6 +148,7 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 					SmithSyndicate( invoker.owner ).m_fnSetStatic( false );
 					invoker.m_bZoomedIn = false;
 					A_StartSound( "ked_zoomout", CHAN_WEAPON, CHANF_OVERLAP );
+					invoker.LookScale = 1;
 				}
 			}
 			#### A 0 A_ZoomFactor (1);

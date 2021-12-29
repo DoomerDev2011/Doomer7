@@ -292,6 +292,7 @@ Class SmithSyndicate : DoomPlayer
 				
 				m_iPersonaGunClipSize = 10;
 				m_iPersonaGunDamage = 45;
+				m_fPersonaGunSpread = 0.75;
 				break;
 			case 3: // Kevin
 				SoundClass = "";

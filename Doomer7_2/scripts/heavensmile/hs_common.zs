@@ -37,7 +37,7 @@ Class K7_HeavenSmile : Actor
 			#### # 1 A_LookEx( 0, 0, 500, 450, 360 );
 			Loop;
 		See:
-			#### # 0 A_FaceTarget();
+			#### ########## 1 A_FaceTarget();
 			#### # 0
 			{
 				A_StartSound( "hs_step", CHAN_BODY, CHANF_OVERLAP );
@@ -49,7 +49,7 @@ Class K7_HeavenSmile : Actor
 				A_StartSound( "hs_step", CHAN_BODY, CHANF_OVERLAP );
 			}
 			#### AAAAAAAAAAAAAAAAAAAAAAA 1 A_Chase(); //2 A_Chase( "_a_chase_default", "_a_chase_default" );
-			Loop;
+			Goto See+1;
 		Melee:
 			#### # 0 A_FaceTarget();
 			#### # 0
