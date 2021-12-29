@@ -1,5 +1,6 @@
 
-//Shader created by Cherno
+// Initial KAEDE static shader created by Cherno
+// Modified by Sage
 
 highp float rand(vec2 co)
 {
@@ -15,7 +16,7 @@ highp float rand(vec2 co)
 void kaede_static()
 {
 	float in_ratio = clamp( timer / 35, 0, 1 );
-	float scale = 8;
+	float scale = mix( 6, 1, in_ratio );
     vec2 coords = TexCoord;
     coords.x = ( round( coords.x * ( resX / scale ) ) / ( resX / scale ) );
     coords.y = ( round( coords.y * ( resY / scale ) ) / ( resY / scale ) );

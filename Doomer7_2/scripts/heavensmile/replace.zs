@@ -9,3 +9,5 @@ Class hs_replace_Cacodemon : K7_HeavenSmile Replaces Cacodemon {}
 Class hs_replace_LostSoul : K7_HeavenSmile Replaces LostSoul {}
 
 Class hs_replace_Demon : K7_HeavenSmile_Fast Replaces Demon {}
+
+Class hs_replace_Spectre : K7_HeavenSmile_Fast Replaces Spectre {}

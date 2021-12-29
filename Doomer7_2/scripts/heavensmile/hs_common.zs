@@ -7,11 +7,11 @@ Class K7_HeavenSmile : Actor
 		DeathSound "hs_laugh";
 		ActiveSound "hs_alert";
 		
-		Health 130;
-		Radius 15;
-		Height 45;
-		Speed 1.5;
-		Mass 400;
+		Health 175;
+		Radius 12;
+		Height 52;
+		Speed 1.75;
+		Mass 175;
 		PainChance ( 256 );
 		Monster;
 		+FLOORCLIP
@@ -25,7 +25,7 @@ Class K7_HeavenSmile : Actor
 	States
 	{
 		Spawn:
-			HSC0 A 10 A_LoopActiveSound();
+			HSC1 A 10 A_LoopActiveSound();
 		Idle:
 			#### # 1 A_Look();
 			Loop;
@@ -74,7 +74,7 @@ Class K7_HeavenSmile : Actor
 			}
 			#### # 1 bright A_StartSound( "hs_trigger", CHAN_WEAPON, CHANF_OVERLAP );
 			#### ###### 1 bright;
-			#### # 0 A_Explode( 30, 250, XF_NOTMISSILE, false, 75 );
+			#### # 0 A_Explode( 32, 300, XF_NOTMISSILE, false, 150 );
 			#### # 0 A_StartSound( "hs_explode", CHAN_WEAPON, CHANF_OVERLAP );
 			#### # 0 A_StartSound( "hs_explosion", CHAN_WEAPON, CHANF_OVERLAP );
 			TNT1 A -1 A_Remove( 0 );

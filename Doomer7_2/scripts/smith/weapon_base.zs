@@ -8,7 +8,7 @@ const LAYER_FUNC = -32;
 const CHAN_CHARGE = CHAN_6;
 const USE_HOLD_AIM = 0;
 
-CONST WEAPON_FLAGS = ( WRF_ALLOWRELOAD | WRF_ALLOWUSER2 | WRF_ALLOWUSER3 );
+CONST WEAPON_FLAGS = ( WRF_ALLOWRELOAD | WRF_ALLOWUSER1 | WRF_ALLOWUSER2 | WRF_ALLOWUSER3 );
 CONST WEAPON_FLAGS_REFIRE1 = ( WEAPON_FLAGS | WRF_NOPRIMARY );
 CONST WEAPON_FLAGS_REFIRE2 = ( WEAPON_FLAGS | WRF_NOSECONDARY );
 
@@ -56,7 +56,8 @@ Class K7_SmithSyndicate_Weapon : Weapon
 			#### # 1 bright;
 			#### # 0
 			{
-				invoker.m_bPressedSpecial = false;
+				if ( !(GetPlayerInput( INPUT_BUTTONS, 0 ) & BT_USER2) )
+					invoker.m_bPressedSpecial = false;
 			}
 			Loop;
 			
@@ -66,7 +67,8 @@ Class K7_SmithSyndicate_Weapon : Weapon
 			#### # 0 A_WeaponReady( WEAPON_FLAGS | WRF_NOFIRE );
 			#### # 0
 			{
-				invoker.m_bPressedSpecial = false;
+				if ( !(GetPlayerInput( INPUT_BUTTONS, 0 ) & BT_USER2) )
+					invoker.m_bPressedSpecial = false;
 			}
 			#### # 1 Offset( 400, 400 );
 			Loop;
@@ -94,7 +96,6 @@ Class K7_SmithSyndicate_Weapon : Weapon
 				return ResolveState( "Aim_In" );
 			}
 			
-
 		Aim_Out:
 			TNT1 A 0
 			{
@@ -116,6 +117,7 @@ Class K7_SmithSyndicate_Weapon : Weapon
 				A_ZoomFactor( 1, ZOOM_INSTANT );
 				invoker.LookScale = 1;
 				invoker.m_bAiming = false;
+				invoker.m_bPressedSpecial = false;
 			}
 			#### A 1 bright A_WeaponOffset( 0, 32, 0);
 			#### A 1 bright A_WeaponOffset( 1, 32 + ( 33 * 1 ), WOF_INTERPOLATE);
@@ -209,7 +211,7 @@ Class K7_SmithSyndicate_Weapon : Weapon
 					return ResolveState( "Ready" );
 				}
 				invoker.m_bPressedSpecial = true;
-				Return ResolveState( "UseSpecial" );
+				return ResolveState( "UseSpecial" );
 			}
 			
 		UseSpecial:

@@ -197,7 +197,7 @@ Class K7_Mask_M79_Grenade: Actor
 	{
 		PROJECTILE;
 		+HEXENBOUNCE
-		//-NOGRAVITY
+		+NOGRAVITY
 		+EXPLODEONWATER
 		Radius 11;
 		Height 8;
@@ -218,7 +218,7 @@ Class K7_Mask_M79_Grenade: Actor
 		Death:
 			MISL B 0 Bright A_NoGravity();
 			MISL B 0 Bright A_SetTranslucent( 0.5, 1 );
-			MISL B 8 Bright A_Explode( 80, 32, 0, false, 24 );
+			MISL B 8 Bright A_Explode( 50, 32, 0, false, 24 );
 			MISL C 6 Bright;
 			MISL D 4 BRIGHT;
 			Stop;

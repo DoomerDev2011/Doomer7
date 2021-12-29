@@ -56,18 +56,19 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 				invoker.m_bZoomedIn = false;
 				SmithSyndicate( invoker.owner ).m_fnSetStatic( false );
 			}
-			#### # 0 A_ZoomFactor (1);
+			#### # 0 A_ZoomFactor ( 1, ZOOM_INSTANT );
 			Stop;
 		
 		Ready:
-			KAED A 0 A_JumpIf( invoker.m_bZoomedIn, "ReadyZoomed" );
+			KAED A 0;
 			#### # 0 A_JumpIf( invoker.m_bZoomedIn && !invoker.m_bZoom, "ZoomOut" );
 			#### # 0 A_JumpIf( !invoker.m_bZoomedIn && invoker.m_bZoom, "ZoomIn" );
-			#### # 1 bright A_WeaponReady( WRF_ALLOWRELOAD );
+			//#### # 0 A_JumpIf( invoker.m_bZoomedIn, "ReadyZoomed" );
+			#### # 1 bright A_WeaponReady( WEAPON_FLAGS );
 			Loop;
 		
 		ReadyZoomed:
-			TNT1 A 1 A_WeaponReady(WRF_ALLOWRELOAD);
+			TNT1 A 1 A_WeaponReady( WEAPON_FLAGS );
 			Goto Ready;
 		
 		Fire:
@@ -104,7 +105,7 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 			#### # 0 A_JumpIfNoAmmo( "Ready" );
 			#### # 0 A_Refire();
 			Goto Ready;
-		
+			
 		UseSpecial:
 			#### # 0 A_JumpIf( invoker.m_bZoomedIn, "ZoomOut" );
 			Goto ZoomIn;

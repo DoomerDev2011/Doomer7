@@ -227,7 +227,7 @@ hs_laugh2 sound/hs/laugh2.ogg
 hs_laugh3 sound/hs/laugh3.ogg
 hs_laugh4 sound/hs/laugh4.ogg
 $random hs_laugh { hs_laugh1 hs_laugh2 hs_laugh3 hs_laugh4 }
-$volume hs_laugh 0.95
+$volume hs_laugh 0.8
 
 hs_trigger sound/hs/trigger.ogg
 
