@@ -5,7 +5,7 @@ StatusBar Normal
    DrawString K7Font, untranslated, "Health", 50, 170, 0, alignment(center);
    DrawNumber 2, K7Font, untranslated, Ammo1, 260, 150;
    DrawString CONFONT, White, "/", 270, 155, 0, alignment(center);
-   DrawNumber 3, K7Font, untranslated, Ammo2, fillzeros, 320, 150;
+   DrawNumber 3, K7Font, untranslated, Ammo2, fillzeros, 330, 150;
    DrawString K7Font, untranslated, "Ammo", 280, 170, 0, alignment(center);
    //DrawImage "NewSkull",-260,-265,center,60,60;
 }
