@@ -181,7 +181,7 @@ Class K7_Kaede_Hardballer: K7_SmithSyndicate_Weapon
 		
 		Flash1:
 			KAEF A 1 bright A_Light(7);
-			#### # 0 A_SetBlend("E6F63F",.25,10);
+			#### # 0 A_SetBlend( "E6F63F", 0.25, 10 );
 			#### B 1 bright A_Light(4); 
 			#### C 1 bright A_Light(2);
 			#### A 1 A_Light(1);

@@ -199,6 +199,7 @@ Class K7_Mask_M79_Grenade: Actor
 		+HEXENBOUNCE
 		+NOGRAVITY
 		+EXPLODEONWATER
+		+FORCEPAIN
 		Radius 11;
 		Height 8;
 		Speed 130;

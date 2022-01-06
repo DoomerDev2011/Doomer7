@@ -1,6 +1,14 @@
 // Syndicate player
-
-
+#include "P0_Garcian.zs"
+#include "P1_Dan.zs"
+#include "P2_Kaede.zs"
+#include "P3_Kevin.zs"
+#include "P4_Coyote.zs"
+#include "P5_Con.zs"
+#include "P6_Mask.zs"
+#include "P7_HarmanYoung.zs"
+#include "weapon_base.zs"
+  
 Class SmithSyndicate : DoomPlayer
 {
 	default
@@ -281,7 +289,7 @@ Class SmithSyndicate : DoomPlayer
 				
 				m_iPersonaGunCharge_Max = 3;
 				m_iPersonaGunClipSize = 6;
-				m_iPersonaGunDamage = 55;
+				m_iPersonaGunDamage = 60;
 				m_fPersonaGunSpread = 0.33;
 				break;
 			case 2: // KAEDE
@@ -323,7 +331,7 @@ Class SmithSyndicate : DoomPlayer
 				m_fPersonaSpeed_Reloading = m_fPersonaSpeed * 0.75;
 				m_fPersonaSpecialFactor = 2.25;
 				
-				m_iPersonaGunDamage = 14;
+				m_iPersonaGunDamage = 18;
 				m_iPersonaGunClipSize = 20;
 				m_iPersonaGunReloadTime = 35;
 				break;

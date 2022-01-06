@@ -1,3 +1,4 @@
+/*
 Class GarcianGun: CustomInventory{
 	default{
 		+SOLID

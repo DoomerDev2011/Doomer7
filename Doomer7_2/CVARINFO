@@ -1,1 +1,1 @@
-server bool k7_mode = true;
+server int k7_mode = 1;

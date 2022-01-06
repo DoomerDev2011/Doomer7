@@ -1,3 +1,4 @@
+// Special Ammo
 Class K7_ThinBlood : Ammo
 {
 	Default
@@ -6,16 +7,20 @@ Class K7_ThinBlood : Ammo
 		Inventory.Amount 1;
 		Inventory.MaxAmount 20;
 		Inventory.PickupMessage "Picked up some thin blood";
-		//Inventory.PickupSound "";
+		Inventory.PickupSound "pickup_blood";
 	}
+	
+	
+	
 	States
 	{
 		Spawn:
 			BLDV A 1;
 			Loop;
+		
 	}
 }
-
+// Upgrade Currency
 Class K7_ThickBlood : Ammo
 {
 	Default
@@ -24,6 +29,5 @@ Class K7_ThickBlood : Ammo
 		Inventory.Amount 1;
 		Inventory.MaxAmount 1000;
 		Inventory.PickupMessage "Picked up some thick blood";
-		//Inventory.PickupSound "";
 	}
 }

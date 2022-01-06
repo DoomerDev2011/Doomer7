@@ -3,28 +3,14 @@ version "4.6.0"
 
 #include "scripts/blood_pickups.zs"
 
-// Smith Syndicate
-#include "scripts/smith/weapon_base.zs"
 
-#include "scripts/smith/syndicate.zs"
-#include "scripts/smith/P0_Garcian.zs"
-#include "scripts/smith/P1_Dan.zs"
-#include "scripts/smith/P2_Kaede.zs"
-#include "scripts/smith/P3_Kevin.zs"
-#include "scripts/smith/P4_Coyote.zs"
-#include "scripts/smith/P5_Con.zs"
-#include "scripts/smith/P6_Mask.zs"
-#include "scripts/smith/P7_HarmanYoung.zs"
+// Smith Syndicate
+#include "scripts/smiths/smith.zs"
 
 // Heaven Smile
 #include "scripts/heavensmile/hs_common.zs"
-#include "scripts/heavensmile/hs_fast.zs"
-
-#include "scripts/heavensmile/replace.zs"
 
 // Misc
 #include "scripts/pickups.zs"
-
-
-#include "scripts/Models.zs"
+//#include "scripts/models.zs"
 

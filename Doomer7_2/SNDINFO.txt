@@ -13,6 +13,7 @@ persona_scan sound/shared/scan.ogg
 persona_powera sound/shared/special1.ogg
 persona_powerb sound/shared/special2.ogg
 persona_usefail sound/shared/usefail.ogg
+pickup_blood sound/pickup/pickup_blood.ogg
 
 // Garcian
 weapon/getppk GETPPK
@@ -27,10 +28,12 @@ gar_reload sound/gar/reload.ogg
 dan_aim sound/dan/aim.ogg
 dan_shoot sound/dan/shoot.ogg
 dan_reload sound/dan/reload.ogg
+dan_reload_standing sound/dan/reload.ogg
 dan_special sound/dan/special.ogg
 dan_special_vo sound/dan/special_vo.ogg
 dan_special_explode sound/dan/special_explode.ogg
 dan_crit sound/dan/crit_vo.ogg
+dan_chargeok sound/dan/chargeok.ogg
 
 dan_die sound/dan/die.ogg
 dan_hurt1 sound/dan/hurt1.ogg
@@ -87,6 +90,8 @@ vo/cyocrit CYOCRIT
 cyo_aim sound/cyo/aim.ogg
 cyo_shoot sound/cyo/shoot.ogg
 cyo_reload RREV //sound/cyo/reload.ogg <- make ogg of rrev pls
+cyo_reload_standing sound/cyo/reload_standing.ogg
+cyo_chargeok sound/cyo/chargeok.ogg
 cyo_special sound/cyo/special.ogg
 cyo_reloading1 sound/cyo/reloading1.ogg
 cyo_reloading2 sound/cyo/reloading2.ogg

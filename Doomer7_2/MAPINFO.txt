@@ -1,9 +1,11 @@
-gameinfo{
-	playerclasses = "SmithSyndicate"
+gameinfo
+{
+	playerclasses = "K7_Smith"
 	titlemusic = "music/Title.ogg"
 }
 
 clearskills
+// NORMAL
 skill normal
 {
 	DefaultSkill
@@ -19,6 +21,7 @@ skill normal
 	
 	EasyKey
 }
+// HARD
 skill deadly
 {
 	name = "Deadly"

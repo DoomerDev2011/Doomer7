@@ -1,0 +1,96 @@
+Class K7_Smith_Ked
+{
+	
+}
+
+Class K7_Smith_Ked_Wep : K7_Smith_Weapon
+{	
+	Default
+	{
+		Weapon.SlotNumber 2;
+	}
+	
+	override void BeginPlay()
+	{
+		Super.BeginPlay();
+		m_sPersona = "ked";
+		m_fDamage = 45;
+		m_fRecoil = 3;
+		m_iClipSize = 10;
+		m_fRefire = 15;
+		m_fHeight = 0.85;
+		m_fReloadTime = 35 * 3.5;
+	}
+	
+	States
+	{
+		Spawn:
+			KEDA A -1 bright;
+			Loop;
+		Recoil:
+			#### # 1 A_SetPitch( pitch - invoker.m_fRecoil );
+			#### # 1 A_SetPitch( pitch + invoker.m_fRecoil * 0.2 );
+			#### # 1 A_SetPitch( pitch - invoker.m_fRecoil *  0.1 );
+			#### # 1 A_SetPitch( pitch + invoker.m_fRecoil *  0.2 );
+			#### # 1 A_SetPitch( pitch - invoker.m_fRecoil *  0.15 );
+			#### # 1 A_SetPitch( pitch + invoker.m_fRecoil *  0.05 );
+			Stop;
+		Flash1:
+			KEDF A 1
+			{
+				return ResolveState( "Flash" );
+			}
+		Flash2:
+			KEDF B 1
+			{
+				return ResolveState( "Flash" );
+			}
+		Flash3:
+			KEDF C 1
+			{
+				return ResolveState( "Flash" );
+			}
+		Anim_Aim_In:
+			KEDB A 0 A_StartSound( invoker.m_sPersona .. "_aim", CHAN_WEAPON, CHANF_OVERLAP );
+			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
+			Goto Anim_Aiming;
+		Anim_Aiming:
+			KEDB A 1 bright
+			{
+				float offx = sin( level.time * 3 ) * 2.3 ;
+				float offy = 1 + sin( level.time * 6 ) * 0.5;
+				A_WeaponOffset( offx, 32 + offy, WOF_INTERPOLATE );
+			}
+			Loop;
+		Anim_Fire:
+			#### # 0 A_WeaponOffset( 0, 32 );
+			KEDB B 1 bright A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
+			#### CDEFGHIJ 2 bright;
+			Goto Anim_Aiming;
+		Anim_Aiming_Reload:
+			KEDB A 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );
+			#### # 1 bright A_WeaponOffset ( 0, 32, 0);
+			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
+			//#### # 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
+			//#### # 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
+			//#### # 1 bright A_WeaponOffset ( 64, 32 + 128, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 128, 32 + 256, WOF_INTERPOLATE);
+			#### # 50 bright;
+			//#### # 0 bright A_StartSound( "dan_aim", CHAN_WEAPON, CHANF_OVERLAP );
+			//#### # 1 bright A_WeaponOffset ( 64, 32 + 128, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE );
+			//#### # 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE );
+			//#### # 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
+			Goto Anim_Aiming;
+		Anim_Standing_Reload:
+			#### # 0 A_StartSound( invoker.m_sPersona .. "_reload_standing", CHAN_WEAPON, CHANF_OVERLAP );
+			Stop;
+			
+	}
+}

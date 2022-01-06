@@ -2,7 +2,7 @@ Class K7_HeavenSmile_Fast : K7_HeavenSmile
 {
 	Default
 	{
-		Speed 4;
+		Speed 3;
 	}
 	
 	States

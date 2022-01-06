@@ -47,7 +47,7 @@ Class K7_Dan_Taurus : K7_SmithSyndicate_Weapon
 			{
 				return ResolveState( "Ready_Generic" );
 			}
-
+			
 		Aim_In:
 			DANF A 0 A_StartSound( "dan_aim", CHAN_WEAPON, CHANF_OVERLAP );
 			#### # 1 bright A_WeaponOffset( 100, 0, 0 );

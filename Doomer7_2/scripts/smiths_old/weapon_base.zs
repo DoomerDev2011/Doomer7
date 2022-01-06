@@ -11,7 +11,7 @@ const USE_HOLD_AIM = 0;
 CONST WEAPON_FLAGS = ( WRF_ALLOWRELOAD | WRF_ALLOWUSER1 | WRF_ALLOWUSER2 | WRF_ALLOWUSER3 );
 CONST WEAPON_FLAGS_REFIRE1 = ( WEAPON_FLAGS | WRF_NOPRIMARY );
 CONST WEAPON_FLAGS_REFIRE2 = ( WEAPON_FLAGS | WRF_NOSECONDARY );
-
+ 
 Class K7_SmithSyndicate_Weapon : Weapon
 {
 	Default
@@ -53,7 +53,7 @@ Class K7_SmithSyndicate_Weapon : Weapon
 			Goto Ready_Generic;
 		
 		Ready_Generic:
-			#### A 0 A_JumpIf( ( USE_HOLD_AIM ), "Ready_HoldAim" );
+			#### A 0 A_JumpIf( ( CVar.FindCVar('k7_mode').GetInt() ), "Ready_HoldAim" );
 			#### # 0 A_WeaponReady( WEAPON_FLAGS );
 			#### # 1 bright;
 			#### # 0
@@ -68,7 +68,7 @@ Class K7_SmithSyndicate_Weapon : Weapon
 			
 		Ready_HoldAim:
 			#### A 0 A_JumpIf( ( invoker.m_bAiming ), "Aiming" );
-			#### # 0 A_JumpIf( (GetPlayerInput( INPUT_BUTTONS, 0 ) & BT_USER1), "Aim_In_Clapper" );
+			#### # 0 A_JumpIf( (GetPlayerInput( INPUT_BUTTONS, 0 ) & BT_USER1 ), "Aim_In_Clapper" );
 			#### # 0 A_WeaponReady( WEAPON_FLAGS | WRF_NOFIRE );
 			#### # 0
 			{
@@ -79,7 +79,7 @@ Class K7_SmithSyndicate_Weapon : Weapon
 			Loop;
 			
 		Aiming:
-			#### A 0 A_JumpIf( !(GetPlayerInput( INPUT_BUTTONS, 0 ) & BT_USER1), "Aim_Out" );
+			#### A 0 A_JumpIf( !(GetPlayerInput( INPUT_BUTTONS, 0 ) & BT_USER1 ), "Aim_Out" );
 			#### # 1 A_WeaponReady( WRF_ALLOWRELOAD | WRF_NOSWITCH | WRF_DISABLESWITCH );
 			Loop;
 		

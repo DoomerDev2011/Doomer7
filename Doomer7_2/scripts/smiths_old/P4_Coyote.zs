@@ -18,7 +18,7 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 	
 	
 	States
-	{
+	{ 
 		Spawn:
 			COYH A -1 bright;
 			Loop;
@@ -106,7 +106,7 @@ Class K7_Coyote_Enfield2: K7_SmithSyndicate_Weapon
 				{
 					A_Overlay(-1,"Flash3");
 				}
-			}
+			} 
 			#### B 1 bright;
 			#### C 1 bright;
 			#### D 1 bright;

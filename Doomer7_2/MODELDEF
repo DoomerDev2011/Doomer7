@@ -1,4 +1,5 @@
 //Code that implements a 3d model for Garcian's weapon
+/*
 Model GarcianGun{
 	Rotating
 	Path "models"
