@@ -6,7 +6,7 @@
 #include "scripts/smiths/p4_cyo.zs"
 //#include "scripts/smiths/p5_con.zs"
 //#include "scripts/smiths/p6_msk.zs"
-//#include "scripts/smiths/p7_hay.zs"
+#include "scripts/smiths/p7_hay.zs"
 
 const CHAN_WEAPON_CHARGE = CHAN_6;
 
@@ -18,6 +18,10 @@ Class K7_Smith : DoomPlayer
 		Player.StartItem "K7_Smith_Ked_Wep";
 		
 		Player.StartItem "K7_Smith_Cyo_Wep";
+		
+		
+		
+		Player.StartItem "K7_Smith_Hay_Wep";
 		
 	}
 	

@@ -21,6 +21,7 @@ Class K7_Smith_Weapon : Weapon
 	float  	m_fHeight;
 	float 	m_fReloadTime;
 	float 	m_fReloadTimeStanding;
+	bool 	m_bAutoFire;
 	
 	override void BeginPlay()
 	{
@@ -131,6 +132,9 @@ Class K7_Smith_Weapon : Weapon
 			}
 			#### # 0
 			{
+				if (invoker.m_bAutoFire){
+					A_ReFire();
+				}
 				return ResolveState( "Aiming" );
 			}
 		FlashR:
