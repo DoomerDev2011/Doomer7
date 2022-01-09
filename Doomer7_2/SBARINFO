@@ -1,3 +1,4 @@
+/*
 StatusBar Normal
 {
    //DrawImage "K7HUD", -261,-25, center;
@@ -7,3 +8,4 @@ StatusBar Normal
    DrawString K7Font, untranslated, "Thin blood", 280, 170, 0, alignment(center);
    //DrawImage "NewSkull",-260,-265,center,60,60;
 }
+*/

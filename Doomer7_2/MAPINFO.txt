@@ -2,6 +2,7 @@ gameinfo
 {
 	playerclasses = "K7_Smith"
 	titlemusic = "music/Title.ogg"
+	StatusBarClass = "K7Hud"
 }
 
 clearskills
