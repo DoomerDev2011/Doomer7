@@ -1,10 +1,10 @@
 // Shared
-charge_tube_cancel sound/shared/tube0.ogg
-charge_tubea sound/shared/tube1.ogg
-charge_tubeb sound/shared/tube2.ogg
-charge_tubec sound/shared/tube3.ogg
-charge_tubed sound/shared/tube4.ogg
-charge_tubee sound/shared/tube5.ogg
+charge_tube0 sound/shared/tube0.ogg
+charge_tube1 sound/shared/tube1.ogg
+charge_tube2 sound/shared/tube2.ogg
+charge_tube3 sound/shared/tube3.ogg
+charge_tube4 sound/shared/tube4.ogg
+charge_tube5 sound/shared/tube5.ogg
 persona_camswap sound/shared/persona_camswap.ogg
 persona_explode sound/shared/persona_explode.ogg
 persona_disperse sound/shared/persona_disperse.ogg
@@ -16,10 +16,6 @@ persona_usefail sound/shared/usefail.ogg
 pickup_blood sound/pickup/pickup_blood.ogg
 
 // Garcian
-weapon/getppk GETPPK
-weapon/fireppk FIREPPK
-weapon/reppk RPPK
-
 gar_aim sound/gar/aim.ogg
 gar_shoot sound/gar/shoot.ogg
 gar_reload sound/gar/reload.ogg
@@ -78,15 +74,10 @@ ked_zoomin sound/ked/zoom_in.ogg
 ked_zoomout sound/ked/zoom_out.ogg
 
 // Kevin
+kvn_aim sound/ksn/aim.ogg
+kvn_shoot sound/kvn/shoot.ogg
 
 // Coyote
-weapon/coyoteshoot FIREREV
-weapon/coyotereload RREV
-weapon/coyoteaim CYOAIM
-weapon/coyotespecial CYOSP
-weapon/coyotecharge CYOSPOK
-vo/cyocrit CYOCRIT
-
 cyo_aim sound/cyo/aim.ogg
 cyo_shoot sound/cyo/shoot.ogg
 cyo_reload RREV //sound/cyo/reload.ogg <- make ogg of rrev pls
@@ -163,6 +154,7 @@ $random hay_shoot {
 	hay_shoot3
 }
 hay_shell sound/hay/shell.ogg
+hay_reload sound/hay/reload_fast.ogg
 hay_reload_fast sound/hay/reload_fast.ogg
 hay_reloading1 sound/hay/reloading1.ogg
 hay_reloading2 sound/hay/reloading2.ogg
@@ -202,13 +194,24 @@ hs_step3 sound/hs/step3.ogg
 hs_step4 sound/hs/step4.ogg
 hs_step5 sound/hs/step5.ogg
 hs_step6 sound/hs/step6.ogg
-$random hs_step { hs_step1 hs_step2 hs_step3 hs_step4 hs_step5 hs_step6 }
+$random hs_step {
+	hs_step1
+	hs_step2
+	hs_step3
+	hs_step4
+	hs_step5
+	hs_step6
+}
 $rolloff hs_step linear 250 500
 
 hs_run1 sound/hs/run1.ogg
 hs_run2 sound/hs/run2.ogg
 hs_run3 sound/hs/run3.ogg
-$random hs_run { hs_run1 hs_run2 hs_run3 }
+$random hs_run {
+	hs_run1
+	hs_run2
+	hs_run3
+}
 
 
 hs_alert sound/hs/alert.ogg
@@ -216,7 +219,9 @@ $rolloff hs_alert linear 250 300
 $volume hs_alert 0.8
 
 hs_hurt1 sound/hs/hurt1.ogg
-$random hs_hurt { hs_hurt1 }
+$random hs_hurt {
+	hs_hurt1
+}
 $rolloff hs_hurt linear 800 1600
 
 hs_hurt2 sound/hs/hurt2.ogg
@@ -225,7 +230,11 @@ hs_hurt2 sound/hs/hurt2.ogg
 hs_snicker1 sound/hs/snicker1.ogg
 hs_snicker2 sound/hs/snicker2.ogg
 hs_snicker3 sound/hs/snicker3.ogg
-$random hs_snicker { hs_snicker1 hs_snicker2 hs_snicker3 }
+$random hs_snicker {
+	hs_snicker1
+	hs_snicker2
+	hs_snicker3
+}
 
 $rolloff hs_snicker linear 800 1600
 
@@ -233,7 +242,12 @@ hs_laugh1 sound/hs/laugh1.ogg
 hs_laugh2 sound/hs/laugh2.ogg
 hs_laugh3 sound/hs/laugh3.ogg
 hs_laugh4 sound/hs/laugh4.ogg
-$random hs_laugh { hs_laugh1 hs_laugh2 hs_laugh3 hs_laugh4 }
+$random hs_laugh {
+	hs_laugh1
+	hs_laugh2
+	hs_laugh3
+	hs_laugh4
+}
 $volume hs_laugh 0.8
 $rolloff hs_laugh linear 0 2000
 
@@ -258,7 +272,6 @@ $random hs_explosion  {
 	hs_explosion7
 	hs_explosion8
 }
-
 
 hs_death sound/hs/death.ogg
 hs_death_bomb sound/hs/death_bomb.ogg

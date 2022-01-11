@@ -1,0 +1,111 @@
+Sprite "KEDAA0", 693, 566
+{
+	XScale 25.000
+	YScale 25.000
+	Offset 338, 566
+	Patch "KEDAA0", 0, 1
+}
+
+Sprite "KEDBA0", 565, 715
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -705, -195
+	Patch "KEDBA0", 0, 0
+}
+
+Sprite "KEDBB0", 566, 720
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -705, -190
+	Patch "KEDBB0", 0, 0
+}
+
+Sprite "KEDBC0", 591, 906
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -690, 0
+	Patch "KEDBC0", 0, 0
+}
+
+Sprite "KEDBD0", 994, 1080
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -690, 174
+	Patch "KEDBD0", 0, 0
+}
+
+Sprite "KEDBE0", 1033, 1080
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -660, 173
+	Patch "KEDBE0", 0, 0
+}
+
+Sprite "KEDBF0", 952, 1080
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -735, 174
+	Patch "KEDBF0", 0, 0
+}
+
+Sprite "KEDBG0", 915, 1080
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -720, 170
+	Patch "KEDBG0", 0, 0
+}
+
+Sprite "KEDBH0", 627, 868
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -730, -40
+	Patch "KEDBH0", 0, 0
+}
+
+Sprite "KEDBI0", 572, 750
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -710, -157
+	Patch "KEDBI0", 0, 0
+}
+
+Sprite "KEDBJ0", 570, 716
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -708, -190
+	Patch "KEDBJ0", 0, 0
+}
+
+Sprite "KEDFA0", 230, 259
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -750, -350
+	Patch "KEDFA0", 0, 0
+}
+
+Sprite "KEDFB0", 265, 248
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -750, -350
+	Patch "KEDFB0", 0, 0
+}
+
+Sprite "KEDFC0", 217, 263
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -750, -350
+	Patch "KEDFC0", 0, 0
+}

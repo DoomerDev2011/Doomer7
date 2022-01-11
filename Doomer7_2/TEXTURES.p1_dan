@@ -1,0 +1,143 @@
+Sprite "DANAA0", 1022, 533
+{
+	XScale 35.000
+	YScale 35.000
+	Offset 500, 530
+	Patch "DANAA0", 0, 0
+}
+
+Sprite "DANBA0", 928, 681
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -930, -235
+	Patch "DANBA0", 0, 0
+}
+
+Sprite "DANBB0", 754, 680
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -930, -235
+	Patch "DANBB0", 0, 0
+}
+
+Sprite "DANBC0", 806, 923
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -885, 50
+	Patch "DANBC0", 0, 0
+}
+
+Sprite "DANBD0", 260, 290
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -1425, 175
+	Patch "DANBD0", 0, 0
+}
+
+Sprite "DANBE0", 184, 215
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -1525, 175
+	Patch "DANBE0", 0, 0
+}
+
+Sprite "DANBF0", 312, 339
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -1370, 175
+	Patch "DANBF0", 0, 0
+}
+
+Sprite "DANBG0", 673, 771
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -1010, 175
+	Patch "DANBG0", 0, 0
+}
+
+Sprite "DANBH0", 762, 836
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -920, 175
+	Patch "DANBH0", 0, 0
+}
+
+Sprite "DANBI0", 764, 973
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -920, 175
+	Patch "DANBI0", 0, 0
+}
+
+Sprite "DANBJ0", 813, 1080
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -870, 173
+	Patch "DANBJ0", 0, 0
+}
+
+Sprite "DANBK0", 785, 798
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -895, -110
+	Patch "DANBK0", 0, 0
+}
+
+Sprite "DANBL0", 748, 681
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -933, -226
+	Patch "DANBL0", 0, 0
+}
+
+Sprite "DANBM0", 743, 668
+{
+	XScale 4.500
+	YScale 5.400
+	Offset -940, -240
+	Patch "DANBM0", 0, 0
+}
+
+Sprite "DANCA0", 284, 242
+{
+	XScale 4.500
+	YScale 5.400
+	Offset 142, 121
+	Patch "DANCA0", 0, 0
+}
+
+Sprite "DANFA0", 797, 718
+{
+	XScale 5.300
+	YScale 5.900
+	Offset -700, -15
+	Patch "DANFA0", 0, 0
+}
+
+Sprite "DANFB0", 859, 756
+{
+	XScale 5.700
+	YScale 6.300
+	Offset -775, -10
+	Patch "DANFB0", 0, 0
+}
+
+Sprite "DANFC0", 751, 698
+{
+	XScale 5.000
+	YScale 6.300
+	Offset -665, -25
+	Patch "DANFC0", 0, 0
+}

@@ -1,18 +1,13 @@
-version "4.6.0"
+version "4.7.1"
 
 
 #include "scripts/blood_pickups.zs"
 
-// Hud
-#include "scripts/k7_hud.zs"
+#include "scripts/ui/k7_hud.zs"
 
-// Smith Syndicate
 #include "scripts/smiths/smith.zs"
 
-// Heaven Smile
 #include "scripts/heavensmile/hs_common.zs"
 
-// Misc
 #include "scripts/pickups.zs"
-//#include "scripts/models.zs"
 

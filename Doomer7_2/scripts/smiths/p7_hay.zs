@@ -15,11 +15,12 @@ Class K7_Smith_Hay_Wep : K7_Smith_Weapon
 		Super.BeginPlay();
 		m_sPersona = "hay";
 		m_fDamage = 47;
-		m_fRecoil = 3;
+		m_fRecoil = 2.5;
+		m_fSpread = 1.66;
 		m_iClipSize = 50;
-		m_fRefire = 10;
-		m_fHeight = 0.75;
-		m_fReloadTime = 35 * 1.5;
+		m_fRefire = 5;
+		m_fViewHeight = 0.9;
+		m_fReloadTime = 65;
 		m_bAutoFire = true;
 	}
 	
@@ -29,7 +30,9 @@ Class K7_Smith_Hay_Wep : K7_Smith_Weapon
 			HAYA A -1 bright;
 			Loop;
 		Recoil:
-			#### # 1 A_SetPitch( pitch - invoker.m_fRecoil );
+			TNT1 A 0;
+			#### # 1 A_SetPitch( pitch + frandom( - 1, 0.25 ) * invoker.m_fRecoil, 0 );
+			#### # 1 A_SetAngle( angle + frandom( -0.25, 0.25 ) * invoker.m_fRecoil, 0 );
 			#### # 1 A_SetPitch( pitch + invoker.m_fRecoil * 0.2 );
 			#### # 1 A_SetPitch( pitch - invoker.m_fRecoil *  0.1 );
 			#### # 1 A_SetPitch( pitch + invoker.m_fRecoil *  0.2 );
@@ -70,26 +73,21 @@ Class K7_Smith_Hay_Wep : K7_Smith_Weapon
 			}
 			Loop;
 		Anim_Fire:
-			#### # 0 A_WeaponOffset( 0, 32 );
+			HAYB B 0 A_WeaponOffset( 0, 32 );
 			#### # 1 bright A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
-			HAYB BCDEFGHI 1 bright;
+			#### CDEFGHI 1 bright;
 			Goto Anim_Aiming;
-		Anim_Aiming_Reload:
+		Anim_Reload_Down:
 			HAYB A 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );
 			#### # 1 bright A_WeaponOffset ( 0, 32, 0);
 			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
-			//#### # 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE);
 			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
-			//#### # 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE);
 			#### # 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
-			//#### # 1 bright A_WeaponOffset ( 64, 32 + 128, WOF_INTERPOLATE);
 			#### # 1 bright A_WeaponOffset ( 128, 32 + 256, WOF_INTERPOLATE);
-			#### # 50 bright;
-			//#### # 1 bright A_WeaponOffset ( 64, 32 + 128, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE );
-			//#### # 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE );
+			Stop;
+		Anim_Reload_Up:
+			HAYB A 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE );
 			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE );
-			//#### # 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE );
 			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE );
 			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
 			Goto Anim_Aiming;

@@ -18,8 +18,8 @@ Class K7_Smith_Cyo_Wep : K7_Smith_Weapon
 		m_fRecoil = 2.5;
 		m_iClipSize = 6;
 		m_fRefire = 18;
-		m_fHeight = 0.85;
-		m_fReloadTime = 50;
+		m_fViewHeight = 0.8;
+		m_fReloadTime = 42;
 	}
 	
 	States
@@ -28,7 +28,8 @@ Class K7_Smith_Cyo_Wep : K7_Smith_Weapon
 			CYOA A -1 bright;
 			Loop;
 		Recoil:
-			#### # 0 A_SetAngle( angle + invoker.m_fRecoil );
+			TNT1 A 0;
+			#### # 1 A_SetAngle( angle + invoker.m_fRecoil );
 			#### # 1 A_SetPitch( pitch - invoker.m_fRecoil * 0.33 );
 			#### # 1 A_SetPitch( pitch + invoker.m_fRecoil );
 			#### # 1 A_SetPitch( pitch - invoker.m_fRecoil *  0.1 );
@@ -77,23 +78,18 @@ Class K7_Smith_Cyo_Wep : K7_Smith_Weapon
 			CYOB FGHI 1 bright;
 			#### JKL 2 bright;
 			Goto Anim_Aiming;
-		Anim_Aiming_Reload:
+		Anim_Reload_Down:
 			CYOB A 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );
 			#### # 1 bright A_WeaponOffset ( 0, 32, 0);
 			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
-			//#### # 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE);
 			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
-			//#### # 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE);
 			#### # 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
-			//#### # 1 bright A_WeaponOffset ( 64, 32 + 128, WOF_INTERPOLATE);
 			#### # 1 bright A_WeaponOffset ( 128, 32 + 256, WOF_INTERPOLATE);
-			#### # 30 bright;
-			#### # 0 bright A_StartSound( invoker.m_sPersona .. "_aim", CHAN_WEAPON, CHANF_OVERLAP );
-			//#### # 1 bright A_WeaponOffset ( 64, 32 + 128, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE );
-			//#### # 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE );
+			Stop;
+		Anim_Reload_Up:
+			CYOB A 0 A_StartSound( invoker.m_sPersona .. "_aim", CHAN_WEAPON, CHANF_OVERLAP );
+			CYOB A 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE );
 			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE );
-			//#### # 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE );
 			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE );
 			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
 			Goto Anim_Aiming;

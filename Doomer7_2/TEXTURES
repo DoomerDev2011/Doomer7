@@ -1,0 +1,68 @@
+Sprite "BLCKA0", 16, 9
+{
+	XScale 0.100
+	YScale 0.100
+	Offset 8, 9
+	Patch "BLCKA0", 0, 0
+}
+
+Sprite "BLDVA0", 28, 108
+{
+	XScale 6.000
+	YScale 6.000
+	Offset 14, 108
+	Patch "DTHNBLD", 0, 0
+}
+
+Sprite "STTCA0", 640, 360
+{
+	XScale 2.000
+	YScale 1.800
+	Offset 0, 70
+	Patch "STTCA0", 0, 0
+}
+
+Sprite "STTCB0", 640, 360
+{
+	XScale 2.000
+	YScale 1.800
+	Offset 0, 70
+	Patch "STTCB0", 0, 0
+}
+
+Sprite "STTCC0", 640, 360
+{
+	XScale 2.000
+	YScale 1.800
+	Offset 0, 70
+	Patch "STTCC0", 0, 0
+}
+
+Sprite "STTCD0", 640, 360
+{
+	XScale 2.000
+	YScale 1.800
+	Offset 0, 70
+	Patch "STTCD0", 0, 0
+}
+
+Sprite "STTCE0", 640, 360
+{
+	XScale 2.000
+	YScale 1.800
+	Offset 0, 70
+	Patch "STTCE0", 0, 0
+}
+
+Graphic "XHAIRB1", 8, 8
+{
+	Patch "XHAIRB1", 0, 0
+}
+
+Graphic "XHAIRB2", 880, 1080
+{
+	Offset 440, 540
+	Patch "XHAIRB2", 0, 0
+}
+
+// End of texture definitions

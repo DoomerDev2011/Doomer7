@@ -1,0 +1,63 @@
+Sprite "HSC1A1", 184, 482
+{
+	XScale 8.000
+	YScale 8.000
+	Offset 93, 472
+	Patch "HSC1A0A1", 0, 0
+}
+
+Sprite "HSC1A2", 192, 504
+{
+	XScale 8.000
+	YScale 8.000
+	Offset 96, 480
+	Patch "HSC1A2", 0, 0
+}
+
+Sprite "HSC1A3", 166, 498
+{
+	XScale 8.000
+	YScale 8.000
+	Offset 96, 473
+	Patch "HSC1A3", 0, 0
+}
+
+Sprite "HSC1A4", 173, 500
+{
+	XScale 8.000
+	YScale 8.000
+	Offset 103, 469
+	Patch "HSC1A4", 0, 0
+}
+
+Sprite "HSC1A5", 247, 493
+{
+	XScale 8.000
+	YScale 8.000
+	Offset 122, 461
+	Patch "HSC1A5", 0, 0
+}
+
+Sprite "HSC1A6", 189, 499
+{
+	XScale 8.000
+	YScale 8.000
+	Offset 91, 462
+	Patch "HSC1A6", 0, 0
+}
+
+Sprite "HSC1A7", 173, 492
+{
+	XScale 8.000
+	YScale 8.000
+	Offset 70, 467
+	Patch "HSC1A7", 0, 0
+}
+
+Sprite "HSC1A8", 184, 511
+{
+	XScale 8.000
+	YScale 8.000
+	Offset 83, 469
+	Patch "HSC1A8", 0, 0
+}

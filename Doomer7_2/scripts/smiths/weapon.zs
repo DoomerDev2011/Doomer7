@@ -4,11 +4,18 @@ Class K7_Smith_Weapon : Weapon
 	const AIMING_FLAGS = ( WRF_ALLOWRELOAD | WRF_DISABLESWITCH );
 	const BULLET_FLAGS = ( FBF_USEAMMO | FBF_NORANDOM | FBF_NORANDOMPUFFZ );
 	
-	const LAYER_BARS = 50;
-	const LAYER_ANIM = 2;
-	const LAYER_FUNC = -1;
-	const LAYER_RECOIL = -2;
-	const LAYER_FLASH = -5;
+	const LAYER_BARS 	= 54;
+	const LAYER_ANIM 	= 2;
+	const LAYER_FUNC 	= -1;
+	const LAYER_RECOIL 	= -2;
+	const LAYER_FLASH 	= -5;
+	
+	/*	Variable Notes
+		m_iPersona is the id of the smith;
+		m_sPersona is the short name of the smith ( gar, dan, ked, kvn, cyo, con, msk, hay );
+		m_fViewHeight is a scale relative to the current smith height;
+		
+	*/
 	
 	int 	m_iPersona;
 	string 	m_sPersona;
@@ -18,14 +25,21 @@ Class K7_Smith_Weapon : Weapon
 	int 	m_iClipSize;
 	int 	m_iAmmo;
 	float 	m_fRefire;
-	float  	m_fHeight;
+	float 	m_fHeight;
+	float  	m_fViewHeight;
 	float 	m_fReloadTime;
 	float 	m_fReloadTimeStanding;
 	bool 	m_bAutoFire;
 	
+	void m_fnAimingBreathe()
+	{
+		
+	}
+	
 	override void BeginPlay()
 	{
 		Super.BeginPlay();
+		
 		m_iPersona = slotnumber;
 		m_sPersona = "none";
 		
@@ -34,14 +48,16 @@ Class K7_Smith_Weapon : Weapon
 		m_fRecoil = 2.5;
 		m_iClipSize = 6;
 		m_fRefire = 15;
-		m_fHeight = 50;
-		m_fReloadTime = 50;
+		m_fHeight = 52;
+		m_fViewHeight = 0.8;
+		m_fReloadTime = 42;
 		m_fReloadTimeStanding = 70;
 	}
 	
 	override void PostBeginPlay()
 	{
 		super.PostBeginPlay();
+		
 		m_iAmmo = m_iClipSize;
 	}
 	
@@ -72,25 +88,26 @@ Class K7_Smith_Weapon : Weapon
 			TNT1 A 1 A_WeaponOffset( 0, 32, 0 );
 			#### # 0
 			{
-				if ( CVar.FindCVar('k7_mode').GetBool() )
+				if ( CVar.FindCVar( 'k7_mode' ).GetBool() )
 				{
 					invoker.m_iAmmo = invoker.m_iClipSize;
+					K7_Smith( invoker.owner ).m_fnApplyStats();
 				}
 				return ResolveState( "Ready" );
 			}
 		Ready:
 			TNT1 A 0;
-			#### # 0 A_SetCrosshair( CVar.FindCVar('k7_mode').GetBool() ? 1 : 2 );
-			#### # 0 A_JumpIf( (K7_Smith( invoker.owner ).m_bAimHeld) , "Aim_In" );
+			#### # 0 A_SetCrosshair( CVar.FindCVar( 'k7_mode' ).GetBool() ? 1 : 2 );
+			#### # 0 A_JumpIf( ( K7_Smith( invoker.owner ).m_bAimHeld ) , "Aim_In" );
 			#### # 1 A_WeaponReady( READY_FLAGS );
 			Goto Ready + 2;
 		Deselect:
 			#### # 0 A_Lower( 512 );
-			Stop;
+			Loop;
 		Aim_In:
-			#### # 0 
+			#### # 0
 			{
-				if ( CVar.FindCVar('k7_mode').GetBool() )
+				if ( CVar.FindCVar( 'k7_mode' ).GetBool() )
 				{
 					Thing_Stop( 0 );
 					K7_Smith( invoker.owner ).m_fnSetSpeed( 0 );
@@ -99,11 +116,13 @@ Class K7_Smith_Weapon : Weapon
 			#### # 5;
 			#### # 0
 			{
-				if ( CVar.FindCVar('k7_mode').GetBool() )
+				if ( CVar.FindCVar( 'k7_mode' ).GetBool() )
 				{
 					invoker.LookScale = 0.5;
 					A_ZoomFactor( 2.75, ZOOM_INSTANT );
 					A_SetCrosshair( 2 );
+					A_SetPitch( 0 );
+					K7_Smith( invoker.owner ).m_fnSetViewHeight( invoker.m_fHeight * invoker.m_fViewHeight );
 				}
 			}
 			#### # 15 A_Overlay( LAYER_ANIM, "Anim_Aim_In" );
@@ -114,27 +133,27 @@ Class K7_Smith_Weapon : Weapon
 			}
 		Aiming:
 			#### # 0 A_JumpIf( !(K7_Smith( invoker.owner ).m_bAimHeld), "Aim_Out" );
-			#### # 1 A_WeaponReady( ( CVar.FindCVar('k7_mode').GetBool() ) ? AIMING_FLAGS : AIMING_FLAGS &~ WRF_DISABLESWITCH );
+			#### # 1 A_WeaponReady( ( CVar.FindCVar( 'k7_mode' ).GetBool() ) ? AIMING_FLAGS : AIMING_FLAGS &~ WRF_DISABLESWITCH );
 			Loop;
 		Fire:
-			#### # 0 A_JumpIf ( ( invoker.m_iAmmo < 1 ), "Reload" );
+			TNT1 A 0 A_JumpIf ( ( invoker.m_iAmmo == 0 ), "Reload" );
 			#### # 0 A_Overlay( LAYER_ANIM, "Anim_Fire" );
-			#### # 0 A_Overlay( LAYER_FUNC, "Shoot" );
+			#### # 1 A_Overlay( LAYER_FUNC, "Shoot" );
 			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
 			#### # 0
 			{
-				invoker.m_iAmmo--;
+				if ( invoker.m_iAmmo > 0 )
+					invoker.m_iAmmo--;
 				A_Overlay( LAYER_FLASH, "FlashR" );
 			}
 			#### # 0
 			{
-				A_SetTics( ceil( invoker.m_fRefire ) );
+				A_SetTics( ceil( invoker.m_fRefire ) - 1 );
 			}
+			#### # 0 A_JumpIf( !invoker.m_bAutoFire, "Aiming" );
+			#### # 0 A_Refire();
 			#### # 0
 			{
-				if (invoker.m_bAutoFire){
-					A_ReFire();
-				}
 				return ResolveState( "Aiming" );
 			}
 		FlashR:
@@ -154,6 +173,10 @@ Class K7_Smith_Weapon : Weapon
 				}
 				return ResolveState( null );
 			}
+		Flash1:
+		Flash2:
+		Flash3:
+			Stop;
 		Flash:
 			#### # 0 A_Light( 6 );
 			#### # 0 A_SetBlend( "E6F63F", 0.25, 10 );
@@ -174,10 +197,14 @@ Class K7_Smith_Weapon : Weapon
 				return ResolveState( "Standing_Reload" );
 			}
 		Aiming_Reload:
-			#### # 0
+			#### # 5
 			{
-				A_Overlay( LAYER_ANIM, "Anim_Aiming_Reload" );
+				A_Overlay( LAYER_ANIM, "Anim_Reload_Down" );
 				A_SetTics( ceil( invoker.m_fReloadTime ) );
+			}
+			#### # 5
+			{
+				A_Overlay( LAYER_ANIM, "Anim_Reload_Up" );
 			}
 			#### # 0
 			{
@@ -200,9 +227,14 @@ Class K7_Smith_Weapon : Weapon
 		Shoot:
 			#### # 0
 			{
-				float 	spread = invoker.m_fSpread;
-				float 	damage = invoker.m_fDamage;
-				A_FireBullets( spread, spread, -1, damage, "BulletPuff", BULLET_FLAGS );
+				A_FireBullets(
+					invoker.m_fSpread,
+					invoker.m_fSpread,
+					-1,
+					invoker.m_fDamage,
+					"BulletPuff",
+					BULLET_FLAGS
+				);
 			}
 			Stop;
 		Aim_Out:
@@ -214,6 +246,7 @@ Class K7_Smith_Weapon : Weapon
 				invoker.LookScale = 1;
 				let smith = K7_Smith( invoker.owner );
 				smith.m_bAiming = false;
+				smith.m_fnSetViewHeight( invoker.m_fHeight - 2.5 );
 			}
 			#### # 0
 			{
