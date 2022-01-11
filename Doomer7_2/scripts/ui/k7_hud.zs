@@ -13,9 +13,9 @@ Class K7_Hud : BaseStatusBar
 	
 	override void Draw( int state, double TicFrac )
 	{
-		Super.Draw( state, TicFrac );
+		BeginHUD( 1, true, 1920, 1080);
 		
-		BeginHUD( 1, true, -1, -1 );
+		Super.Draw( state, TicFrac );
 		
 		DrawImage( "K7HUD_BG", ( 0, 0 ), DI_ITEM_OFFSETS );
 		

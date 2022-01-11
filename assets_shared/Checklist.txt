@@ -1,0 +1,12 @@
+- Get hud/images/text/crosshair to scale properly down on different resolutions
+- Create eye compass
+- Get eye health bar functionality working 
+- Animation/reload timing cleanup
+- Bobbing cleanup (make sure the frames don't show blank spaces)
+- Add in Doom Mode and Killer7/8 mode for players to choose at the start of the game
+ -- Doom Mode plays like Doom (regular Doom movement speed for every persona, can aim and fire freely without holding space, difficulty options will be
+	Doom's regular difficulty options)
+ -- Killer7 mode plays like Killer7(each character has different movement speeds, need to hold space to fire, enemies will be heaven smiles when completed,
+	difficulty options will be Killer7's difficulty options)
+ -- Killer8 (same as Killer7 mode, but enemies one shot you, and only has the one killer8 difficulty)
+- Figure out how thin blood will work within the game and how to balance it
