@@ -18,7 +18,7 @@ Class K7_Smith_Hay_Wep : K7_Smith_Weapon
 		m_fRecoil = 2.5;
 		m_fSpread = 1.66;
 		m_iClipSize = 50;
-		m_fRefire = 5;
+		m_fRefire = 7;
 		m_fViewHeight = 0.9;
 		m_fReloadTime = 65;
 		m_bAutoFire = true;
@@ -56,19 +56,20 @@ Class K7_Smith_Hay_Wep : K7_Smith_Weapon
 			}
 		Anim_Aim_In:
 			HAYB A 0 A_StartSound( invoker.m_sPersona .. "_aim", CHAN_WEAPON, CHANF_OVERLAP );
-			#### # 1 bright A_WeaponOffset ( 50, 42, 0 );
-			#### # 1 bright A_WeaponOffset ( 20, 38, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 0, 36, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( -10, 34, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( -15, 34, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( -10, 34, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( 0 - 5, 32 + 10, 0 );
+			#### # 1 bright A_WeaponOffset ( 0 - 2.5, 32 + 5, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( 0 - 1.25, 32 + 2.5, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( 0 - 0.75, 32 + 1.25, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( 0 - 0.375, 32 + 0.75 , WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( 0 - 0.1875, 32 + 0.375, WOF_INTERPOLATE );
 			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
 			Goto Anim_Aiming;
 		Anim_Aiming:
 			HAYB A 1 bright
 			{
-				float offx = sin( level.time * 3 ) * 2.3 ;
-				float offy = 1 + sin( level.time * 6 ) * 0.5;
+				float anim_time = ( level.time * 3 );
+				float offx = sin( anim_time ) * 2.3 ;
+				float offy = 1 + sin( anim_time * 2 ) * 0.5;
 				A_WeaponOffset( offx, 32 + offy, WOF_INTERPOLATE );
 			}
 			Loop;

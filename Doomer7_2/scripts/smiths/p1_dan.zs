@@ -19,7 +19,7 @@ Class K7_Smith_Dan_Wep : K7_Smith_Weapon
 		m_iClipSize = 6;
 		m_fRefire = 18;
 		m_fViewHeight = 0.85;
-		m_fReloadTime = 42;
+		m_fReloadTime = 60;
 	}
 	
 	States
@@ -30,12 +30,7 @@ Class K7_Smith_Dan_Wep : K7_Smith_Weapon
 		Recoil:
 			TNT1 A 0;
 			#### # 1 A_SetPitch( pitch - invoker.m_fRecoil );
-			#### # 1 A_SetPitch( pitch + invoker.m_fRecoil * 0.2 );
-			#### # 1 A_SetPitch( pitch - invoker.m_fRecoil *  0.1 );
-			#### # 1 A_SetPitch( pitch + invoker.m_fRecoil *  0.2 );
-			#### # 1 A_SetPitch( pitch - invoker.m_fRecoil *  0.15 );
-			#### # 1 A_SetPitch( pitch + invoker.m_fRecoil *  0.05 );
-			Stop;
+			Goto Recoil_Generic;
 		Flash1:
 			DANF A 0
 			{

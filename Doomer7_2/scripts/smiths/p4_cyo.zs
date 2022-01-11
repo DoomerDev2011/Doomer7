@@ -54,7 +54,7 @@ Class K7_Smith_Cyo_Wep : K7_Smith_Weapon
 			}
 		Anim_Aim_In:
 			CYOB A 0 A_StartSound( invoker.m_sPersona .. "_aim", CHAN_WEAPON, CHANF_OVERLAP );
-			#### # 1 bright A_WeaponOffset ( 50, 42, 0 );
+			#### # 1 bright A_WeaponOffset ( 50, 64, 0 );
 			#### # 1 bright A_WeaponOffset ( 20, 38, WOF_INTERPOLATE );
 			#### # 1 bright A_WeaponOffset ( 0, 36, WOF_INTERPOLATE );
 			#### # 1 bright A_WeaponOffset ( -10, 34, WOF_INTERPOLATE );
@@ -71,7 +71,7 @@ Class K7_Smith_Cyo_Wep : K7_Smith_Weapon
 			}
 			Loop;
 		Anim_Fire:
-			#### # 0 A_WeaponOffset( 0, 0 );
+			#### # 0 A_WeaponOffset( 0, 32 );
 			CYOB B 1 bright A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
 			#### CDE 1 bright;
 			TNT1 A 28;
@@ -88,7 +88,7 @@ Class K7_Smith_Cyo_Wep : K7_Smith_Weapon
 			Stop;
 		Anim_Reload_Up:
 			CYOB A 0 A_StartSound( invoker.m_sPersona .. "_aim", CHAN_WEAPON, CHANF_OVERLAP );
-			CYOB A 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE );
 			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE );
 			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE );
 			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );

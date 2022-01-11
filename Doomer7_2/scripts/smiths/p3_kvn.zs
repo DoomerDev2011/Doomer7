@@ -18,9 +18,10 @@ Class K7_Smith_Kvn_Wep : K7_Smith_Weapon
 		m_fSpread = 0;
 		m_fRecoil = 2;
 		m_iClipSize = -1;
-		m_fRefire = 26;
-		m_fViewHeight = 0.95;
-		m_fReloadTime = 37;
+		m_fRefire = 30;
+		m_fViewHeight = 0.975;
+		m_fReloadTime = 0;
+		m_fFireDelay = 10;
 	}
 	
 	States
@@ -29,29 +30,9 @@ Class K7_Smith_Kvn_Wep : K7_Smith_Weapon
 			KVNA A -1 bright;
 			Loop;
 		Recoil:
-			Stop;
 			TNT1 A 0;
-			#### A 1 A_SetPitch( pitch - invoker.m_fRecoil );
-			#### A 1 A_SetPitch( pitch + invoker.m_fRecoil * 2 );
-			#### A 1 A_SetPitch( pitch - invoker.m_fRecoil * 1.5 );
-			#### A 1 A_SetPitch( pitch + invoker.m_fRecoil * 0.75 );
-			#### A 1 A_SetPitch( pitch - invoker.m_fRecoil * 0.25 );
-			Stop;
-		Fire:
-			TNT1 A 0 A_Overlay( LAYER_ANIM, "Anim_Fire" );
-			#### # 7;
-			#### # 1 A_Overlay( LAYER_FUNC, "Shoot" );
-			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
-			#### # 0 A_Overlay( LAYER_FLASH, "Flash" );
-			#### # 0
-			{
-				A_SetTics( ceil( invoker.m_fRefire ) - 8 );
-			}
-			#### # 0
-			{
-				return ResolveState( "Aiming" );
-			}
-		Flash:
+			Goto Recoil_Generic;
+		FlashA:
 			KVNF A 1 bright;
 			Stop;
 		Anim_Aim_In:
@@ -75,7 +56,7 @@ Class K7_Smith_Kvn_Wep : K7_Smith_Weapon
 		Anim_Fire:
 			KVNB A 0 A_WeaponOffset( 0, 32 );
 			#### BCS 1 bright;
-			TNT1 A 4;
+			TNT1 A 7;
 			KVNB # 0 A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
 			#### DEFGHIJKLM 1 bright;
 			TNT1 A 5;

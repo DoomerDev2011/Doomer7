@@ -118,6 +118,7 @@ Class K7_Con_Glock: K7_SmithSyndicate_Weapon
 			#### A 0 A_Refire();
 			Goto Ready;
 		
+		
 			
 		UseSpecial:
 			#### # 0

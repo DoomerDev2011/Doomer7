@@ -8,6 +8,7 @@ Class K7_Smith_Weapon : Weapon
 	const LAYER_ANIM 	= 2;
 	const LAYER_FUNC 	= -1;
 	const LAYER_RECOIL 	= -2;
+	const LAYER_SHOOT 	= -3;
 	const LAYER_FLASH 	= -5;
 	
 	/*	Variable Notes
@@ -30,6 +31,7 @@ Class K7_Smith_Weapon : Weapon
 	float 	m_fReloadTime;
 	float 	m_fReloadTimeStanding;
 	bool 	m_bAutoFire;
+	float 	m_fFireDelay;
 	
 	void m_fnAimingBreathe()
 	{
@@ -44,7 +46,7 @@ Class K7_Smith_Weapon : Weapon
 		m_sPersona = "none";
 		
 		m_fDamage = 40;
-		m_fSpread = 1;
+		m_fSpread = 0.2;
 		m_fRecoil = 2.5;
 		m_iClipSize = 6;
 		m_fRefire = 15;
@@ -78,6 +80,9 @@ Class K7_Smith_Weapon : Weapon
 		Weapon.AmmoUse2 0;
 		Weapon.KickBack 0;
 		Weapon.SlotNumber 0;
+		Weapon.BobSpeed -2;
+		Weapon.BobRangeX 0.1;
+		Weapon.BobRangeY 1;
 	}
 	
 	
@@ -91,8 +96,10 @@ Class K7_Smith_Weapon : Weapon
 				if ( CVar.FindCVar( 'k7_mode' ).GetBool() )
 				{
 					invoker.m_iAmmo = invoker.m_iClipSize;
-					K7_Smith( invoker.owner ).m_fnApplyStats();
 				}
+				let smith = K7_Smith( invoker.owner );
+				smith.m_fnApplyStats();
+				smith.m_fnSetViewHeight( invoker.m_fHeight - 2.5 );
 				return ResolveState( "Ready" );
 			}
 		Ready:
@@ -104,6 +111,13 @@ Class K7_Smith_Weapon : Weapon
 		Deselect:
 			#### # 0 A_Lower( 512 );
 			Loop;
+		Recoil_Generic:
+			#### A 1 A_SetPitch( pitch - 1 );
+			#### A 1 A_SetPitch( pitch + 1 * 2 );
+			#### A 1 A_SetPitch( pitch - 1 * 1.5 );
+			#### A 1 A_SetPitch( pitch + 1 * 0.75 );
+			#### A 1 A_SetPitch( pitch - 1 * 0.25 );
+			Stop;
 		Aim_In:
 			#### # 0
 			{
@@ -138,13 +152,11 @@ Class K7_Smith_Weapon : Weapon
 		Fire:
 			TNT1 A 0 A_JumpIf ( ( invoker.m_iAmmo == 0 ), "Reload" );
 			#### # 0 A_Overlay( LAYER_ANIM, "Anim_Fire" );
-			#### # 1 A_Overlay( LAYER_FUNC, "Shoot" );
-			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
+			#### # 0 A_Overlay( LAYER_SHOOT, "Shoot" );
 			#### # 0
 			{
 				if ( invoker.m_iAmmo > 0 )
 					invoker.m_iAmmo--;
-				A_Overlay( LAYER_FLASH, "FlashR" );
 			}
 			#### # 0
 			{
@@ -156,7 +168,7 @@ Class K7_Smith_Weapon : Weapon
 			{
 				return ResolveState( "Aiming" );
 			}
-		FlashR:
+		FlashA:
 			#### # 0
 			{
 				switch( Random( 0, 2 ) )
@@ -169,6 +181,23 @@ Class K7_Smith_Weapon : Weapon
 						break;
 					case 2:
 						return ResolveState( "Flash3" );
+						break;
+				}
+				return ResolveState( null );
+			}
+		FlashB:
+			#### # 0
+			{
+				switch( Random( 0, 2 ) )
+				{
+					case 0:
+						return ResolveState( "Flash4" );
+						break;
+					case 1:
+						return ResolveState( "Flash5" );
+						break;
+					case 2:
+						return ResolveState( "Flash6" );
 						break;
 				}
 				return ResolveState( null );
@@ -208,8 +237,12 @@ Class K7_Smith_Weapon : Weapon
 			}
 			#### # 0
 			{
-				A_SetInventory( "K7_Ammo", invoker.m_iClipSize );
 				invoker.m_iAmmo = invoker.m_iClipSize;
+			}
+			#### # 0 A_JumpIf( !invoker.m_bAutoFire, "Aiming" );
+			#### # 0 A_Refire();
+			#### # 0
+			{
 				return ResolveState( "Aiming" );
 			}
 		Standing_Reload:
@@ -220,11 +253,19 @@ Class K7_Smith_Weapon : Weapon
 			}
 			#### # 0
 			{
-				A_SetInventory( "K7_Ammo", invoker.m_iClipSize );
 				invoker.m_iAmmo = invoker.m_iClipSize;
 				return ResolveState( "Ready" );
 			}
 		Shoot:
+			#### # 0
+			{
+				A_SetTics( ceil( invoker.m_fFireDelay ) );
+			}
+			#### # 1 A_Overlay( LAYER_FUNC, "Fire_Bullet" );
+			#### # 1 A_Overlay( LAYER_FLASH, "FlashA" );
+			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
+			Stop;
+		Fire_Bullet:
 			#### # 0
 			{
 				A_FireBullets(

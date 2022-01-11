@@ -66,8 +66,8 @@ Class K7_Smith_Ked_Wep : K7_Smith_Weapon
 			Loop;
 		Anim_Fire:
 			KEDB # 0 A_WeaponOffset( 0, 32 );
-			#### B 1 bright A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
-			#### CDEFGHIJ 2 bright;
+			#### # 0 A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
+			#### BCDEFGHIJ 2 bright;
 			Goto Anim_Aiming;
 		Anim_Reload_Down:
 			KEDB A 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );

@@ -72,7 +72,7 @@ Class K7_Smith : DoomPlayer
 	
 	void m_fnApplyStats()
 	{
-		ViewBob = 0.2;
+		ViewBob = 0.4;
 		Height = m_fHeight;
 		
 		m_fSpeed = 1;
