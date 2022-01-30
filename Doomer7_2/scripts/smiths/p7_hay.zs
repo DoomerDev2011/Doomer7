@@ -18,7 +18,7 @@ Class K7_Smith_Hay_Wep : K7_Smith_Weapon
 		m_fRecoil = 2.5;
 		m_fSpread = 1.66;
 		m_iClipSize = 50;
-		m_fRefire = 7;
+		m_fRefire = 6;
 		m_fViewHeight = 0.9;
 		m_fReloadTime = 65;
 		m_bAutoFire = true;
@@ -76,7 +76,7 @@ Class K7_Smith_Hay_Wep : K7_Smith_Weapon
 		Anim_Fire:
 			HAYB B 0 A_WeaponOffset( 0, 32 );
 			#### # 1 bright A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
-			#### CDEFGHI 1 bright;
+			#### CDEF 1 bright;
 			Goto Anim_Aiming;
 		Anim_Reload_Down:
 			HAYB A 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );

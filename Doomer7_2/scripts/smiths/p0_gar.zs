@@ -19,7 +19,7 @@ Class K7_Smith_Gar_Wep : K7_Smith_Weapon
 		m_iClipSize = 5;
 		m_fRefire = 10;
 		m_fViewHeight = 0.985;
-		m_fReloadTime = 37;
+		m_fReloadTime = 28;
 	}
 	
 	States
@@ -56,8 +56,8 @@ Class K7_Smith_Gar_Wep : K7_Smith_Weapon
 		Anim_Fire:
 			GARB A 0 A_WeaponOffset( 0, 32 );
 			#### # 1 bright A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
-			#### BC 1;
-			#### DEFG 2 bright;
+			#### BCD 1;
+			#### EF 2 bright;
 			Goto Anim_Aiming;
 		Anim_Reload_Down:
 			GARB A 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );
