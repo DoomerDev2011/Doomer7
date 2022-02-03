@@ -35,6 +35,13 @@ Class K7_Smith_Gar_Wep : K7_Smith_Weapon
 			#### A 1 A_SetPitch( pitch + invoker.m_fRecoil * 0.75 );
 			#### A 1 A_SetPitch( pitch - invoker.m_fRecoil * 0.25 );
 			Stop;
+		Flash1:
+		Flash2:
+		Flash3:
+			TNT1 A 0
+			{
+				return ResolveState( "Flash" );
+			}
 		Anim_Aim_In:
 			GARB A 0 A_StartSound( invoker.m_sPersona .. "_aim", CHAN_WEAPON, CHANF_OVERLAP );
 			#### # 1 bright A_WeaponOffset ( 50, 42, 0 );
