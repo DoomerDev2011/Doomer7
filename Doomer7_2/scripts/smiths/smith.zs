@@ -10,17 +10,17 @@
 
 const CHAN_WEAPON_CHARGE = CHAN_6;
 
-Class K7_Smith : DoomPlayer
+Class CK7_Smith : DoomPlayer
 {
 	Default
 	{
-		Player.StartItem "K7_Smith_Gar_Wep";
-		Player.StartItem "K7_Smith_Dan_Wep";
-		Player.StartItem "K7_Smith_Ked_Wep";
-		Player.StartItem "K7_Smith_Kvn_Wep";
-		Player.StartItem "K7_Smith_Cyo_Wep";
-		Player.StartItem "K7_Smith_Con_Wep";
-		Player.StartItem "K7_Smith_Msk_Wep";
+		Player.StartItem "CK7_Smith_Gar_Wep";
+		Player.StartItem "CK7_Smith_Dan_Wep";
+		Player.StartItem "CK7_Smith_Ked_Wep";
+		Player.StartItem "CK7_Smith_Kvn_Wep";
+		Player.StartItem "CK7_Smith_Cyo_Wep";
+		Player.StartItem "CK7_Smith_Con_Wep";
+		Player.StartItem "CK7_Smith_Msk_Wep";
 	}
 	
 	override void BeginPlay()
@@ -31,10 +31,10 @@ Class K7_Smith : DoomPlayer
 		int sk = G_SkillPropertyInt( SKILLP_ACSReturn );
 		if ( sk >= 4 )
 		{
-			A_SetInventory( "K7_Smith_Hay_Wep", 1 );
+			A_SetInventory( "CK7_Smith_Hay_Wep", 1 );
 		}
 		
-		m_fnApplyStats();
+		ApplyStats();
 	}
 	
 	override void Tick()
@@ -70,18 +70,18 @@ Class K7_Smith : DoomPlayer
 	
 	float 	m_fHeight;
 	
-	void m_fnApplyStats()
+	void ApplyStats()
 	{
 		ViewBob = 0.4;
 		Height = m_fHeight;
 		
 		m_fSpeed = 1;
 		m_fSpeedFactor = 1;
-		m_fnSetSpeed( m_fSpeed );
+		SetSpeed( m_fSpeed );
 		
 	}
 	
-	void m_fnSetViewHeight( float new_height )
+	void SetViewHeight( float new_height )
 	{
 		player.ViewHeight = new_height;
 		ViewHeight = new_height;
@@ -91,7 +91,7 @@ Class K7_Smith : DoomPlayer
 		
 	}
 
-	void m_fnSetSpeed( float new_speed )
+	void SetSpeed( float new_speed )
 	{
 		m_fCurrentSpeed = new_speed;
 		forwardmove1 = m_fCurrentSpeed;

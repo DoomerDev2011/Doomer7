@@ -1,7 +1,7 @@
 #include "scripts/heavensmile/hs_fast.zs"
-#include "scripts/heavensmile/replace.zs"
+//#include "scripts/heavensmile/replace.zs"
 
-Class K7_HeavenSmile : Actor
+Class CK7_HeavenSmile : Actor
 {
 	Default
 	{
@@ -32,7 +32,7 @@ Class K7_HeavenSmile : Actor
 		+NOTELESTOMP
 		+LOOKALLAROUND
 		
-		DropItem "K7_ThinBlood";
+		DropItem "CK7_ThinBlood";
 	}
 	
 	float m_fBlood;
@@ -105,7 +105,7 @@ Class K7_HeavenSmile : Actor
 	}
 }
 
-Class K7_HS_CritSpot : Actor
+Class CK7_HS_CritSpot : Actor
 {
 	
 }

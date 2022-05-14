@@ -1,4 +1,4 @@
-Class K7_Hud : BaseStatusBar 
+Class CK7_Hud : BaseStatusBar 
 {
 	HUDFont k7HudFont;
 	Inventory a1, a2;

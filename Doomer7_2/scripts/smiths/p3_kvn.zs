@@ -1,9 +1,9 @@
-Class K7_Smith_Kvn
+Class CK7_Smith_Kvn
 {
 	
 }
 
-Class K7_Smith_Kvn_Wep : K7_Smith_Weapon
+Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 {	
 	Default
 	{
