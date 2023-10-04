@@ -17,7 +17,7 @@ Class K7_Hud : BaseStatusBar
 		
 		Super.Draw( state, TicFrac );
 		
-		DrawImage( "K7HUD_BG", ( 0, 0 ), DI_ITEM_OFFSETS );
+		//DrawImage( "K7HUD_BG", ( 0, 0 ), DI_ITEM_OFFSETS );
 		
 		DrawString( k7HudFont, FormatNumber( CPlayer.health, 3 ), ( 70, 150 ) );
 		DrawString( k7HudFont, "Health", ( 40, 180 ));

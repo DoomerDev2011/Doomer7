@@ -141,6 +141,27 @@ $playeralias k7_con male *death con_die
 
 
 // MASK
+msk_aim sound/msk/aim.ogg
+msk_shoot sound/msk/shoot.ogg
+msk_reload sound/msk/reload.ogg
+msk_die sound/msk/die.ogg
+msk_hurt1 sound/msk/hurt1.ogg
+msk_hurt2 sound/msk/hurt2.ogg
+msk_hurt3 sound/msk/hurt3.ogg
+msk_hurt4 sound/msk/hurt4.ogg
+msk_hurt5 sound/msk/hurt5.ogg
+msk_hurt6 sound/msk/hurt6.ogg
+msk_hurt7 sound/msk/hurt7.ogg
+
+$random msk_hurt { msk_hurt1 msk_hurt2 msk_hurt3 msk_hurt4 msk_hurt5 msk_hurt6 msk_hurt7 }
+
+$playeralias k7_msk male *usefail persona_usefail
+$playeralias k7_msk male *pain100 msk_hurt
+$playersounddup k7_msk male *pain75 *pain100
+$playersounddup k7_msk male *pain50 *pain75
+$playersounddup k7_msk male *pain25 *pain50
+$playeralias k7_msk male *death msk_die
+
 
 
 // HarmanYoung
