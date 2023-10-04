@@ -1,4 +1,4 @@
-Class K7_HeavenSmile_Fast : K7_HeavenSmile
+Class CK7_HeavenSmile_Fast : CK7_HeavenSmile
 {
 	Default
 	{

@@ -1,5 +1,5 @@
 // Special Ammo
-Class K7_ThinBlood : Ammo
+Class CK7_ThinBlood : Ammo
 {
 	Default
 	{
@@ -21,7 +21,7 @@ Class K7_ThinBlood : Ammo
 	}
 }
 // Upgrade Currency
-Class K7_ThickBlood : Ammo
+Class CK7_ThickBlood : Ammo
 {
 	Default
 	{
