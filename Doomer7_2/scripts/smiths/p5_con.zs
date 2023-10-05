@@ -28,7 +28,7 @@ Class CK7_Smith_Con_Wep : CK7_Smith_Weapon
 	States
 	{
 		Spawn:
-			CONA A -1 bright;
+			CONP A -1 bright;
 			Loop;
 		Recoil:
 			TNT1 A 0;

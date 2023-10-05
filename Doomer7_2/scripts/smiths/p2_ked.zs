@@ -25,7 +25,7 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 	States
 	{
 		Spawn:
-			KEDA A -1 bright;
+			KAEP A -1 bright;
 			Loop;
 		Recoil:
 			TNT1 A 0;

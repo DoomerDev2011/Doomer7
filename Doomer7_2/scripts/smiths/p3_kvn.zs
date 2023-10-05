@@ -27,7 +27,7 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 	States
 	{
 		Spawn:
-			KVNA A -1 bright;
+			KEVP A -1 bright;
 			Loop;
 		Recoil:
 			TNT1 A 0;

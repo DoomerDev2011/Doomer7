@@ -25,7 +25,7 @@ Class CK7_Smith_Dan_Wep : CK7_Smith_Weapon
 	States
 	{
 		Spawn:
-			DANA A -1 bright;
+			DANP A -1 bright;
 			Loop;
 		Recoil:
 			TNT1 A 0;

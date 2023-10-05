@@ -3,7 +3,7 @@ Class K7_Smith_Msk
 	
 }
 
-Class K7_Smith_Msk_Wep : K7_Smith_Weapon
+Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 {	
 	Default
 	{
@@ -25,7 +25,7 @@ Class K7_Smith_Msk_Wep : K7_Smith_Weapon
 	States
 	{
 		Spawn:
-			GARA A -1 bright;
+			MASP A -1 bright;
 			Loop;
 		Recoil:
 			TNT1 A 0;
@@ -87,4 +87,38 @@ Class K7_Smith_Msk_Wep : K7_Smith_Weapon
 			Stop;
 			
 	}
-} 
+}
+
+class K7_Mask_M79_Grenade : Actor
+{
+	Default
+	{
+		Radius 11;
+		Height 8;
+		Speed 20;
+		Damage 20;
+		Projectile;
+		+RANDOMIZE
+		+DEHEXPLOSION
+		+ROCKETTRAIL
+		+ZDOOMTRANS
+		SeeSound "weapons/rocklf";
+		DeathSound "weapons/rocklx";
+		Obituary "$OB_MPROCKET";
+	}
+	States
+	{
+	Spawn:
+		MGRE A 1 Bright;
+		Loop;
+	Death:
+		MISL B 8 Bright A_Explode;
+		MISL C 6 Bright;
+		MISL D 4 Bright;
+		Stop;
+	BrainExplode:
+		MISL BC 10 Bright;
+		MISL D 10 A_BrainExplode;
+		Stop;
+	}
+}

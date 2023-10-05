@@ -1,6 +1,6 @@
 //Code that implements a 3d model for Garcian's weapon
-/*
-Model GarcianGun{
+
+Model CK7_Smith_Gar_Wep{
 	Rotating
 	Path "models"
 	Model 0 "GarcianPickup.md3"
@@ -14,7 +14,7 @@ Model GarcianGun{
 }
 
 //Code that implements a 3d model for Dan's weapon
-Model DanGun{
+Model CK7_Smith_Dan_Wep{
 	Rotating
 	Path "models"
 	Model 0 "DanPickup.md3"
@@ -28,7 +28,7 @@ Model DanGun{
 }
 
 //Code that implements a 3d model for Coyote's weapon
-Model CoyoteGun{
+Model CK7_Smith_Cyo_Wep{
 	Rotating
 	Path "models"
 	Model 0 "CoyotePickup.md3"
@@ -41,7 +41,7 @@ Model CoyoteGun{
 	FrameIndex COYP A 0 0
 }
 
-Model YoungHarmanGun{
+Model CK7_Smith_Hay_Wep{
 	Rotating
 	Path "models"
 	Model 0 "YoungHarmanPickup.md3"
@@ -54,7 +54,7 @@ Model YoungHarmanGun{
 	FrameIndex YHAP A 0 0
 }
 
-Model KaedeGun{
+Model CK7_Smith_Ked_Wep{
 	Rotating
 	Path "models"
 	Model 0 "KaedePickup.md3"
@@ -73,7 +73,7 @@ Model KaedeGun{
 	FrameIndex KAEP A 0 0
 }
 
-Model MaskGun{
+Model CK7_Smith_Msk_Wep{
 	Rotating
 	Path "models"
 	Model 0 "MaskPickup.md3"
@@ -92,7 +92,7 @@ Model MaskGun{
 	FrameIndex MASP A 0 0
 }
 
-Model ConGun{
+Model CK7_Smith_Con_Wep{
 	Rotating
 	Path "models"
 	Model 0 "ConPickup.md3"
@@ -105,7 +105,7 @@ Model ConGun{
 	FrameIndex CONP A 0 0
 }
 
-Model KevinKnife{
+Model CK7_Smith_Kvn_Wep{
 	Rotating
 	Path "models"
 	Model 0 "KevinPickup.md3"

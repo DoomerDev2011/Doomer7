@@ -27,7 +27,7 @@ Class CK7_Smith_Hay_Wep : CK7_Smith_Weapon
 	States
 	{
 		Spawn:
-			HAYA A -1 bright;
+			YHAP A -1 bright;
 			Loop;
 		Recoil:
 			TNT1 A 0;
