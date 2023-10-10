@@ -38,19 +38,19 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 		Anim_Aim_In:
 			KVNB A 0 A_StartSound( invoker.m_sPersona .. "_aim", CHAN_WEAPON, CHANF_OVERLAP );
 			#### # 1 bright A_WeaponOffset ( 50, 42, 0 );
-			#### # 1 bright A_WeaponOffset ( 20, 38, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 0, 36, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( -10, 34, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( -15, 34, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( -10, 34, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( 34, 38, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( 22, 36, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( 13, 34, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( 6, 34, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( 2, 34, WOF_INTERPOLATE );
 			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
 			Goto Anim_Aiming;
 		Anim_Aiming:
 			KVNB A 1 bright
 			{
-				float offx = sin( level.time * 3 ) * 2.3 ;
+				//float offx = sin( level.time * 3 ) * 2.3 ;
 				float offy = 1 + sin( level.time * 6 ) * 0.5;
-				A_WeaponOffset( offx, 32 + offy, WOF_INTERPOLATE );
+				A_WeaponOffset( 0, 32 + offy, WOF_INTERPOLATE );
 			}
 			Loop;
 		Anim_Fire:
