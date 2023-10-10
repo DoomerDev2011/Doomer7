@@ -58,9 +58,10 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			#### BCS 1 bright;
 			TNT1 A 7;
 			KVNB # 0 A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
-			#### DEFGHIJKLM 1 bright;
+			#### E 4;
+			#### FGHIJKL 1 bright;
 			TNT1 A 5;
-			KVNB NOPQR 1 bright;
+			KVNB MNOPQ 1 bright;
 			#### A 1 bright;
 			Goto Anim_Aiming;
 		Anim_Reload_Down:
