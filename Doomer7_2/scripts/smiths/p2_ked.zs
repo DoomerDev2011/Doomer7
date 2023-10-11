@@ -8,6 +8,8 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 	Default
 	{
 		Weapon.SlotNumber 2;
+		Inventory.PickupMessage "You got the AMT Hardballer!";
+		Inventory.PickupSound "weapon/gethar";
 	}
 	
 	override void BeginPlay()
@@ -18,7 +20,8 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 		m_fRecoil = 3;
 		m_iClipSize = 10;
 		m_fRefire = 15;
-		m_fViewHeight = 0.75;
+		m_fViewHeight = 0.4;
+		m_fHeight = 55;
 		m_fReloadTime = 35 * 3.5;
 	}
 	

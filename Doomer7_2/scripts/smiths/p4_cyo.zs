@@ -8,6 +8,8 @@ Class CK7_Smith_Cyo_Wep : CK7_Smith_Weapon
 	Default
 	{
 		Weapon.SlotNumber 4;
+		Inventory.PickupMessage "You got the Enfield revolver!";
+		Inventory.PickupSound "weapon/getrev";
 	}
 	
 	override void BeginPlay()
@@ -19,6 +21,7 @@ Class CK7_Smith_Cyo_Wep : CK7_Smith_Weapon
 		m_iClipSize = 6;
 		m_fRefire = 18;
 		m_fViewHeight = 0.8;
+		m_fHeight = 60;
 		m_fReloadTime = 42;
 	}
 	

@@ -8,6 +8,8 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 	Default
 	{
 		Weapon.SlotNumber 3;
+		Inventory.PickupMessage "You got the throwing knives!";
+		Inventory.PickupSound "weapon/getknife";
 	}
 	
 	override void BeginPlay()
@@ -19,7 +21,8 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 		m_fRecoil = 2;
 		m_iClipSize = -1;
 		m_fRefire = 30;
-		m_fViewHeight = 0.975;
+		m_fViewHeight = 0.6;
+		m_fHeight = 50;
 		m_fReloadTime = 0;
 		m_fFireDelay = 10;
 	}
@@ -54,11 +57,11 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			}
 			Loop;
 		Anim_Fire:
-			KVNB A 0 A_WeaponOffset( 0, 32 );
+			KVNB A 0 bright A_WeaponOffset ( 0, 32 );
 			#### BCS 1 bright;
 			TNT1 A 7;
 			KVNB # 0 A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
-			#### E 4;
+			#### E 4 bright;
 			#### FGHIJKL 1 bright;
 			TNT1 A 5;
 			KVNB MNOPQ 1 bright;

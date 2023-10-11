@@ -22,6 +22,7 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 		m_iClipSize = 1;
 		m_fRefire = 28;
 		m_fViewHeight = 0.985;
+		m_fHeight = 80;
 		m_fReloadTime = 39;
 		
 	}

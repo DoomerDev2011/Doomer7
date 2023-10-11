@@ -15,12 +15,13 @@ Class CK7_Smith : DoomPlayer
 	Default
 	{
 		Player.StartItem "CK7_Smith_Gar_Wep";
-		Player.StartItem "CK7_Smith_Dan_Wep";
-		Player.StartItem "CK7_Smith_Ked_Wep";
-		Player.StartItem "CK7_Smith_Kvn_Wep";
-		Player.StartItem "CK7_Smith_Cyo_Wep";
-		Player.StartItem "CK7_Smith_Con_Wep";
-		Player.StartItem "CK7_Smith_Msk_Wep";
+		//Player.StartItem "CK7_Smith_Dan_Wep";
+		//Player.StartItem "CK7_Smith_Ked_Wep";
+		//Player.StartItem "CK7_Smith_Kvn_Wep";
+		//Player.StartItem "CK7_Smith_Cyo_Wep";
+		//Player.StartItem "CK7_Smith_Con_Wep";
+		//Player.StartItem "CK7_Smith_Msk_Wep";
+		//Player.StartItem "CK7_Smith_Hay_Wep";
 	}
 	
 	override void BeginPlay()
@@ -31,7 +32,7 @@ Class CK7_Smith : DoomPlayer
 		int sk = G_SkillPropertyInt( SKILLP_ACSReturn );
 		if ( sk >= 4 )
 		{
-			A_SetInventory( "CK7_Smith_Hay_Wep", 1 );
+			A_SetInventory( "CK7_Smith_Gar_Wep", 1 );
 		}
 		
 		ApplyStats();

@@ -8,6 +8,8 @@ Class CK7_Smith_Hay_Wep : CK7_Smith_Weapon
 	Default
 	{
 		Weapon.SlotNumber 7;
+		Inventory.PickupMessage "You got the Tommygun!";
+		Inventory.PickupSound "weapon/gettmg";
 	}
 	
 	override void BeginPlay()
@@ -19,7 +21,8 @@ Class CK7_Smith_Hay_Wep : CK7_Smith_Weapon
 		m_fSpread = 1.66;
 		m_iClipSize = 50;
 		m_fRefire = 6;
-		m_fViewHeight = 0.9;
+		m_fViewHeight = 0.8;
+		m_fHeight = 60;
 		m_fReloadTime = 65;
 		m_bAutoFire = true;
 	}
@@ -81,15 +84,15 @@ Class CK7_Smith_Hay_Wep : CK7_Smith_Weapon
 		Anim_Reload_Down:
 			HAYB A 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );
 			#### # 1 bright A_WeaponOffset ( 0, 32, 0);
-			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
-			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
-			#### # 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
-			#### # 1 bright A_WeaponOffset ( 128, 32 + 256, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( -2, 32 + 4, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( -8, 32 + 16, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( -32, 32 + 64, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( -128, 32 + 256, WOF_INTERPOLATE);
 			Stop;
 		Anim_Reload_Up:
-			HAYB A 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE );
+			HAYB A 1 bright A_WeaponOffset ( -32, 32 + 64, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( -8, 32 + 16, WOF_INTERPOLATE );
+			#### # 1 bright A_WeaponOffset ( -2, 32 + 4, WOF_INTERPOLATE );
 			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
 			Goto Anim_Aiming;
 		Anim_Standing_Reload:

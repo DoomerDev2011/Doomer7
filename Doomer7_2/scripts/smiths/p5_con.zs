@@ -8,6 +8,8 @@ Class CK7_Smith_Con_Wep : CK7_Smith_Weapon
 	Default
 	{
 		Weapon.SlotNumber 5;
+		Inventory.PickupMessage "You got the automatic pistols!";
+		Inventory.PickupSound "weapon/getglk";
 	}
 	
 	override void BeginPlay()
@@ -19,7 +21,7 @@ Class CK7_Smith_Con_Wep : CK7_Smith_Weapon
 		m_fSpread = 2;
 		m_iClipSize = 6;
 		m_fRefire = 16;
-		m_fViewHeight = 0.9;
+		m_fViewHeight = 0.4;
 		m_fReloadTime = 42;
 		m_fHeight = 40;
 		m_bAutoFire = true;

@@ -306,23 +306,33 @@ $volume hs_blood 0.7
 weapon/getglk GETGLK
 weapon/fireglk FIREGLK
 weapon/reglk RGLK
+
 weapon/gettmg GETTMG
 weapon/firetmg FIRETMG
 weapon/retmg RTMG
+
+weapon/getmag DANCRIT
+
+weapon/getppk GETPPK
+
 weapon/getrev GETREV
 weapon/firerev FIREREV
 weapon/rerev RREV
 weapon/firerevcharge RCHRGE
+
 weapon/gethar GETHARD
 weapon/firehard FIREHARD
 weapon/rehard RHARD
 weapon/zoomhard ZHARD
 weapon/statichard STATIC
+
 weapon/getm79 GETM79
 weapon/firem79 FIREM79
 weapon/rem79 RM79
+
 weapon/getknife GETKNIFE
 weapon/fireknife FIRKN
+
 grunt/newAttack NEWATK
 weapon/MaskExplosion MGRS
 

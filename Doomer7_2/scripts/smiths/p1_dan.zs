@@ -8,6 +8,8 @@ Class CK7_Smith_Dan_Wep : CK7_Smith_Weapon
 	Default
 	{
 		Weapon.SlotNumber 1;
+		Inventory.PickupMessage "You got the Colt .357 revolver!";
+		Inventory.PickupSound "weapon/getmag";
 	}
 	
 	override void BeginPlay()
@@ -19,6 +21,7 @@ Class CK7_Smith_Dan_Wep : CK7_Smith_Weapon
 		m_iClipSize = 6;
 		m_fRefire = 18;
 		m_fViewHeight = 0.85;
+		m_fHeight = 60;
 		m_fReloadTime = 60;
 	}
 	
@@ -65,10 +68,10 @@ Class CK7_Smith_Dan_Wep : CK7_Smith_Weapon
 			}
 			Loop;
 		Anim_Fire:
-			DANB # 0 A_WeaponOffset( 0, 32 );
+			DANB # 0 bright A_WeaponOffset( 0, 32 );
 			#### # 1 bright A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
-			#### BC 1;
-			#### DEFGHIJKL 2 bright;
+			#### BC 1 bright;
+			#### DEFGHIJKLMA 2 bright;
 			Goto Anim_Aiming;
 		Anim_Reload_Down:
 			DANB A 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );
