@@ -140,7 +140,11 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 		Anim_Fire_Zoomed:
 			TNT1 A 0;
 			#### # 0 A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
-			#### # 0 A_Overlay( LAYER_FLASH, "FlashA" );
+			#### # 0 A_SetBlend( "E6F63F", 0.25, 10 );
+			#### # 2 A_Light( 6 );
+			#### # 2 A_Light( 4 );
+			#### # 2 A_Light( 2 );
+			#### # 2 A_Light( 0 );
 			Goto Anim_Zoomed;
 		
 		Anim_Zoom_Out:
