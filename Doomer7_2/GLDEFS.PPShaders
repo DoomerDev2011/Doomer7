@@ -2,7 +2,7 @@ HardwareShader PostProcess Scene
 {
 	Name "k7post"
 	Shader "shaders/k7post.fp" 330
-	Uniform float timer
+	Uniform float static_timer
 	Uniform int resX
 	Uniform int resY
 }

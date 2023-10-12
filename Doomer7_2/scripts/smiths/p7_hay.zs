@@ -78,8 +78,9 @@ Class CK7_Smith_Hay_Wep : CK7_Smith_Weapon
 			Loop;
 		Anim_Fire:
 			HAYB B 0 A_WeaponOffset( 0, 32 );
-			#### # 1 bright A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
-			#### CDEF 1 bright;
+			#### # 0 bright A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
+			#### # 0 A_Overlay( LAYER_FLASH, "FlashA" );
+			#### BCDEF 1 bright;
 			Goto Anim_Aiming;
 		Anim_Reload_Down:
 			HAYB A 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );

@@ -12,6 +12,24 @@ const CHAN_WEAPON_CHARGE = CHAN_6;
 
 Class CK7_Smith : DoomPlayer
 {
+	bool 	m_bAimHeld;
+	bool 	m_bSpecialPressed;
+	bool 	m_bHealPressed;
+	
+	bool 	m_bAiming;
+	bool		m_bZoomedIn;
+	
+	float 	m_fSpeed;
+	float 	m_fSpeedFactor;
+	float 	m_fCurrentSpeed;
+	
+	int 	m_iThinBlood;
+	int 	m_iThickBlood;
+	
+	float 	m_fHeight;
+	
+	int m_iStaticStartTime;
+	
 	Default
 	{
 		Player.StartItem "CK7_Smith_Gar_Wep";
@@ -28,6 +46,8 @@ Class CK7_Smith : DoomPlayer
 	{
 		Super.BeginPlay();
 		m_fHeight = 52;
+		
+		m_iStaticStartTime = 0;
 		
 		int sk = G_SkillPropertyInt( SKILLP_ACSReturn );
 		if ( sk >= 4 )
@@ -54,22 +74,9 @@ Class CK7_Smith : DoomPlayer
 		// Heal Button
 		m_bHealPressed = ( input & BT_USER3 ) &~ ( input_old & BT_USER3 );
 		
+		
+		PPShader.SetUniform1i( "k7post", "static_timer", level.time - m_iStaticStartTime );
 	}
-
-	bool 	m_bAimHeld;
-	bool 	m_bSpecialPressed;
-	bool 	m_bHealPressed;
-	
-	bool 	m_bAiming;
-	
-	float 	m_fSpeed;
-	float 	m_fSpeedFactor;
-	float 	m_fCurrentSpeed;
-	
-	int 	m_iThinBlood;
-	int 	m_iThickBlood;
-	
-	float 	m_fHeight;
 	
 	void ApplyStats()
 	{
@@ -96,20 +103,22 @@ Class CK7_Smith : DoomPlayer
 	{
 		m_fCurrentSpeed = new_speed;
 		forwardmove1 = m_fCurrentSpeed;
-		sidemove1 = forwardmove1 * 0.65;
+		sidemove1 = forwardmove1 * 0.8;
 		forwardmove2 = forwardmove1 * 0.5;
 		sidemove2 = sidemove1 * 0.5;
 	}
 	
-	void SetStatic(bool on)
+	void SetStatic( bool on )
 	{
-		if(IsActorPlayingSound(CHAN_5, "weapon/statichard") == false){
-			A_StartSound("weapon/statichard",CHAN_5,CHANF_LOOPING,0.5);//start loopin sound, but only if it is not already playing
-        }
-		Shader.SetUniform1i(player, "Static", "timer", level.time);
-		Shader.SetUniform1i(player, "Static", "resX", Screen.GetWidth() / 8);
-		Shader.SetUniform1i(player, "Static", "resY", Screen.GetHeight() / 8);
-		Shader.SetEnabled(player,"Static",on);
+		A_StopSound( CHAN_5 );
+		if ( on )
+		{
+			A_StartSound( "weapon/statichard", CHAN_5, CHANF_LOOPING, 0.5 );
+			m_iStaticStartTime = level.time;
+		}
+		PPShader.SetEnabled( "k7post", on );
+		PPShader.SetUniform1i( "k7post", "resX", Screen.GetWidth() / 8 );
+		PPShader.SetUniform1i( "k7post", "resY", Screen.GetHeight() / 8 );
 	}
 
 	States

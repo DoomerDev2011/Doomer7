@@ -61,6 +61,7 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			#### BCS 1 bright;
 			TNT1 A 7;
 			KVNB # 0 A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
+			#### # 0 A_Overlay( LAYER_FLASH, "FlashA" );
 			#### E 4 bright;
 			#### FGHIJKL 1 bright;
 			TNT1 A 5;

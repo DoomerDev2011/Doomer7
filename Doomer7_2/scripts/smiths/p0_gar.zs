@@ -65,8 +65,9 @@ Class CK7_Smith_Gar_Wep : CK7_Smith_Weapon
 			Loop;
 		Anim_Fire:
 			GARB A 0 A_WeaponOffset( 0, 32 );
-			#### # 1 bright A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
-			#### BCD 1;
+			#### # 0 bright A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
+			#### # 0 A_Overlay( LAYER_FLASH, "FlashA" );
+			#### ABCD 1 bright;
 			#### EF 2 bright;
 			Goto Anim_Aiming;
 		Anim_Reload_Down:

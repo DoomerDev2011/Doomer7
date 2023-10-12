@@ -2,7 +2,7 @@ Class CK7_Smith_Weapon : Weapon
 {
 	const READY_FLAGS = ( WRF_ALLOWRELOAD | WRF_NOPRIMARY | WRF_NOSECONDARY | WRF_NOBOB );
 	const AIMING_FLAGS = ( WRF_ALLOWRELOAD | WRF_DISABLESWITCH );
-	const BULLET_FLAGS = ( FBF_USEAMMO | FBF_NORANDOM | FBF_NORANDOMPUFFZ );
+	const BULLET_FLAGS = ( FBF_USEAMMO | FBF_NORANDOMPUFFZ );
 	
 	const LAYER_BARS 	= 54;
 	const LAYER_ANIM 	= 2;
@@ -108,9 +108,14 @@ Class CK7_Smith_Weapon : Weapon
 			#### # 0 A_JumpIf( ( CK7_Smith( invoker.owner ).m_bAimHeld ) , "Aim_In" );
 			#### # 1 A_WeaponReady( READY_FLAGS );
 			Goto Ready + 2;
+			
 		Deselect:
 			#### # 0 A_Lower( 512 );
-			Loop;
+			#### # 0
+			{
+				CK7_Smith( invoker.owner ).m_bZoomedIn = false;
+			}
+			
 		Recoil_Generic:
 			#### A 1 A_SetPitch( pitch - 1 );
 			#### A 1 A_SetPitch( pitch + 1 * 2 );
@@ -118,6 +123,7 @@ Class CK7_Smith_Weapon : Weapon
 			#### A 1 A_SetPitch( pitch + 1 * 0.75 );
 			#### A 1 A_SetPitch( pitch - 1 * 0.25 );
 			Stop;
+			
 		Aim_In:
 			#### # 0
 			{
@@ -145,13 +151,32 @@ Class CK7_Smith_Weapon : Weapon
 				CK7_Smith( invoker.owner ).m_bAiming = true;
 				return ResolveState( "Aiming" );
 			}
+		
 		Aiming:
-			#### # 0 A_JumpIf( !( CK7_Smith( invoker.owner ).m_bAimHeld), "Aim_Out" );
+			#### # 0 A_JumpIf( ( CK7_Smith( invoker.owner ).m_bZoomedIn ), "Aiming_Zoomed" );
+			#### # 0 A_JumpIf( !( CK7_Smith( invoker.owner ).m_bAimHeld ), "Aim_Out" );
 			#### # 1 A_WeaponReady( ( CVar.FindCVar( 'k7_mode' ).GetBool() ) ? AIMING_FLAGS : AIMING_FLAGS &~ WRF_DISABLESWITCH );
 			Loop;
+		
+		Aiming_Zoomed: // leave zoom state if this character shouldnt be in it
+			TNT1 A 0
+			{
+				CK7_Smith( invoker.owner ).m_bZoomedIn = false;
+				return ResolveState( "Aiming" );
+			}
+			Loop;
+		
 		Fire:
-			TNT1 A 0 A_JumpIf ( ( invoker.m_iAmmo == 0 ), "Reload" );
-			#### # 0 A_Overlay( LAYER_ANIM, "Anim_Fire" );
+			TNT1 A 0;
+			//#### # 0 A_JumpIf( ( CK7_Smith( invoker.owner ).m_bZoomedIn ), "Fire_Zoomed" );
+			#### # 0 A_JumpIf ( ( invoker.m_iAmmo == 0 ), "Reload" );
+			#### # 0
+			{
+				if ( CK7_Smith( invoker.owner ).m_bZoomedIn )
+					A_Overlay( LAYER_ANIM, "Anim_Fire_Zoomed" );
+				else
+					A_Overlay( LAYER_ANIM, "Anim_Fire" );
+			}
 			#### # 0 A_Overlay( LAYER_SHOOT, "Shoot" );
 			#### # 0
 			{
@@ -168,7 +193,14 @@ Class CK7_Smith_Weapon : Weapon
 			{
 				return ResolveState( "Aiming" );
 			}
-			
+		
+		Fire_Zoomed: // leave zoom state if this character shouldnt be in it
+			TNT1 A 0
+			{
+				CK7_Smith( invoker.owner ).m_bZoomedIn = false;
+				return ResolveState( "Fire" );
+			}
+		
 		FlashA:
 			#### # 0
 			{
@@ -186,6 +218,7 @@ Class CK7_Smith_Weapon : Weapon
 				}
 				return ResolveState( null );
 			}
+		
 		FlashB:
 			#### # 0
 			{
@@ -207,6 +240,7 @@ Class CK7_Smith_Weapon : Weapon
 		Flash2:
 		Flash3:
 			Stop;
+		
 		Flash:
 			#### # 0 A_Light( 6 );
 			#### # 0 A_SetBlend( "E6F63F", 0.25, 10 );
@@ -220,12 +254,14 @@ Class CK7_Smith_Weapon : Weapon
 			#### # 2 A_OverlayAlpha( LAYER_FLASH, 0.33 );
 			#### # 0 A_Light( 0 );
 			Stop;
+		
 		Reload:
 			#### # 0 A_JumpIf( CK7_Smith( invoker.owner ).m_bAiming, "Aiming_Reload" );
 			#### # 0
 			{
 				return ResolveState( "Standing_Reload" );
 			}
+		
 		Aiming_Reload:
 			#### # 5
 			{
@@ -246,6 +282,7 @@ Class CK7_Smith_Weapon : Weapon
 			{
 				return ResolveState( "Aiming" );
 			}
+		
 		Standing_Reload:
 			#### # 0
 			{
@@ -257,15 +294,16 @@ Class CK7_Smith_Weapon : Weapon
 				invoker.m_iAmmo = invoker.m_iClipSize;
 				return ResolveState( "Ready" );
 			}
+		
 		Shoot:
 			#### # 0
 			{
 				A_SetTics( ceil( invoker.m_fFireDelay ) );
 			}
 			#### # 1 A_Overlay( LAYER_FUNC, "Fire_Bullet" );
-			#### # 1 A_Overlay( LAYER_FLASH, "FlashA" );
 			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
 			Stop;
+		
 		Fire_Bullet:
 			#### # 0
 			{
@@ -279,6 +317,7 @@ Class CK7_Smith_Weapon : Weapon
 				);
 			}
 			Stop;
+		
 		Aim_Out:
 			#### # 0 A_Overlay( LAYER_ANIM, null );
 			#### # 0 A_ZoomFactor( 1, ZOOM_INSTANT );

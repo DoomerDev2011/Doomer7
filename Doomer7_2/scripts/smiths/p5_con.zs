@@ -67,10 +67,12 @@ Class CK7_Smith_Con_Wep : CK7_Smith_Weapon
 				return ResolveState( "Flash" );
 			}
 		Shoot:
-			#### # 0 A_Overlay( LAYER_FLASH, "FlashA" );
 			#### # 1 A_Overlay( LAYER_FUNC, "Fire_Bullet" );
-			#### # 4 A_Overlay( LAYER_RECOIL, "Recoil" );
-			#### # 0 A_Overlay( LAYER_FLASH, "FlashB" );
+			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
+			#### # 4
+			{
+				
+			}
 			#### # 1 A_Overlay( LAYER_FUNC, "Fire_Bullet" );
 			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
 			Stop;
@@ -95,8 +97,10 @@ Class CK7_Smith_Con_Wep : CK7_Smith_Weapon
 		Anim_Fire:
 			CONB A 0 A_WeaponOffset( 0, 32 );
 			#### # 0 bright A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
+			#### # 0 A_Overlay( LAYER_FLASH, "FlashA" );
 			#### BCDE 1 bright;
 			#### # 0 bright A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
+			#### # 0 A_Overlay( LAYER_FLASH, "FlashB" );
 			#### FGHIKLORST 2 bright;
 			Goto Anim_Aiming;
 		Anim_Reload_Down:

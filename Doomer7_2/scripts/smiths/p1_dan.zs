@@ -68,9 +68,10 @@ Class CK7_Smith_Dan_Wep : CK7_Smith_Weapon
 			}
 			Loop;
 		Anim_Fire:
-			DANB # 0 bright A_WeaponOffset( 0, 32 );
-			#### # 1 bright A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
-			#### BC 1 bright;
+			DANB A 0 bright A_WeaponOffset( 0, 32 );
+			#### # 0 bright A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
+			#### # 0 A_Overlay( LAYER_FLASH, "FlashA" );
+			#### ABC 1 bright;
 			#### DEFGHIJKLMA 2 bright;
 			Goto Anim_Aiming;
 		Anim_Reload_Down:

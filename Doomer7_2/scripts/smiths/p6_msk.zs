@@ -74,12 +74,12 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 			{
 				A_SetTics( ceil( invoker.m_fFireDelay ) );
 			}
-			#### # 1 A_Overlay( LAYER_FLASH, "FlashA" );
 			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
 			Stop;
 		Anim_Aim_In:
-			MASK A 0 A_StartSound( invoker.m_sPersona .. "_aim", CHAN_WEAPON, CHANF_OVERLAP );
-			#### # 1 bright A_WeaponOffset ( 0, 82, 0 );
+			MASK A 0 bright A_WeaponOffset ( 0, 82, 0 );
+			#### # 0 A_StartSound( invoker.m_sPersona .. "_aim", CHAN_WEAPON, CHANF_OVERLAP );
+			#### # 1 bright;
 			#### # 1 bright A_WeaponOffset ( 0, 68, WOF_INTERPOLATE );
 			#### # 1 bright A_WeaponOffset ( 0, 54, WOF_INTERPOLATE );
 			#### # 1 bright A_WeaponOffset ( 0, 45, WOF_INTERPOLATE );
@@ -97,7 +97,8 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 			Loop;
 		Anim_Fire:
 			MASK A 0 bright A_WeaponOffset( 0, 32 );
-			#### # 1 A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
+			#### # 0 A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
+			#### # 0 A_Overlay( LAYER_FLASH, "FlashA" );
 			#### CDEFGHIJKLM 1 bright;
 			#### NPRTUVXZ 2 bright;
 			MASB BD 2 bright;
