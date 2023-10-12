@@ -15,13 +15,13 @@ Class CK7_Smith : DoomPlayer
 	Default
 	{
 		Player.StartItem "CK7_Smith_Gar_Wep";
-		//Player.StartItem "CK7_Smith_Dan_Wep";
-		//Player.StartItem "CK7_Smith_Ked_Wep";
-		//Player.StartItem "CK7_Smith_Kvn_Wep";
-		//Player.StartItem "CK7_Smith_Cyo_Wep";
-		//Player.StartItem "CK7_Smith_Con_Wep";
-		//Player.StartItem "CK7_Smith_Msk_Wep";
-		//Player.StartItem "CK7_Smith_Hay_Wep";
+		Player.StartItem "CK7_Smith_Dan_Wep";
+		Player.StartItem "CK7_Smith_Ked_Wep";
+		Player.StartItem "CK7_Smith_Kvn_Wep";
+		Player.StartItem "CK7_Smith_Cyo_Wep";
+		Player.StartItem "CK7_Smith_Con_Wep";
+		Player.StartItem "CK7_Smith_Msk_Wep";
+		Player.StartItem "CK7_Smith_Hay_Wep";
 	}
 	
 	override void BeginPlay()
@@ -99,6 +99,17 @@ Class CK7_Smith : DoomPlayer
 		sidemove1 = forwardmove1 * 0.65;
 		forwardmove2 = forwardmove1 * 0.5;
 		sidemove2 = sidemove1 * 0.5;
+	}
+	
+	void SetStatic(bool on)
+	{
+		if(IsActorPlayingSound(CHAN_5, "weapon/statichard") == false){
+			A_StartSound("weapon/statichard",CHAN_5,CHANF_LOOPING,0.5);//start loopin sound, but only if it is not already playing
+        }
+		Shader.SetUniform1i(player, "Static", "timer", level.time);
+		Shader.SetUniform1i(player, "Static", "resX", Screen.GetWidth() / 8);
+		Shader.SetUniform1i(player, "Static", "resY", Screen.GetHeight() / 8);
+		Shader.SetEnabled(player,"Static",on);
 	}
 
 	States

@@ -168,6 +168,7 @@ Class CK7_Smith_Weapon : Weapon
 			{
 				return ResolveState( "Aiming" );
 			}
+			
 		FlashA:
 			#### # 0
 			{

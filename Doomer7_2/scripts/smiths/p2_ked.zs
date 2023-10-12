@@ -39,6 +39,10 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 			#### # 1 A_SetPitch( pitch - invoker.m_fRecoil *  0.15 );
 			#### # 1 A_SetPitch( pitch + invoker.m_fRecoil *  0.05 );
 			Stop;
+		Aiming_Zoomed:
+			#### # 0 A_JumpIf( !( CK7_Smith( invoker.owner ).m_bAimHeld), "Aim_Out" );
+			#### # 1 A_WeaponReady( ( CVar.FindCVar( 'k7_mode' ).GetBool() ) ? AIMING_FLAGS : AIMING_FLAGS &~ WRF_DISABLESWITCH );
+			Loop;	
 		Flash1:
 			KEDF A 1
 			{
@@ -67,11 +71,45 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 				A_WeaponOffset( offx, 32 + offy, WOF_INTERPOLATE );
 			}
 			Loop;
+			
+		Anim_Zoom_In:
+			KEDB A 0 A_StartSound( invoker.m_sPersona .. "_zoomin", CHAN_WEAPON, CHANF_OVERLAP );
+			Goto Anim_Zoomed;
+			
+		//Anim_Zoomed:
+		//	TNT1 A 1 
+		//	Loop;
+		
+		Anim_Zoom_Out:
+			KEDB A 0 A_StartSound( invoker.m_sPersona .. "_zoomout", CHAN_WEAPON, CHANF_OVERLAP );
+			Goto Anim_Aiming;
+			
 		Anim_Fire:
 			KEDB # 0 A_WeaponOffset( 0, 32 );
 			#### # 0 A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
 			#### BCDEFGHIJ 2 bright;
 			Goto Anim_Aiming;
+			
+		AltFire:
+			TNT1 A 0 A_JumpIf ( ( invoker.m_iAmmo == 0 ), "Reload" );
+			#### # 0 A_Overlay( LAYER_ANIM, "Anim_Fire" );
+			#### # 0 A_Overlay( LAYER_SHOOT, "Shoot" );
+			#### # 0
+			{
+				if ( invoker.m_iAmmo > 0 )
+					invoker.m_iAmmo--;
+			}
+			#### # 0
+			{
+				A_SetTics( ceil( invoker.m_fRefire ) - 1 );
+			}
+			#### # 0 A_JumpIf( !invoker.m_bAutoFire, "Aiming" );
+			#### # 0 A_Refire();
+			#### # 0
+			{
+				return ResolveState( "Aiming" );
+			}	
+			
 		Anim_Reload_Down:
 			KEDB A 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );
 			#### # 1 bright A_WeaponOffset ( 0, 32, 0);
@@ -90,5 +128,6 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 			#### # 0 A_StartSound( invoker.m_sPersona .. "_reload_standing", CHAN_WEAPON, CHANF_OVERLAP );
 			Stop;
 			
+		
 	}
 }
