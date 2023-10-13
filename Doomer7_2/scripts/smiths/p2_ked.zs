@@ -5,11 +5,13 @@ Class CK7_Smith_Ked
 
 Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 {	
+	
 	Default
 	{
 		Weapon.SlotNumber 2;
 		Inventory.PickupMessage "You got the AMT Hardballer!";
 		Inventory.PickupSound "weapon/gethar";
+		
 	}
 	
 	override void BeginPlay()
@@ -23,7 +25,10 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 		m_fViewHeight = 0.4;
 		m_fHeight = 55;
 		m_fReloadTime = 35 * 3.5;
+		
 	}
+	
+	bool m_bZoomedReload;
 	
 	States
 	{
@@ -57,6 +62,13 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 			KEDF C 1
 			{
 				return ResolveState( "Flash" );
+			}
+			
+		Reload:
+			#### # 0 A_JumpIf( CK7_Smith( invoker.owner ).m_bAiming, "Aiming_Reload" );
+			#### # 0
+			{
+				return ResolveState( "Standing_Reload" );
 			}
 		
 		AltFire:
@@ -166,7 +178,14 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 			Goto Anim_Aiming;
 		
 		Anim_Reload_Down:
-			KEDB A 0;
+			KEDB A 0 {
+				if (CK7_Smith( invoker.owner ).m_bZoomedIn){
+					A_ZoomFactor( 1 );
+					CK7_Smith( invoker.owner ).SetStatic( false );
+					CK7_Smith( invoker.owner ).m_bZoomedIn = false;
+					A_StartSound( invoker.m_sPersona .. "_zoomout", CHAN_WEAPON, CHANF_OVERLAP );
+				}
+			}	
 			#### # 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );
 			#### # 1 bright A_WeaponOffset ( 0, 32, 0);
 			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE );
@@ -182,6 +201,7 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE );
 			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
 			Goto Anim_Aiming;
+			
 		
 		Anim_Standing_Reload:
 			#### # 0 A_StartSound( invoker.m_sPersona .. "_reload_standing", CHAN_WEAPON, CHANF_OVERLAP );

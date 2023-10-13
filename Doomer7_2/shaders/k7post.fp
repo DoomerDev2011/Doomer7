@@ -16,7 +16,7 @@ highp float rand(vec2 co)
 void kaede_static()
 {
 	float in_ratio = clamp( static_timer / 30, 0, 1 );
-	float scale = mix( 3, 0.5, in_ratio );
+	float scale = mix( 3.0, 0.5, in_ratio );
     vec2 coords = TexCoord;
     coords.x = ( round( coords.x * ( resX / scale ) ) / ( resX / scale ) );
     coords.y = ( round( coords.y * ( resY / scale ) ) / ( resY / scale ) );
