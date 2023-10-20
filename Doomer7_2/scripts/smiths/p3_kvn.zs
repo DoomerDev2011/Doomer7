@@ -68,6 +68,12 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			KVNB MNOPQ 1 bright;
 			#### A 1 bright;
 			Goto Anim_Aiming;
+			
+		
+		Altfire:
+			KVNA  50 A_Overlay(LAYER_ANIM);
+			Goto Anim_Aiming;
+			
 		Anim_Reload_Down:
 			KVNB A 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );
 			#### # 1 bright A_WeaponOffset ( 0, 32, 0);
