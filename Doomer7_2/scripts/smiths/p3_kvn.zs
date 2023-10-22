@@ -71,7 +71,7 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			
 		
 		Altfire:
-			KVNA  50 A_Overlay(LAYER_ANIM);
+			KVND X 50 A_Overlay(LAYER_ANIM);
 			Goto Anim_Aiming;
 			
 		Anim_Reload_Down:
