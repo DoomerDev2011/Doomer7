@@ -38,6 +38,15 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 		FlashA:
 			KVNF A 1 bright;
 			Stop;
+			
+		Altfire:
+			TNT1 A 0 A_Overlay(LAYER_ANIM, "Anim_Altfire");
+			TNT1 A 50; 
+			#### # 0
+			{
+				return ResolveState( "Aiming" );
+			} 	
+			
 		Anim_Aim_In:
 			KVNB A 0 A_StartSound( invoker.m_sPersona .. "_aim", CHAN_WEAPON, CHANF_OVERLAP );
 			#### # 1 bright A_WeaponOffset ( 50, 42, 0 );
@@ -49,7 +58,8 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
 			Goto Anim_Aiming;
 		Anim_Aiming:
-			KVNB A 1 bright
+			TNT1 A 0 A_OverlayFlags(LAYER_ANIM, PSPF_ADDBOB, true);
+			KVNB A 1 bright 
 			{
 				//float offx = sin( level.time * 3 ) * 2.3 ;
 				float offy = 1 + sin( level.time * 6 ) * 0.5;
@@ -70,9 +80,15 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			Goto Anim_Aiming;
 			
 		
-		Altfire:
-			KVND X 50 A_Overlay(LAYER_ANIM);
+		//  A_WeaponOffset( 0, 32, WOF_INTERPOLATE );	
+		Anim_Altfire:
+			TNT1 A 0 A_OverlayFlags(LAYER_ANIM, PSPF_ADDBOB, false);
+			#### # 0 A_WeaponOffset( 0, 32, WOF_INTERPOLATE );
+			KVNA ABCDEFGHIJKLMNOPQRSTUVWXYZ 1;
+			KVNC ABCDEFGHIJKLMNOPQRSTUVWXYZ 1;
+			KVND ABCDEFG 1;
 			Goto Anim_Aiming;
+			
 			
 		Anim_Reload_Down:
 			KVNB A 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );

@@ -17,7 +17,7 @@ Class CK7_Smith : DoomPlayer
 	bool 	m_bHealPressed;
 	
 	bool 	m_bAiming;
-	bool		m_bZoomedIn;
+	bool	m_bZoomedIn;
 	
 	float 	m_fSpeed;
 	float 	m_fSpeedFactor;
