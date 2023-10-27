@@ -28,8 +28,6 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 		
 	}
 	
-	bool m_bZoomedReload;
-	
 	States
 	{
 		Spawn:
@@ -65,11 +63,28 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 			}
 			
 		Reload:
+			#### # 0 A_JumpIf( CK7_Smith( invoker.owner ).m_bZoomedIn, "Zoomed_Reload" );
 			#### # 0 A_JumpIf( CK7_Smith( invoker.owner ).m_bAiming, "Aiming_Reload" );
 			#### # 0
 			{
 				return ResolveState( "Standing_Reload" );
 			}
+			
+		Zoomed_Reload:
+			#### # 5
+			{
+				A_Overlay( LAYER_ANIM, "Anim_Reload_Down" );
+				A_SetTics( ceil( invoker.m_fReloadTime ) );
+			}
+			#### # 5
+			{
+				A_Overlay( LAYER_ANIM, "Anim_Reload_Up" );
+			}
+			#### # 0
+			{
+				invoker.m_iAmmo = invoker.m_iClipSize;
+			}
+			Goto Zoom_In;
 		
 		AltFire:
 			TNT1 A 0;
