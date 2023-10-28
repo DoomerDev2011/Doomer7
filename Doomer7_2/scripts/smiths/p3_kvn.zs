@@ -41,7 +41,10 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			
 		Altfire:
 			TNT1 A 0 A_Overlay(LAYER_ANIM, "Anim_Altfire");
-			TNT1 A 50; 
+			#### # 19;
+			#### # 1 A_Overlay( LAYER_FUNC, "Fire_Bullet" );
+			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
+			#### # 84;
 			#### # 0
 			{
 				return ResolveState( "Aiming" );
@@ -57,6 +60,8 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			#### # 1 bright A_WeaponOffset ( 2, 34, WOF_INTERPOLATE );
 			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
 			Goto Anim_Aiming;
+			
+		// TNT1 A 0 A_OverlayFlags(LAYER_ANIM, PSPF_ADDBOB, true); have this to start bobbing again	
 		Anim_Aiming:
 			TNT1 A 0 A_OverlayFlags(LAYER_ANIM, PSPF_ADDBOB, true);
 			KVNB A 1 bright 
@@ -80,13 +85,32 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			Goto Anim_Aiming;
 			
 		
-		//  A_WeaponOffset( 0, 32, WOF_INTERPOLATE );	
+		//  A_WeaponOffset( 0, 32, WOF_INTERPOLATE );	have this to recenter frame
+		// TNT1 A 0 A_OverlayFlags(LAYER_ANIM, PSPF_ADDBOB, false); have this to stop bobbing during animation
 		Anim_Altfire:
 			TNT1 A 0 A_OverlayFlags(LAYER_ANIM, PSPF_ADDBOB, false);
 			#### # 0 A_WeaponOffset( 0, 32, WOF_INTERPOLATE );
-			KVNA ABCDEFGHIJKLMNOPQRSTUVWXYZ 1;
-			KVNC ABCDEFGHIJKLMNOPQRSTUVWXYZ 1;
-			KVND ABCDEFG 1;
+			KVNA ABC 1 bright;
+			TNT1 A 17;
+			KVNA D 1 {
+				A_StartSound( invoker.m_sPersona .. "_special_shot", CHAN_WEAPON, CHANF_OVERLAP );
+				A_SetBlend( "E6F63F", 0.25, 10 );
+			}
+			KVNA EFGHIJKLMNOPQRSTUVWXYZ 1 bright;
+			KVNC ABDEFGHIJKLMNOPQRSTUVWXYZ 1 bright;
+			KVND ABCEFGHIJKLMNOPQRSTUVWXYZ 1 bright; 
+			KVNE ABCDEF 1 bright;
+			KVNB A 1 bright;
+			/*
+			KVNA DEGHIJK 1 bright; 
+			KVNA MOQSUWY 1 bright;
+			KVNC ADFHJ 1 bright;
+			KVNC KLMNOPQRSTUVWXYZ 1 bright;
+			KVND BEGIJLNPR 1 bright;
+			KVND TVXZ 1 bright; 
+			KVNE ACE 2 bright;
+			KVNB A 2 bright;
+			*/
 			Goto Anim_Aiming;
 			
 			

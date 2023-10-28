@@ -76,6 +76,7 @@ ked_zoomout sound/ked/zoom_out.ogg
 // Kevin
 kvn_aim sound/ksn/aim.ogg
 kvn_shoot sound/kvn/shoot.ogg
+kvn_special_shot sound/kvn/specialshot.ogg
 
 // Coyote
 cyo_aim sound/cyo/aim.ogg

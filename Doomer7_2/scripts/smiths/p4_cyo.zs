@@ -72,6 +72,7 @@ Class CK7_Smith_Cyo_Wep : CK7_Smith_Weapon
 			Goto Anim_Aiming;
 			
 		Anim_Aiming:
+			TNT1 A 0 A_OverlayFlags(LAYER_ANIM, PSPF_ADDBOB, true);
 			CYOB A 1 bright
 			{
 				float offx = sin( level.time * 6 ) * 0.5 ;
@@ -81,6 +82,7 @@ Class CK7_Smith_Cyo_Wep : CK7_Smith_Weapon
 			Loop;
 			
 		Anim_Fire:
+			TNT1 A 0 A_OverlayFlags(LAYER_ANIM, PSPF_ADDBOB, false);
 			CYOB A 0;
 			#### # 0 A_WeaponOffset( 0, 32 );
 			#### # 0 A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
