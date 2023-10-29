@@ -62,6 +62,19 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 				return ResolveState( "Flash" );
 			}
 			
+		Deselect:
+			#### # 0
+			{
+				if (CK7_Smith( invoker.owner ).m_bZoomedIn){
+					A_ZoomFactor( 1 );
+					CK7_Smith( invoker.owner ).SetStatic( false );
+					CK7_Smith( invoker.owner ).m_bZoomedIn = false;
+					A_StartSound( invoker.m_sPersona .. "_zoomout", CHAN_WEAPON, CHANF_OVERLAP );
+				}
+			}
+			#### # 0 A_Lower( 512 );
+			
+			
 		Reload:
 			#### # 0 A_JumpIf( CK7_Smith( invoker.owner ).m_bZoomedIn, "Zoomed_Reload" );
 			#### # 0 A_JumpIf( CK7_Smith( invoker.owner ).m_bAiming, "Aiming_Reload" );

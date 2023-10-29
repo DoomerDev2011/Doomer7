@@ -16,7 +16,7 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 	{
 		Super.BeginPlay();
 		m_sPersona = "kvn";
-		m_fDamage = 42;
+		m_fDamage = 6;
 		m_fSpread = 0;
 		m_fRecoil = 2;
 		m_iClipSize = -1;
@@ -39,10 +39,24 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			KVNF A 1 bright;
 			Stop;
 			
+		Fire_Special_Bullet:
+			#### # 0
+			{
+				A_FireBullets(
+					invoker.m_fSpread,
+					invoker.m_fSpread,
+					-1,
+					invoker.m_fDamage * 3,
+					"BulletPuff",
+					BULLET_FLAGS
+				);
+			}
+			Stop;		
+			
 		Altfire:
 			TNT1 A 0 A_Overlay(LAYER_ANIM, "Anim_Altfire");
 			#### # 19;
-			#### # 1 A_Overlay( LAYER_FUNC, "Fire_Bullet" );
+			#### # 1 A_Overlay( LAYER_FUNC, "Fire_Special_Bullet" );
 			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
 			#### # 84;
 			#### # 0
