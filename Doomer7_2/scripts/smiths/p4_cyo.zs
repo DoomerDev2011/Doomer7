@@ -60,6 +60,48 @@ Class CK7_Smith_Cyo_Wep : CK7_Smith_Weapon
 				return ResolveState( "Flash" );
 			}
 			
+		Shoot_Special:
+			#### # 0
+			{
+				A_SetTics( ceil( invoker.m_fFireDelay ) );
+			}
+			#### # 1 A_Overlay( LAYER_FUNC, "Fire_Special_Bullet" );
+			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
+			Stop;
+			
+		Fire_Special_Bullet:
+			#### # 0
+			{
+				A_FireBullets(
+					invoker.m_fSpread,
+					invoker.m_fSpread,
+					-1,
+					invoker.m_fDamage * 3,
+					"BulletPuff",
+					BULLET_FLAGS
+				);
+			}
+			Stop;		
+			
+		Altfire:
+			TNT1 A 0;
+			#### # 0 A_JumpIf ( ( invoker.m_iAmmo == 0 ), "Reload" );
+			#### # 0 A_Overlay( LAYER_ANIM, "Anim_Altfire" );
+			#### # 0 A_Overlay( LAYER_SHOOT, "Shoot_Special" );
+			#### # 0
+			{
+				if ( invoker.m_iAmmo > 0 )
+					invoker.m_iAmmo--;
+			}
+			#### # 52;
+			#### # 0 A_JumpIf( !invoker.m_bAutoFire, "Aiming" );
+			#### # 0 A_Refire();
+			#### # 0
+			{
+				return ResolveState( "Aiming" );
+			}
+			
+			
 		Anim_Aim_In:
 			CYOB A 0 A_StartSound( invoker.m_sPersona .. "_aim", CHAN_WEAPON, CHANF_OVERLAP );
 			#### # 1 bright A_WeaponOffset ( 240, -64, 0 );
@@ -89,6 +131,18 @@ Class CK7_Smith_Cyo_Wep : CK7_Smith_Weapon
 			#### # 0 A_Overlay( LAYER_FLASH, "FlashA" );
 			#### BC 1 bright;
 			TNT1 A 28;
+			CYOB CDE 1 bright;
+			#### FGHIJ 2 bright;
+			Goto Anim_Aiming;
+		
+		Anim_Altfire:
+			TNT1 A 0 A_OverlayFlags(LAYER_ANIM, PSPF_ADDBOB, false);
+			CYOB A 0;
+			#### # 0 A_WeaponOffset( 0, 32 );
+			#### # 0 A_StartSound( invoker.m_sPersona .. "_special", CHAN_WEAPON, CHANF_OVERLAP );
+			#### # 0 A_Overlay( LAYER_FLASH, "FlashA" );
+			#### BC 1 bright;
+			TNT1 A 52; 
 			CYOB CDE 1 bright;
 			#### FGHIJ 2 bright;
 			Goto Anim_Aiming;
