@@ -5,6 +5,9 @@ Class CK7_Smith_Con
 
 Class CK7_Smith_Con_Wep : CK7_Smith_Weapon
 {	
+
+	float m_iConSpeedTimer;
+	
 	Default
 	{
 		Weapon.SlotNumber 5;
@@ -25,6 +28,7 @@ Class CK7_Smith_Con_Wep : CK7_Smith_Weapon
 		m_fReloadTime = 42;
 		m_fHeight = 40;
 		m_bAutoFire = true;
+		m_iConSpeedTimer = 30;
 	}
 	
 	States
@@ -76,6 +80,60 @@ Class CK7_Smith_Con_Wep : CK7_Smith_Weapon
 			#### # 1 A_Overlay( LAYER_FUNC, "Fire_Bullet" );
 			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
 			Stop;
+			
+		Altfire:
+			#### # 0
+			{
+				if ( invoker.m_iConSpeedTimer > 0)
+				{
+					return ResolveState("Ready");
+				}
+				//A_TakeInventory( "K7_ThinBlood", 1 );
+				invoker.m_iConSpeedTimer = 35 * 5;
+				return ResolveState( "Anim_Altfire" );
+			}
+			
+		Anim_Altfire:
+			#### A 0 A_ZoomFactor( 0.7 );
+			CONS # 1 bright
+			{
+				let smith = CK7_Smith( invoker.owner );
+				smith.SetSpeed( 0 );
+				A_StartSound( "persona_powera", CHAN_BODY, CHANF_OVERLAP );
+			}
+			#### # 1 bright A_WeaponOffset ( 0, 32, 0);
+			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 64, 32 + 128, WOF_INTERPOLATE);
+			TNT1 A 30;
+			#### # 25
+			{
+				A_StartSound( "con_special_vo", CHAN_VOICE, 0 );
+			}
+			#### # 20
+			{
+				A_StartSound ( "con_special_pose", CHAN_BODY, CHANF_OVERLAP );
+			}
+			#### # 0
+			{
+				let smith = CK7_Smith( invoker.owner );
+				smith.m_fSpeedFactor = smith.m_fPersonaSpecialFactor;
+				smith.SetSpeed( smith.m_fSpeed );
+				invoker.m_iConSpeedTimer = 35 * 20;
+			}
+			#### A 0 A_ZoomFactor( 1 );
+			CONS A 1 bright A_WeaponOffset ( 64, 32 + 128, 0);
+			#### # 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 16, 32 + 32, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 4, 32 + 8, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
+			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE);
+			Goto Ready;
+			
 		Anim_Aim_In:
 			CONB A 0 A_StartSound( invoker.m_sPersona .. "_aim", CHAN_WEAPON, CHANF_OVERLAP );
 			#### # 1 bright A_WeaponOffset ( 50, 64, 0 );

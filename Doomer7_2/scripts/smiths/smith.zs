@@ -21,6 +21,7 @@ Class CK7_Smith : DoomPlayer
 	
 	float 	m_fSpeed;
 	float 	m_fSpeedFactor;
+	float 	m_fPersonaSpecialFactor;
 	float 	m_fCurrentSpeed;
 	
 	int 	m_iThinBlood;
@@ -28,7 +29,7 @@ Class CK7_Smith : DoomPlayer
 	
 	float 	m_fHeight;
 	
-	int m_iStaticStartTime;
+	int 	m_iStaticStartTime;
 	
 	Default
 	{
@@ -44,6 +45,7 @@ Class CK7_Smith : DoomPlayer
 	
 	override void BeginPlay()
 	{
+		
 		Super.BeginPlay();
 		m_fHeight = 52;
 		
@@ -85,6 +87,7 @@ Class CK7_Smith : DoomPlayer
 		
 		m_fSpeed = 1;
 		m_fSpeedFactor = 1;
+		m_fPersonaSpecialFactor = 1;
 		SetSpeed( m_fSpeed );
 		
 	}
