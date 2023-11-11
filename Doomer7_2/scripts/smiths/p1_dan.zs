@@ -49,6 +49,43 @@ Class CK7_Smith_Dan_Wep : CK7_Smith_Weapon
 			{
 				return ResolveState( "Flash" );
 			}
+			
+		Altfire:
+			TNT1 A 0 A_Overlay(LAYER_ANIM, "Anim_Altfire");
+			#### A 0 bright A_FireProjectile( "K7_Dan_CollateralShot", 0, false, 0, 0 );
+			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
+			#### # 23;
+			#### # 0
+			{
+				return ResolveState( "Aiming" );
+			} 
+			
+		Anim_Altfire:
+			DANB A 0 {
+				A_WeaponOffset ( 0, 32 );
+				A_OverlayFlags(LAYER_ANIM, PSPF_ADDBOB, false);
+			}
+			#### A 0 bright A_StopSound( CHAN_5 );
+			//#### A 0 bright A_TakeInventory( "K7_ThinBlood", 3 );
+			/*
+			#### A 0
+			{
+				let smith = CK7_Smith( invoker.owner );
+				smith.m_iPersonaGunCharge = 0;
+			}
+			*/
+			#### A 0 A_StartSound( "dan_special", CHAN_WEAPON, CHANF_OVERLAP );
+			#### A 0 A_StartSound( "dan_special_vo", CHAN_VOICE );
+			#### A 0 bright A_FireProjectile( "K7_Dan_CollateralShot", 0, false, 0, 0 );
+			#### # 0 A_AlertMonsters();
+			#### A 0 A_Overlay( -1, "Flash" );
+			#### B 1 bright;
+			#### C 1 bright;
+			#### CDEF 1 bright;
+			#### GHIJ 2 bright;
+			#### KLM 3 bright;
+			Goto Anim_Aiming;
+			
 		Anim_Aim_In:
 			DANB A 0 A_StartSound( invoker.m_sPersona .. "_aim", CHAN_WEAPON, CHANF_OVERLAP );
 			#### # 1 bright A_WeaponOffset ( 50, 42, 0 );
@@ -60,6 +97,7 @@ Class CK7_Smith_Dan_Wep : CK7_Smith_Weapon
 			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
 			Goto Anim_Aiming;
 		Anim_Aiming:
+			DANB A 0 A_OverlayFlags(LAYER_ANIM, PSPF_ADDBOB, true);
 			DANB A 1 bright
 			{
 				float offx = sin( level.time * 3 ) * 2.3 ;
@@ -92,5 +130,35 @@ Class CK7_Smith_Dan_Wep : CK7_Smith_Weapon
 			#### # 0 A_StartSound( invoker.m_sPersona .. "_reload_standing", CHAN_WEAPON, CHANF_OVERLAP );
 			Stop;
 			
+	}
+}
+
+Class K7_Dan_CollateralShot : PlasmaBall
+{
+	Default
+	{
+		Radius 11;
+		Height 8;
+		Speed 20;
+		DamageFunction (450);
+		Projectile;
+		-RANDOMIZE
+		-DEHEXPLOSION
+		-ROCKETTRAIL
+		+NODAMAGETHRUST
+		+FORCEPAIN
+		RenderStyle "Add";
+		Alpha 1;
+		SeeSound "";
+		DeathSound "dan_special_explode";
+	}
+	
+	States {
+		Spawn:
+		DANC A -1 bright;
+		Loop;
+		
+		Death:
+		Stop;
 	}
 }

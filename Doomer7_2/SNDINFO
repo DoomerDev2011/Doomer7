@@ -145,6 +145,7 @@ $playeralias k7_con male *death con_die
 msk_aim sound/msk/aim.ogg
 msk_shoot sound/msk/shoot.ogg
 msk_reload sound/msk/reload.ogg
+msk_special_vo sound/msk/special_vo.mp3
 msk_die sound/msk/die.ogg
 msk_hurt1 sound/msk/hurt1.ogg
 msk_hurt2 sound/msk/hurt2.ogg
