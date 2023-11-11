@@ -10,6 +10,7 @@ Class CK7_Smith_Weapon : Weapon
 	const LAYER_RECOIL 	= -2;
 	const LAYER_SHOOT 	= -3;
 	const LAYER_FLASH 	= -5;
+	const LAYER_SPECIAL = -6;
 	
 	/*	Variable Notes
 		m_iPersona is the id of the smith;
@@ -18,13 +19,14 @@ Class CK7_Smith_Weapon : Weapon
 		
 	*/
 	
-	int 	m_iPersona;
+	int 		m_iPersona;
 	string 	m_sPersona;
-	int 	m_fDamage;
+	float		m_fSpeed;
+	int 		m_fDamage;
 	float 	m_fSpread;
 	float 	m_fRecoil;
-	int 	m_iClipSize;
-	int 	m_iAmmo;
+	int 		m_iClipSize;
+	int 		m_iAmmo;
 	float 	m_fRefire;
 	float 	m_fHeight;
 	float  	m_fViewHeight;
@@ -32,6 +34,8 @@ Class CK7_Smith_Weapon : Weapon
 	float 	m_fReloadTimeStanding;
 	bool 	m_bAutoFire;
 	float 	m_fFireDelay;
+	float 	m_fSpecialFactor;
+	float		m_fSpecialDuration;
 	
 	void AimingBreathe()
 	{
@@ -45,6 +49,8 @@ Class CK7_Smith_Weapon : Weapon
 		m_iPersona = slotnumber;
 		m_sPersona = "none";
 		
+		m_fSpeed = 1.0;
+		
 		m_fDamage = 40;
 		m_fSpread = 0.2;
 		m_fRecoil = 2.5;
@@ -54,6 +60,8 @@ Class CK7_Smith_Weapon : Weapon
 		m_fViewHeight = 0.8;
 		m_fReloadTime = 42;
 		m_fReloadTimeStanding = 70;
+		m_fSpecialFactor = 1;
+		m_fSpecialDuration = 1;
 	}
 	
 	override void PostBeginPlay()
@@ -99,6 +107,7 @@ Class CK7_Smith_Weapon : Weapon
 				}
 				let smith = CK7_Smith( invoker.owner );
 				smith.ApplyStats();
+				smith.SetSpeed( invoker.m_fSpeed );
 				smith.SetViewHeight( invoker.m_fHeight - 2.5 );
 				return ResolveState( "Ready" );
 			}

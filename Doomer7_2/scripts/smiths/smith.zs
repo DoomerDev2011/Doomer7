@@ -16,20 +16,22 @@ Class CK7_Smith : DoomPlayer
 	bool 	m_bSpecialPressed;
 	bool 	m_bHealPressed;
 	
+	int 		m_iSpecialChargeCount;
+	int		m_iSpecialCharges;
+	
 	bool 	m_bAiming;
-	bool	m_bZoomedIn;
+	bool		m_bZoomedIn;
 	
 	float 	m_fSpeed;
 	float 	m_fSpeedFactor;
-	float 	m_fPersonaSpecialFactor;
 	float 	m_fCurrentSpeed;
 	
-	int 	m_iThinBlood;
-	int 	m_iThickBlood;
+	int 		m_iThinBlood;
+	int 		m_iThickBlood;
 	
 	float 	m_fHeight;
 	
-	int 	m_iStaticStartTime;
+	int 		m_iStaticStartTime;
 	
 	Default
 	{
@@ -45,9 +47,11 @@ Class CK7_Smith : DoomPlayer
 	
 	override void BeginPlay()
 	{
-		
 		Super.BeginPlay();
 		m_fHeight = 52;
+		
+		m_iSpecialChargeCount = 0;
+		m_iSpecialCharges = 0;
 		
 		m_iStaticStartTime = 0;
 		
@@ -87,7 +91,6 @@ Class CK7_Smith : DoomPlayer
 		
 		m_fSpeed = 1;
 		m_fSpeedFactor = 1;
-		m_fPersonaSpecialFactor = 1;
 		SetSpeed( m_fSpeed );
 		
 	}
@@ -104,7 +107,7 @@ Class CK7_Smith : DoomPlayer
 
 	void SetSpeed( float new_speed )
 	{
-		m_fCurrentSpeed = new_speed;
+		m_fCurrentSpeed = ( new_speed * m_fSpeedFactor );
 		forwardmove1 = m_fCurrentSpeed;
 		sidemove1 = forwardmove1 * 0.8;
 		forwardmove2 = forwardmove1 * 0.5;
