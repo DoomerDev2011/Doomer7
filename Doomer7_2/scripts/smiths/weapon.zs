@@ -36,6 +36,8 @@ Class CK7_Smith_Weapon : Weapon
 	float 	m_fFireDelay;
 	float 	m_fSpecialFactor;
 	float		m_fSpecialDuration;
+	int 		m_iSpecialCharges;
+	int		m_iSpecialChargeCount;
 	
 	void AimingBreathe()
 	{
@@ -109,6 +111,7 @@ Class CK7_Smith_Weapon : Weapon
 				smith.ApplyStats();
 				smith.SetSpeed( invoker.m_fSpeed );
 				smith.SetViewHeight( invoker.m_fHeight - 2.5 );
+				invoker.m_iSpecialCharges = 0;
 				return ResolveState( "Ready" );
 			}
 		Ready:
@@ -184,13 +187,69 @@ Class CK7_Smith_Weapon : Weapon
 				if ( CK7_Smith( invoker.owner ).m_bZoomedIn )
 					A_Overlay( LAYER_ANIM, "Anim_Fire_Zoomed" );
 				else
-					A_Overlay( LAYER_ANIM, "Anim_Fire" );
+				{
+					if ( invoker.m_iSpecialChargeCount > 0 )
+					{
+						if ( invoker.m_iSpecialCharges > 0 )
+						{
+							switch ( invoker.m_iSpecialCharges )
+							{
+								case 2:
+									A_Overlay( LAYER_ANIM, "Anim_Fire_Special2" );
+									break;
+								case 3:
+									A_Overlay( LAYER_ANIM, "Anim_Fire_Special3" );
+									break;
+								case 4:
+									A_Overlay( LAYER_ANIM, "Anim_Fire_Special4" );
+									break;
+								case 5:
+									A_Overlay( LAYER_ANIM, "Anim_Fire_Special5" );
+									break;
+								default:
+									A_Overlay( LAYER_ANIM, "Anim_Fire_Special1" );
+									break;
+							}
+						}
+						else
+							A_Overlay( LAYER_ANIM, "Anim_Fire" );
+					}
+					else
+						A_Overlay( LAYER_ANIM, "Anim_Fire" );
+				}
 			}
-			#### # 0 A_Overlay( LAYER_SHOOT, "Shoot" );
 			#### # 0
 			{
-				if ( invoker.m_iAmmo > 0 )
-					invoker.m_iAmmo--;
+				if ( invoker.m_iSpecialChargeCount > 0 )
+				{
+					if ( invoker.m_iSpecialCharges > 0 )
+					{
+						switch ( invoker.m_iSpecialCharges )
+						{
+							case 2:
+								A_Overlay( LAYER_SHOOT, "Shoot_Special2" );
+								break;
+							case 3:
+								A_Overlay( LAYER_SHOOT, "Shoot_Special3" );
+								break;
+							case 4:
+								A_Overlay( LAYER_SHOOT, "Shoot_Special4" );
+								break;
+							case 5:
+								A_Overlay( LAYER_SHOOT, "Shoot_Special5" );
+								break;
+							default:
+								A_Overlay( LAYER_SHOOT, "Shoot_Special1" );
+								break;
+						}
+					}
+					else
+						A_Overlay( LAYER_SHOOT, "Shoot" );
+				}
+				else
+				{
+					A_Overlay( LAYER_SHOOT, "Shoot" );
+				}
 			}
 			#### # 0
 			{
@@ -208,6 +267,22 @@ Class CK7_Smith_Weapon : Weapon
 			{
 				CK7_Smith( invoker.owner ).m_bZoomedIn = false;
 				return ResolveState( "Fire" );
+			}
+		
+		Altfire:
+			#### # 0
+			{
+				int iCount = min( invoker.m_iSpecialChargeCount, 5 );
+				if ( iCount > 0 )
+				{
+					invoker.m_iSpecialCharges++;
+					if ( invoker.m_iSpecialCharges > iCount )
+					{
+						invoker.m_iSpecialCharges = 0;
+					}
+					A_StartSound( "charge_tube" .. invoker.m_iSpecialCharges, CHAN_WEAPON, CHANF_OVERLAP );
+				}
+				return ResolveState( "Aiming" );
 			}
 		
 		FlashA:
@@ -304,9 +379,16 @@ Class CK7_Smith_Weapon : Weapon
 				return ResolveState( "Ready" );
 			}
 		
+		Shoot_Special1:
+		Shoot_Special2:
+		Shoot_Special3:
+		Shoot_Special4:
+		Shoot_Special5:
 		Shoot:
 			#### # 0
 			{
+				if ( invoker.m_iAmmo > 0 )
+					invoker.m_iAmmo--;
 				A_SetTics( ceil( invoker.m_fFireDelay ) );
 			}
 			#### # 1 A_Overlay( LAYER_FUNC, "Fire_Bullet" );
@@ -316,7 +398,8 @@ Class CK7_Smith_Weapon : Weapon
 		Fire_Bullet:
 			#### # 0
 			{
-				A_FireBullets(
+				A_FireBullets
+				(
 					invoker.m_fSpread,
 					invoker.m_fSpread,
 					-1,

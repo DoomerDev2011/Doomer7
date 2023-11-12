@@ -16,13 +16,14 @@ Class CK7_Smith_Cyo_Wep : CK7_Smith_Weapon
 	{
 		Super.BeginPlay();
 		m_sPersona = "cyo";
-		m_fDamage = 40;
+		m_fDamage = 35;
 		m_fRecoil = 2.5;
 		m_iClipSize = 6;
 		m_fRefire = 18;
 		m_fViewHeight = 0.8;
 		m_fHeight = 60;
 		m_fReloadTime = 42;
+		m_iSpecialChargeCount = 1;
 	}
 	
 	States
@@ -60,10 +61,11 @@ Class CK7_Smith_Cyo_Wep : CK7_Smith_Weapon
 				return ResolveState( "Flash" );
 			}
 			
-		Shoot_Special:
+		Shoot_Special1:
 			#### # 0
 			{
 				A_SetTics( ceil( invoker.m_fFireDelay ) );
+				invoker.m_iSpecialCharges = 0;
 			}
 			#### # 1 A_Overlay( LAYER_FUNC, "Fire_Special_Bullet" );
 			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
@@ -72,7 +74,8 @@ Class CK7_Smith_Cyo_Wep : CK7_Smith_Weapon
 		Fire_Special_Bullet:
 			#### # 0
 			{
-				A_FireBullets(
+				A_FireBullets
+				(
 					invoker.m_fSpread,
 					invoker.m_fSpread,
 					-1,
@@ -83,7 +86,7 @@ Class CK7_Smith_Cyo_Wep : CK7_Smith_Weapon
 			}
 			Stop;		
 			
-		Altfire:
+		Altfire_Old:
 			TNT1 A 0;
 			#### # 0 A_JumpIf ( ( invoker.m_iAmmo == 0 ), "Reload" );
 			#### # 0 A_Overlay( LAYER_ANIM, "Anim_Altfire" );
@@ -135,6 +138,7 @@ Class CK7_Smith_Cyo_Wep : CK7_Smith_Weapon
 			#### FGHIJ 2 bright;
 			Goto Anim_Aiming;
 		
+		Anim_Fire_Special1:
 		Anim_Altfire:
 			TNT1 A 0 A_OverlayFlags(LAYER_ANIM, PSPF_ADDBOB, false);
 			CYOB A 0;

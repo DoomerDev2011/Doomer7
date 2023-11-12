@@ -16,7 +16,7 @@ Class CK7_Smith_Gar_Wep : CK7_Smith_Weapon
 	{
 		Super.BeginPlay();
 		m_sPersona = "gar";
-		m_fDamage = 42;
+		m_fDamage = 28;
 		m_fRecoil = 2;
 		m_iClipSize = 5;
 		m_fRefire = 10;

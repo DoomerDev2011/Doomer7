@@ -16,7 +16,7 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 	{
 		Super.BeginPlay();
 		m_sPersona = "kvn";
-		m_fDamage = 6;
+		m_fDamage = 30;
 		m_fSpread = 0;
 		m_fRecoil = 2;
 		m_iClipSize = -1;

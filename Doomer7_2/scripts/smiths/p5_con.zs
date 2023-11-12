@@ -19,7 +19,7 @@ Class CK7_Smith_Con_Wep : CK7_Smith_Weapon
 	{
 		Super.BeginPlay();
 		m_sPersona = "con";
-		m_fDamage = 40;
+		m_fDamage = 15;
 		m_fRecoil = 2.5;
 		m_fSpread = 2;
 		m_iClipSize = 6;
@@ -77,7 +77,10 @@ Class CK7_Smith_Con_Wep : CK7_Smith_Weapon
 			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
 			#### # 4
 			{
-				
+				if ( invoker.m_iAmmo > 0 )
+				{
+					invoker.m_iAmmo--;
+				}
 			}
 			#### # 1 A_Overlay( LAYER_FUNC, "Fire_Bullet" );
 			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );

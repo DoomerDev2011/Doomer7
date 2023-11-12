@@ -16,9 +16,6 @@ Class CK7_Smith : DoomPlayer
 	bool 	m_bSpecialPressed;
 	bool 	m_bHealPressed;
 	
-	int 		m_iSpecialChargeCount;
-	int		m_iSpecialCharges;
-	
 	bool 	m_bAiming;
 	bool		m_bZoomedIn;
 	
@@ -49,9 +46,6 @@ Class CK7_Smith : DoomPlayer
 	{
 		Super.BeginPlay();
 		m_fHeight = 52;
-		
-		m_iSpecialChargeCount = 0;
-		m_iSpecialCharges = 0;
 		
 		m_iStaticStartTime = 0;
 		

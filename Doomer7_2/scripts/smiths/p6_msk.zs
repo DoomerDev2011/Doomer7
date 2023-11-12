@@ -17,14 +17,14 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 	{
 		Super.BeginPlay();
 		m_sPersona = "msk";
-		m_fDamage = 42;
+		m_fDamage = 48;
 		m_fRecoil = 6;
 		m_iClipSize = 1;
 		m_fRefire = 28;
 		m_fViewHeight = 0.985;
 		m_fHeight = 80;
 		m_fReloadTime = 39;
-		
+		m_iSpecialChargeCount = 5;
 	}
 	
 	States
@@ -51,12 +51,6 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 			TNT1 A 0 A_JumpIf ( (invoker.m_iAmmo == 0) , "Reload" );
 			#### # 0 A_Overlay( LAYER_ANIM, "Anim_Fire" );
 			#### # 0 A_Overlay( LAYER_SHOOT, "Shoot" );
-			#### # 0
-			{
-				if ( invoker.m_iAmmo > 0 ){
-					invoker.m_iAmmo--;
-				}
-			}
 			#### # 0 A_FireProjectile("K7_Mask_M79_Grenade",0,1,-10,0);
 			#### # 0 A_FireProjectile("K7_Mask_M79_Grenade",0,1,10,0);
 			#### # 0
@@ -72,6 +66,10 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 		Shoot:
 			#### # 0
 			{
+				if ( invoker.m_iAmmo > 0 )
+				{
+					invoker.m_iAmmo--;
+				}
 				A_SetTics( ceil( invoker.m_fFireDelay ) );
 			}
 			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );

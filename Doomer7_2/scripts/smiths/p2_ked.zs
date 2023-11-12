@@ -18,7 +18,7 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 	{
 		Super.BeginPlay();
 		m_sPersona = "ked";
-		m_fDamage = 45;
+		m_fDamage = 30;
 		m_fRecoil = 3;
 		m_iClipSize = 10;
 		m_fRefire = 15;
