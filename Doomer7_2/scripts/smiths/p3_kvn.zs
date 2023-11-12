@@ -25,6 +25,7 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 		m_fHeight = 50;
 		m_fReloadTime = 0;
 		m_fFireDelay = 10;
+		m_iSpecialChargeCount = 1;
 	}
 	
 	States
@@ -53,7 +54,11 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			}
 			Stop;		
 			
-		Altfire:
+		Shoot_Special1:
+			#### # 0
+			{
+				invoker.m_iSpecialCharges = 0;
+			}
 			TNT1 A 0 A_Overlay(LAYER_ANIM, "Anim_Altfire");
 			#### # 19;
 			#### # 1 A_Overlay( LAYER_FUNC, "Fire_Special_Bullet" );

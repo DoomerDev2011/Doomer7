@@ -1,0 +1,21 @@
+pointlight CollateralShotLightAttach
+{
+    color 1.0 0.6 0.0
+    size 100
+    offset 0 40 0
+}
+
+object K7_Dan_CollateralShot
+{
+  frame DANC { light CollateralShotLightAttach }
+}
+
+pointlight GrenadeLightAttach{
+	color 255.0 255.0 255.0
+	size 100
+	offset 0 0 0
+}
+
+object K7_Mask_M79_Charge_Grenade{
+	frame MGRE { light GrenadeLightAttach }
+}

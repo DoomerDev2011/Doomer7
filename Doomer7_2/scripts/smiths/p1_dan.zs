@@ -8,6 +8,7 @@ Class CK7_Smith_Dan_Wep : CK7_Smith_Weapon
 	Default
 	{
 		Weapon.SlotNumber 1;
+		Weapon.AmmoType2 "CK7_ThinBlood";
 		Inventory.PickupMessage "You got the Colt .357 revolver!";
 		Inventory.PickupSound "weapon/getmag";
 	}
@@ -64,6 +65,7 @@ Class CK7_Smith_Dan_Wep : CK7_Smith_Weapon
 			
 		Fire_Special_Bullet:
 			#### # 0 A_FireProjectile( "K7_Dan_CollateralShot", 0, false, 0, 0 );
+			#### # 0 bright A_TakeInventory( "CK7_ThinBlood", 3 );
 			#### # 0 A_AlertMonsters();
 			Stop;	
 		
@@ -120,7 +122,6 @@ Class CK7_Smith_Dan_Wep : CK7_Smith_Weapon
 			DANB A 0 bright A_WeaponOffset ( 0, 32 );
 			#### # 0 A_OverlayFlags( LAYER_ANIM, PSPF_ADDBOB, false );
 			#### A 0 bright A_StopSound( CHAN_5 );
-			//#### A 0 bright A_TakeInventory( "K7_ThinBlood", 3 );
 			#### A 0 A_StartSound( "dan_special", CHAN_WEAPON, CHANF_OVERLAP );
 			#### A 0 A_StartSound( "dan_special_vo", CHAN_VOICE );
 			#### A 0 A_Overlay( LAYER_FLASH, "Flash" );
@@ -176,10 +177,11 @@ Class K7_Dan_CollateralShot : PlasmaBall
 	
 	States {
 		Spawn:
-		DANC A -1 bright;
+		DANC A -1;
 		Loop;
 		
 		Death:
+		//TNT1 A 0 A_RemoveLight ('CollateralShot');
 		Stop;
 	}
 }

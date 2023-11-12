@@ -409,6 +409,7 @@ Class CK7_Smith_Weapon : Weapon
 				);
 			}
 			Stop;
+			
 		
 		Aim_Out:
 			#### # 0 A_Overlay( LAYER_ANIM, null );

@@ -24,7 +24,7 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 		m_fViewHeight = 0.985;
 		m_fHeight = 80;
 		m_fReloadTime = 39;
-		m_iSpecialChargeCount = 5;
+		m_iSpecialChargeCount = 2;
 	}
 	
 	States
@@ -47,6 +47,7 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 			{
 				return ResolveState( "Flash" );
 			}
+		/*
 		Fire:
 			TNT1 A 0 A_JumpIf ( (invoker.m_iAmmo == 0) , "Reload" );
 			#### # 0 A_Overlay( LAYER_ANIM, "Anim_Fire" );
@@ -63,8 +64,10 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 			{
 				return ResolveState( "Aiming" );
 			}
+		*/
+		Shoot_Special1:
 		Shoot:
-			#### # 0
+			TNT1 A 0
 			{
 				if ( invoker.m_iAmmo > 0 )
 				{
@@ -73,8 +76,26 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 				A_SetTics( ceil( invoker.m_fFireDelay ) );
 			}
 			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
+			#### # 0 A_FireProjectile("K7_Mask_M79_Grenade",0,1,-10,0);
+			#### # 0 A_FireProjectile("K7_Mask_M79_Grenade",0,1,10,0);
 			Stop;
 			
+		Shoot_Special2:
+			TNT1 A 0
+			{
+				if ( invoker.m_iAmmo > 0 )
+				{
+					invoker.m_iAmmo--;
+				}
+				A_SetTics( ceil( invoker.m_fFireDelay ) );
+				invoker.m_iSpecialCharges = 0;
+			}
+			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
+			#### # 0 A_FireProjectile("K7_Mask_M79_Charge_Grenade",0,1,-10,0);
+			#### # 0 A_FireProjectile("K7_Mask_M79_Charge_Grenade",0,1,10,0);
+			Stop;
+			
+		/*
 		Altfire:
 			TNT1 A 0 A_JumpIf ( (invoker.m_iAmmo == 0) , "Reload" );
 			#### # 0 A_Overlay( LAYER_ANIM, "Anim_Altfire" );
@@ -97,6 +118,7 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 			{
 				return ResolveState( "Aiming" );
 			}
+		*/
 		
 			
 		Anim_Aim_In:
@@ -118,6 +140,7 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 				A_WeaponOffset( 0, 32 + offy, WOF_INTERPOLATE );
 			}
 			Loop;
+		Anim_Fire_Special1:
 		Anim_Fire:
 			MASK A 0 bright A_WeaponOffset( 0, 32 );
 			#### # 0 A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
@@ -127,7 +150,7 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 			MASB BD 2 bright;
 			Goto Anim_Aiming;
 			
-		Anim_Altfire:
+		Anim_Fire_Special2:
 			MASK A 0 bright A_WeaponOffset( 0, 32 );
 			#### # 0 A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
 			#### A 0 A_StartSound( "msk_special_vo", CHAN_VOICE );
