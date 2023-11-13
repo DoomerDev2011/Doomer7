@@ -58,6 +58,7 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			#### # 0
 			{
 				invoker.m_iSpecialCharges = 0;
+				invoker.A_TakeInventory( "CK7_ThinBlood", 1 );
 			}
 			TNT1 A 0 A_Overlay(LAYER_ANIM, "Anim_Altfire");
 			#### # 19;

@@ -58,6 +58,7 @@ Class CK7_Smith_Dan_Wep : CK7_Smith_Weapon
 			{
 				A_SetTics( ceil( invoker.m_fFireDelay ) );
 				invoker.m_iSpecialCharges = 0;
+				invoker.A_TakeInventory( "CK7_ThinBlood", 3 );
 			}
 			#### # 1 A_Overlay( LAYER_FUNC, "Fire_Special_Bullet" );
 			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
@@ -65,7 +66,6 @@ Class CK7_Smith_Dan_Wep : CK7_Smith_Weapon
 			
 		Fire_Special_Bullet:
 			#### # 0 A_FireProjectile( "K7_Dan_CollateralShot", 0, false, 0, 0 );
-			#### # 0 bright A_TakeInventory( "CK7_ThinBlood", 3 );
 			#### # 0 A_AlertMonsters();
 			Stop;	
 		

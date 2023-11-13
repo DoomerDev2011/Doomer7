@@ -272,7 +272,8 @@ Class CK7_Smith_Weapon : Weapon
 		Altfire:
 			#### # 0
 			{
-				int iCount = min( invoker.m_iSpecialChargeCount, 5 );
+				let thinblood = invoker.FindInventory( "CK7_ThinBlood" );
+				int iCount = min( invoker.m_iSpecialChargeCount, thinblood.Amount );
 				if ( iCount > 0 )
 				{
 					invoker.m_iSpecialCharges++;

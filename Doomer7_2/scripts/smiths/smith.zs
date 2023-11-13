@@ -25,6 +25,7 @@ Class CK7_Smith : DoomPlayer
 	
 	int 		m_iThinBlood;
 	int 		m_iThickBlood;
+	int		m_iThinBloodPart;
 	
 	float 	m_fHeight;
 	

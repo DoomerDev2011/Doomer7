@@ -89,6 +89,7 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 				}
 				A_SetTics( ceil( invoker.m_fFireDelay ) );
 				invoker.m_iSpecialCharges = 0;
+				invoker.A_TakeInventory( "CK7_ThinBlood", 2 );
 			}
 			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
 			#### # 0 A_FireProjectile("K7_Mask_M79_Charge_Grenade",0,1,-10,0);
