@@ -273,7 +273,7 @@ Class CK7_Smith_Weapon : Weapon
 			#### # 0
 			{
 				let thinblood = invoker.FindInventory( "CK7_ThinBlood" );
-				int iCount = min( invoker.m_iSpecialChargeCount, thinblood.Amount );
+				int iCount = min( invoker.m_iSpecialChargeCount, ( thinblood ? thinblood.Amount : 0 ) );
 				if ( iCount > 0 )
 				{
 					invoker.m_iSpecialCharges++;

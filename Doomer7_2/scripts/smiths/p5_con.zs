@@ -24,6 +24,7 @@ Class CK7_Smith_Con_Wep : CK7_Smith_Weapon
 		m_fSpread = 2;
 		m_iClipSize = 6;
 		m_fRefire = 16;
+		m_fSpeed = 1.33;
 		m_fViewHeight = 0.4;
 		m_fReloadTime = 42;
 		m_fHeight = 40;
