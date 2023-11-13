@@ -16,7 +16,7 @@ Class CK7_Smith_Hay_Wep : CK7_Smith_Weapon
 	{
 		Super.BeginPlay();
 		m_sPersona = "hay";
-		m_fDamage = 25;
+		m_fDamage = 19;
 		m_fRecoil = 2.5;
 		m_fSpread = 1.66;
 		m_iClipSize = 50;

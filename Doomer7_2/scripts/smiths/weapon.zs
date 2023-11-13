@@ -394,6 +394,7 @@ Class CK7_Smith_Weapon : Weapon
 			}
 			#### # 1 A_Overlay( LAYER_FUNC, "Fire_Bullet" );
 			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
+			#### # 0 A_AlertMonsters();
 			Stop;
 		
 		Fire_Bullet:

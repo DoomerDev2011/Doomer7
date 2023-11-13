@@ -24,13 +24,13 @@ Class CK7_Smith_Con_Wep : CK7_Smith_Weapon
 		m_fSpread = 2;
 		m_iClipSize = 6;
 		m_fRefire = 16;
-		m_fSpeed = 1.33;
+		m_fSpeed = 1.66;
 		m_fViewHeight = 0.4;
 		m_fReloadTime = 42;
 		m_fHeight = 40;
 		m_bAutoFire = true;
 		m_fConSpeedTimer = 0;
-		m_fSpecialFactor = 2.66;
+		m_fSpecialFactor = 2.1;
 		m_fSpecialDuration = 8.5;
 	}
 	

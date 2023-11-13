@@ -40,7 +40,7 @@ Class CK7_Smith : DoomPlayer
 		Player.StartItem "CK7_Smith_Cyo_Wep";
 		Player.StartItem "CK7_Smith_Con_Wep";
 		Player.StartItem "CK7_Smith_Msk_Wep";
-		Player.StartItem "CK7_Smith_Hay_Wep";
+		//Player.StartItem "CK7_Smith_Hay_Wep";
 	}
 	
 	override void BeginPlay()
@@ -53,7 +53,7 @@ Class CK7_Smith : DoomPlayer
 		int sk = G_SkillPropertyInt( SKILLP_ACSReturn );
 		if ( sk >= 4 )
 		{
-			A_SetInventory( "CK7_Smith_Gar_Wep", 1 );
+			A_SetInventory( "CK7_Smith_Hay_Wep", 1 );
 		}
 		
 		ApplyStats();
@@ -84,7 +84,7 @@ Class CK7_Smith : DoomPlayer
 		ViewBob = 0.4;
 		Height = m_fHeight;
 		
-		m_fSpeed = 1;
+		m_fSpeed = 1.5;
 		m_fSpeedFactor = 1;
 		SetSpeed( m_fSpeed );
 		
@@ -104,9 +104,9 @@ Class CK7_Smith : DoomPlayer
 	{
 		m_fCurrentSpeed = ( new_speed * m_fSpeedFactor );
 		forwardmove1 = m_fCurrentSpeed;
-		sidemove1 = forwardmove1 * 0.8;
-		forwardmove2 = forwardmove1 * 0.5;
-		sidemove2 = sidemove1 * 0.5;
+		sidemove1 = forwardmove1 * 0.975;
+		forwardmove2 = forwardmove1 * 0.75;
+		sidemove2 = sidemove1 * 0.75;
 	}
 	
 	void SetStatic( bool on )
