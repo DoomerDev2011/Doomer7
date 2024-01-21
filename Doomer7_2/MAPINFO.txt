@@ -3,6 +3,8 @@ gameinfo
 	playerclasses = "CK7_Smith"
 	titlemusic = "music/Title.ogg"
 	StatusBarClass = "CK7_Hud"
+	AddEventHandlers = "DamageHandler"
+
 }
 
 clearskills
@@ -49,3 +51,4 @@ skill bloodbath
 	SpawnFilter = Nightmare
 	ACSReturn = 4
 }
+

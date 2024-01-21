@@ -91,7 +91,7 @@ Class CK7_Smith_Con_Wep : CK7_Smith_Weapon
 			#### # 0 A_JumpIf( invoker.m_fConSpeedTimer > 0, "Aiming" );
 			#### # 0
 			{
-				//A_TakeInventory( "K7_ThinBlood", 1 );
+				A_TakeInventory( "CK7_ThinBlood", 1 );
 				A_Overlay( LAYER_ANIM, "Anim_Special1" );
 				let smith = CK7_Smith( invoker.owner );
 				smith.SetSpeed( 0 );

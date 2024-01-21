@@ -1,0 +1,11 @@
+
+/*
+Class DoomStatusBar2 : DoomStatusBar
+{
+    override void Draw (int state, double TicFrac)
+    {
+        Super.Draw (state, TicFrac);
+        DrawImage("M_SKULL1",(160,100));
+    }
+}
+*/

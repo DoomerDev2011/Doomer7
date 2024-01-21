@@ -1,6 +1,7 @@
 // Special Ammo
 Class CK7_ThinBlood : Ammo
 {
+	
 	Default
 	{
 		+INVENTORY.IGNORESKILL
@@ -10,8 +11,6 @@ Class CK7_ThinBlood : Ammo
 		Inventory.PickupSound "pickup_blood";
 	}
 	
-	
-	
 	States
 	{
 		Spawn:
@@ -19,6 +18,7 @@ Class CK7_ThinBlood : Ammo
 			Loop;
 		
 	}
+	
 }
 // Upgrade Currency
 Class CK7_ThickBlood : Ammo

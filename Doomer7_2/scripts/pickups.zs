@@ -51,3 +51,15 @@ Class PlasmaRifleReplacer: Medikit replaces PlasmaRifle {
 
 Class BFGReplacer: SoulSphere replaces BFG9000 {
 }
+
+Class HealthBonusReplacer: HealthBonus replaces HealthBonus{
+	override bool TryPickup (in out Actor toucher)
+	{
+		bool result = Super.TryPickup(toucher);
+		if (result)
+		{
+			EventHandler.SendInterfaceEvent(toucher.PlayerNumber(), String.Format("PlayedPickedUpItem:%s", self.GetClassName()));
+		}
+		return result;
+	}
+}
