@@ -445,7 +445,7 @@ Class CK7_Smith_Weapon : Weapon
 					invoker.m_fSpread,
 					-1,
 					invoker.m_fDamage,
-					"BulletPuff",
+					"CK7_BulletPuff",
 					BULLET_FLAGS
 				);
 			}
@@ -479,5 +479,89 @@ Class CK7_Ammo : Ammo
 		+INVENTORY.IGNORESKILL;
 		Inventory.Amount 1;
 		Inventory.MaxAmount 255;
+	}
+}
+
+class CK7_BulletPuff : BulletPuff
+{
+	Line hitLine;
+	enum EHitTypes
+	{
+		HT_NONE,
+		HT_WALL,
+		HT_FLOOR,
+		HT_CEILING,
+	}
+	static const Color puffColors[] = 
+	{
+		"956d00",
+		"e0b94c",
+		"d7812e",
+		"8e4c0c",
+		"693405"
+	};
+
+	Default
+	{
+		+PUFFGETSOWNER
+		vspeed 0;
+		height 4;
+	}
+
+	static CK7_BulletPuff SpawnPuff(vector3 p, Line hitLine = null)
+	{
+		let p = CK7_BulletPuff(Spawn('CK7_BulletPuff', p));
+		if (p)
+		{
+			p.hitLine = hitLine;
+		}
+		return p;
+	}
+
+	void SpawnPuffEffects()
+	{
+		if (!target)
+		{
+			return;
+		}
+		FLineTraceData lt;
+		Vector3 dir; bool success;
+		[dir, success] = CK7_Utils.GetNormalFromPos(self, 128, target.angle, target.pitch, lt);
+		if (!success)
+		{
+			return;
+		}
+
+		FSpawnParticleParams p;
+		p.flags = SPF_FULLBRIGHT;
+		p.startalpha = 1.0;
+		p.pos = pos;
+		p.vel = dir;
+		for (int i = random[puffvis](20, 30); i > 0; i--)
+		{
+			p.color1 = puffcolors[random[puffvis](0, puffcolors.Size()-1)];
+			p.lifetime = random[puffvis](20, 30);
+			p.size = frandom[puffvis](8, 14);
+			p.sizestep = -(p.size / p.lifetime);
+			double v = 1.4;
+			p.vel = (dir + (frandom[puffvis](-v, v), frandom[puffvis](-v, v), frandom[puffvis](-v, v))) * frandom[puffvis](2.5, 3.5);
+			p.accel.xy = (p.vel.xy / -p.lifetime) * 0.5;
+			p.accel.z = gravity * -0.5;
+			Level.SpawnParticle(p);
+		}
+	}
+
+	States
+	{
+	Spawn:
+		AMRK A 1 bright NoDelay
+		{
+			if (!hitLine && blockingline)
+			{
+				hitline = blockingline;
+			}
+			SpawnPuffEffects();
+		}
+		stop;
 	}
 }

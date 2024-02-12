@@ -48,7 +48,7 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 					invoker.m_fSpread,
 					-1,
 					invoker.m_fDamage * 3,
-					"BulletPuff",
+					"CK7_BulletPuff",
 					BULLET_FLAGS
 				);
 			}
