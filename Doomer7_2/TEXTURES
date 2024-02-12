@@ -54,15 +54,4 @@ Sprite "STTCE0", 640, 360
 	Patch "STTCE0", 0, 0
 }
 
-Graphic "XHAIRB1", 8, 8
-{
-	Patch "XHAIRB1", 0, 0
-}
-
-Graphic "XHAIRB2", 880, 1080
-{
-	Offset 440, 540
-	Patch "XHAIRB2", 0, 0
-}
-
 // End of texture definitions

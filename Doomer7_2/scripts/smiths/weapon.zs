@@ -19,14 +19,14 @@ Class CK7_Smith_Weapon : Weapon
 		
 	*/
 	
-	int 		m_iPersona;
+	int 	m_iPersona;
 	string 	m_sPersona;
-	float		m_fSpeed;
-	int 		m_fDamage;
+	float	m_fSpeed;
+	int 	m_fDamage;
 	float 	m_fSpread;
 	float 	m_fRecoil;
-	int 		m_iClipSize;
-	int 		m_iAmmo;
+	int 	m_iClipSize;
+	int 	m_iAmmo;
 	float 	m_fRefire;
 	float 	m_fHeight;
 	float  	m_fViewHeight;
@@ -35,9 +35,10 @@ Class CK7_Smith_Weapon : Weapon
 	bool 	m_bAutoFire;
 	float 	m_fFireDelay;
 	float 	m_fSpecialFactor;
-	float		m_fSpecialDuration;
-	int 		m_iSpecialCharges;
+	float	m_fSpecialDuration;
+	int 	m_iSpecialCharges;
 	int		m_iSpecialChargeCount;
+	transient bool crossHairMode;
 	
 	void AimingBreathe()
 	{
@@ -95,7 +96,27 @@ Class CK7_Smith_Weapon : Weapon
 		Weapon.BobRangeY 1;
 	}
 	
-	
+	override void DoEffect()
+	{
+		Super.DoEffect();
+		if (!owner || !owner.player)
+		{
+			return;
+		}
+		let weap = owner.player.readyweapon;
+		if (!weap || weap != self)
+		{
+			return;
+		}
+		if (CVar.GetCVar('k7_crosshairEnabled', owner.player).GetBool())
+		{
+			weap.crosshair = 99;
+		}
+		else
+		{
+			weap.crosshair = 0;
+		}
+	}
 	
 	States
 	{
@@ -115,9 +136,7 @@ Class CK7_Smith_Weapon : Weapon
 				return ResolveState( "Ready" );
 			}
 		Ready:
-			TNT1 A 0;
-			#### # 0 A_SetCrosshair( CVar.FindCVar( 'k7_mode' ).GetBool() ? 1 : 2 );
-			#### # 0 A_JumpIf( ( CK7_Smith( invoker.owner ).m_bAimHeld ) , "Aim_In" );
+			TNT1 A 0 A_JumpIf( ( CK7_Smith( invoker.owner ).m_bAimHeld ) , "Aim_In" );
 			#### # 1 A_WeaponReady( READY_FLAGS );
 			Goto Ready + 2;
 			

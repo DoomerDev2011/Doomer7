@@ -8,7 +8,8 @@ Class CK7_Hud : BaseStatusBar
 	const HUDRESX = 1920;
 	const HUDRESY = 1080;
 	int damageWipeDuration;
-	
+	transient CVar c_xhair;
+	transient CVar c_xhair_alpha;
 	
 	override void Init()
 	{
@@ -40,8 +41,7 @@ Class CK7_Hud : BaseStatusBar
 		CK7_ThinBlood = CPlayer.mo.FindInventory('CK7_ThinBlood');
 		DrawImage( "KHUDA0", ( 0, 0 ), DI_ITEM_OFFSETS );
 		
-		
-		
+		DrawK7Crosshair();
 		
 		if ( a2 )
 		{
@@ -62,6 +62,24 @@ Class CK7_Hud : BaseStatusBar
 		DrawString( k7HudFont, FormatNumber( CPlayer.health, 3 ), (113, 50), DI_TEXT_ALIGN_CENTER );
 		DrawString( k7HudFont, FormatNumber( GetArmorAmount(), 3 ), (113, 220), DI_TEXT_ALIGN_CENTER );
 	}
+
+	void DrawK7Crosshair()
+	{
+		if (!c_xhair)
+		{
+			c_xhair = CVar.GetCVar('k7_crosshairEnabled', CPlayer);
+		}
+		if (!c_xhair_alpha)
+		{
+			c_xhair_alpha = CVar.GetCVar('k7_crosshairOpacity', CPlayer);
+		}
+		double alpha = Clamp(c_xhair_alpha.GetFloat(), 0.0, 1.0);
+		if (!c_xhair.GetBool() || alpha <= 0.0)
+		{
+			return;
+		}
+		DrawImage("K7XHAIR", (0,0), DI_SCREEN_CENTER|DI_ITEM_CENTER, alpha: alpha);
+	}
 	
 	void StartDamageWipe(int duration = 20)
 	{
@@ -77,25 +95,25 @@ Class CK7_Hud : BaseStatusBar
 	}
 	
 	clearscope double LinearMap(double val, double source_min, double source_max, double out_min, double out_max, bool clampIt = false) 
-    {
-        double sourceDiff = (source_max - source_min);
-        if (sourceDiff == 0)
-            sourceDiff = 1;
-        double d = (val - source_min) * (out_max - out_min) / sourceDiff + out_min;
-        if (clampit) 
-        {
-            double truemax = out_max > out_min ? out_max : out_min;
-            double truemin = out_max > out_min ? out_min : out_max;
-            d = Clamp(d, truemin, truemax);
-        }
-        return d;
-    }
+	{
+		double sourceDiff = (source_max - source_min);
+		if (sourceDiff == 0)
+			sourceDiff = 1;
+		double d = (val - source_min) * (out_max - out_min) / sourceDiff + out_min;
+		if (clampit) 
+		{
+			double truemax = out_max > out_min ? out_max : out_min;
+			double truemin = out_max > out_min ? out_min : out_max;
+			d = Clamp(d, truemin, truemax);
+		}
+		return d;
+	}
 	
 	void DrawDamageWipe()
 	{
 		if (damageWipeOfs <= 0)
-        return;
-    
+			return;
+	
 		TextureID tex = TexMan.CheckForTexture('K7HUD_BG');
 		if (tex.IsValid())
 		{
@@ -128,9 +146,9 @@ Class CK7_Hud : BaseStatusBar
 	}
 	
 	void PrintItemNotif(class<Inventory> item)
-    {
-        StartDamageWipe(60);
-    }
+	{
+		StartDamageWipe(60);
+	}
 	
 	double GetHealthFraction()
 	{

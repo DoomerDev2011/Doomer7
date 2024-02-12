@@ -1,1 +1,3 @@
 server int k7_mode = 0;
+user nosave bool k7_crosshairEnabled = true;
+user nosave float k7_crosshairOpacity = 1.0;
