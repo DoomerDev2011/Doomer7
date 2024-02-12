@@ -52,7 +52,8 @@ Class PlasmaRifleReplacer: Medikit replaces PlasmaRifle {
 Class BFGReplacer: SoulSphere replaces BFG9000 {
 }
 
-Class HealthBonusReplacer: HealthBonus replaces HealthBonus{
+Class CK7_HealthBonus : HealthBonus
+{
 	override bool TryPickup (in out Actor toucher)
 	{
 		bool result = Super.TryPickup(toucher);
