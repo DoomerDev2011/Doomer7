@@ -13,6 +13,7 @@ Class CK7_Smith_Con_Wep : CK7_Smith_Weapon
 		Weapon.SlotNumber 5;
 		Inventory.PickupMessage "You got the automatic pistols!";
 		Inventory.PickupSound "weapon/getglk";
+		CK7_Smith_Weapon.PersonaSoundClass "k7_con";
 	}
 	
 	override void BeginPlay()

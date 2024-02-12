@@ -11,6 +11,7 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 		Weapon.BobRangeX 0;
 		Inventory.PickupMessage "You got the M79 Grenade Launchers!";
 		Inventory.PickupSound "weapon/getm79";
+		CK7_Smith_Weapon.PersonaSoundClass "k7_msk";
 	}
 	
 	override void BeginPlay()

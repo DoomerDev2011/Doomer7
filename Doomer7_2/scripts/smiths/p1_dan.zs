@@ -11,6 +11,7 @@ Class CK7_Smith_Dan_Wep : CK7_Smith_Weapon
 		Weapon.AmmoType2 "CK7_ThinBlood";
 		Inventory.PickupMessage "You got the Colt .357 revolver!";
 		Inventory.PickupSound "weapon/getmag";
+		CK7_Smith_Weapon.PersonaSoundClass 'k7_dan';
 	}
 	
 	override void BeginPlay()

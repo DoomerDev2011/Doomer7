@@ -39,6 +39,8 @@ Class CK7_Smith_Weapon : Weapon
 	int 	m_iSpecialCharges;
 	int		m_iSpecialChargeCount;
 	transient bool crossHairMode;
+	Name 	pSoundClass;
+	property PersonaSoundClass : pSoundClass;
 	
 	void AimingBreathe()
 	{
@@ -94,6 +96,30 @@ Class CK7_Smith_Weapon : Weapon
 		Weapon.BobSpeed -2;
 		Weapon.BobRangeX 0.1;
 		Weapon.BobRangeY 1;
+		CK7_Smith_Weapon.PersonaSoundClass "player";
+	}
+
+	void UpdateSoundClass()
+	{
+		let plr = PlayerPawn(owner);
+		if (!plr || plr.SoundClass == pSoundClass)
+		{
+			return;
+		}
+		plr.SoundClass = pSoundClass ? pSoundClass : 'player';
+		Console.Printf("New sound class: %s", plr.SoundClass);
+	}
+
+	void UpdateCrosshair(Weapon weap)
+	{
+		if (CVar.GetCVar('k7_crosshairEnabled', owner.player).GetBool())
+		{
+			weap.crosshair = 99;
+		}
+		else
+		{
+			weap.crosshair = 0;
+		}
 	}
 	
 	override void DoEffect()
@@ -108,14 +134,9 @@ Class CK7_Smith_Weapon : Weapon
 		{
 			return;
 		}
-		if (CVar.GetCVar('k7_crosshairEnabled', owner.player).GetBool())
-		{
-			weap.crosshair = 99;
-		}
-		else
-		{
-			weap.crosshair = 0;
-		}
+
+		UpdateSoundClass();
+		UpdateCrosshair(weap);
 	}
 	
 	States

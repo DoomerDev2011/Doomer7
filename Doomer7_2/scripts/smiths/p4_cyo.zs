@@ -10,6 +10,7 @@ Class CK7_Smith_Cyo_Wep : CK7_Smith_Weapon
 		Weapon.SlotNumber 4;
 		Inventory.PickupMessage "You got the Enfield revolver!";
 		Inventory.PickupSound "weapon/getrev";
+		CK7_Smith_Weapon.PersonaSoundClass "k7_cyo";
 	}
 	
 	override void BeginPlay()

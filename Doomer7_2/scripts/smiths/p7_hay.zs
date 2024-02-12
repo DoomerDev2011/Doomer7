@@ -10,6 +10,7 @@ Class CK7_Smith_Hay_Wep : CK7_Smith_Weapon
 		Weapon.SlotNumber 7;
 		Inventory.PickupMessage "You got the Tommygun!";
 		Inventory.PickupSound "weapon/gettmg";
+		CK7_Smith_Weapon.PersonaSoundClass "k7_hay";
 	}
 	
 	override void BeginPlay()
