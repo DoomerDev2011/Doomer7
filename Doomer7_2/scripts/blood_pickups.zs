@@ -1,5 +1,53 @@
 // Special Ammo
-Class CK7_ThinBlood : Ammo
+class K7_AmmoBase : Ammo
+{
+	Default
+	{
+		gravity 0.5;
+	}
+	override Class<Ammo> GetParentAmmo ()
+	{
+		class<Object> type = GetClass();
+
+		while (type.GetParentClass() && type.GetParentClass() != "Ammo" && type.GetParentClass() != "K7_AmmoBase")
+		{
+			type = type.GetParentClass();
+		}
+		return (class<Ammo>)(type);
+	}
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		if (bTossed)
+		{
+			vel.xy *= 1.2;
+			//vel.z *= 1.2;
+		}
+	}
+
+	override void Tick()
+	{
+		super.Tick();
+		if (owner || pos.z <= floorz)
+		{
+			return;
+		}
+		FSpawnParticleParams p;
+		p.pos = pos + ( frandom[bpart](-4, 4), frandom[bpart](-4, 4), frandom[bpart](-4, 4) );
+		p.color1 = color(200,0,0);
+		p.flags = SPF_FULLBRIGHT;
+		p.size = 3;
+		p.lifetime = 20;
+		p.startalpha = 1.0;
+		p.fadestep = -1;
+		p.vel = ( frandom[bpart](-2, 2), frandom[bpart](-2, 2), frandom[bpart](-2, 2) );
+		p.accel = p.vel * -0.05;
+		Level.SpawnParticle(p);
+	}
+}
+
+Class CK7_ThinBlood : K7_AmmoBase
 {
 	
 	Default
@@ -21,7 +69,7 @@ Class CK7_ThinBlood : Ammo
 	
 }
 // Upgrade Currency
-Class CK7_ThickBlood : Ammo
+Class CK7_ThickBlood : K7_AmmoBase
 {
 	Default
 	{
