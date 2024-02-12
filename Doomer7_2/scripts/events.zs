@@ -47,4 +47,20 @@ class CK7_GameplayHandler : EventHandler
 		}
 	}
 
+	override void CheckReplacement(replaceEvent e)
+	{
+		if (e.Replacee is 'DoomWeapon' ||
+			e.Replacee is 'Clip' ||
+			e.Replacee is 'Shell' ||
+			e.Replacee is 'RocketAmmo' ||
+			e.Replacee is 'Cell'
+		)
+		{
+			e.Replacement = 'CK7_EmptyPickup';
+		}
+		if (e.Replacee == 'HealthBonus')
+		{
+			e.Replacement = 'CK7_HealthBonus';
+		}
+	}
 }
