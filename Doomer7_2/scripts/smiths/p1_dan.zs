@@ -182,7 +182,7 @@ Class K7_Dan_CollateralShot : PlasmaBall
 		Loop;
 		
 		Death:
-		//TNT1 A 0 A_RemoveLight ('CollateralShot');
+		TNT1 A 1;
 		Stop;
 	}
 }

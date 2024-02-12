@@ -94,21 +94,6 @@ Class CK7_Hud : BaseStatusBar
 		damageWipeDuration = duration;
 	}
 	
-	clearscope double LinearMap(double val, double source_min, double source_max, double out_min, double out_max, bool clampIt = false) 
-	{
-		double sourceDiff = (source_max - source_min);
-		if (sourceDiff == 0)
-			sourceDiff = 1;
-		double d = (val - source_min) * (out_max - out_min) / sourceDiff + out_min;
-		if (clampit) 
-		{
-			double truemax = out_max > out_min ? out_max : out_min;
-			double truemin = out_max > out_min ? out_min : out_max;
-			d = Clamp(d, truemin, truemax);
-		}
-		return d;
-	}
-	
 	void DrawDamageWipe()
 	{
 		if (damageWipeOfs <= 0)
@@ -123,12 +108,12 @@ Class CK7_Hud : BaseStatusBar
 			double slideOutTime = damageWipeDuration * 0.25;
 			if (damageWipeOfs > slideOutTime)
 			{
-				xpos = LinearMap(damageWipeOfs, damageWipeDuration, slideInTime, -texSize.x, 0, true);
+				xpos = CK7_Utils.LinearMap(damageWipeOfs, damageWipeDuration, slideInTime, -texSize.x, 0, true);
 				
 			}
 			else
 			{
-				xpos = LinearMap(damageWipeOfs, slideOutTime, 0, 0, -texSize.x, true);
+				xpos = CK7_Utils.LinearMap(damageWipeOfs, slideOutTime, 0, 0, -texSize.x, true);
 			}
 			DrawTexture(tex, (xpos, 0), flags: DI_SCREEN_LEFT_CENTER|DI_ITEM_LEFT|DI_ITEM_CENTER);
 			//DrawString( k7HudFont, FormatNumber( CPlayer.health, 3 ), (xpos, 150), flags: DI_SCREEN_LEFT_CENTER|DI_ITEM_LEFT|DI_ITEM_CENTER);
@@ -154,47 +139,5 @@ Class CK7_Hud : BaseStatusBar
 	{
 		double frac = double(CPlayer.mo.health) / CPlayer.mo.GetMaxHealth(true);
 		return frac;
-	}
-}
-
-Class CK7_DamageHandler : EventHandler
-{
-	Override void WorldThingDamaged(WorldEvent e)
-	{
-		if (e.thing.player && e.Damage > 0)
-		{
-			EventHandler.SendInterfaceEvent(e.thing.PlayerNumber(), "PlayerWasDamaged");
-		}
-	}
-	
-	override void InterfaceProcess(consoleEvent e)
-	{
-		if (e.name ~== "PlayerWasDamaged")
-		{
-			let hud = CK7_Hud(statusbar);
-			if (hud)
-			{
-				hud.StartDamageWipe(60);
-			}
-		}
-		
-		// returns true if the event name CONTAINS "PlayedPickedUpItem" in it:
-		if (e.name.IndexOf("PlayedPickedUpItem") >= 0)
-		{
-			array<String> cmd;
-			e.name.Split(cmd, ":"); //splits the name of the event in two parts at ":"
-			if (cmd.Size() == 2) // it should be exactly 2
-			{
-				class<Inventory> item = cmd[1]; //the second element of the array is your class name
-				// check it's an existing item:
-				if (!item)
-					return;
-				// get pointer to the HUD:
-				let hud = CK7_HUD(statusbar);
-				if (!hud)
-					return;
-				hud.PrintItemNotif(item);
-			}
-		}
 	}
 }

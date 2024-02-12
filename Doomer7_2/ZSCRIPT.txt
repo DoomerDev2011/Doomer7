@@ -1,13 +1,9 @@
 version "4.11.3"
 
-
+#include "scripts/utils.zs"
+#include "scripts/events.zs"
 #include "scripts/blood_pickups.zs"
-
 #include "scripts/ui/k7_hud.zs"
-
 #include "scripts/smiths/smith.zs"
-
 #include "scripts/heavensmile/hs_common.zs"
-
 #include "scripts/pickups.zs"
-

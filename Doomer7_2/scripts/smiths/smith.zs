@@ -17,19 +17,19 @@ Class CK7_Smith : DoomPlayer
 	bool 	m_bHealPressed;
 	
 	bool 	m_bAiming;
-	bool		m_bZoomedIn;
+	bool	m_bZoomedIn;
 	
 	float 	m_fSpeed;
 	float 	m_fSpeedFactor;
 	float 	m_fCurrentSpeed;
 	
-	int 		m_iThinBlood;
-	int 		m_iThickBlood;
+	int 	m_iThinBlood;
+	int 	m_iThickBlood;
 	int		m_iThinBloodPart;
 	
 	float 	m_fHeight;
 	
-	int 		m_iStaticStartTime;
+	int 	m_iStaticStartTime;
 	
 	Default
 	{

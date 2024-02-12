@@ -107,7 +107,6 @@ Class CK7_Smith_Weapon : Weapon
 			return;
 		}
 		plr.SoundClass = pSoundClass ? pSoundClass : 'player';
-		Console.Printf("New sound class: %s", plr.SoundClass);
 	}
 
 	void UpdateCrosshair(Weapon weap)
