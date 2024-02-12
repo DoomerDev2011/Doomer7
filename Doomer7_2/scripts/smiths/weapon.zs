@@ -544,7 +544,7 @@ class CK7_BulletPuff : BulletPuff
 			p.size = frandom[puffvis](8, 14);
 			p.sizestep = -(p.size / p.lifetime);
 			double v = 1.4;
-			p.vel = (dir + (frandom[puffvis](-v, v), frandom[puffvis](-v, v), frandom[puffvis](-v, v))) * frandom[puffvis](2.5, 3.5);
+			p.vel = (dir + (frandom[puffvis](-v, v), frandom[puffvis](-v, v), frandom[puffvis](-v, v))) * frandom[puffvis](2.5, 4);
 			p.accel.xy = (p.vel.xy / -p.lifetime) * 0.5;
 			p.accel.z = gravity * -0.5;
 			Level.SpawnParticle(p);
