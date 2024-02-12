@@ -3,7 +3,7 @@ gameinfo
 	playerclasses = "CK7_Smith"
 	titlemusic = "music/Title.ogg"
 	StatusBarClass = "CK7_Hud"
-	AddEventHandlers = "DamageHandler"
+	AddEventHandlers = "CK7_DamageHandler"
 
 }
 

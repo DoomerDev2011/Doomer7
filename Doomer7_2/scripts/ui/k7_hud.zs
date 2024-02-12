@@ -157,15 +157,15 @@ Class CK7_Hud : BaseStatusBar
 	}
 }
 
-Class DamageHandler : EventHandler
+Class CK7_DamageHandler : EventHandler
 {
-    Override void WorldThingDamaged(WorldEvent e)
-    {
-        if (e.thing.player && e.Damage > 0)
+	Override void WorldThingDamaged(WorldEvent e)
+	{
+		if (e.thing.player && e.Damage > 0)
 		{
 			EventHandler.SendInterfaceEvent(e.thing.PlayerNumber(), "PlayerWasDamaged");
 		}
-    }
+	}
 	
 	override void InterfaceProcess(consoleEvent e)
 	{
@@ -178,8 +178,7 @@ Class DamageHandler : EventHandler
 			}
 		}
 		
-		 // returns true if the event name CONTAINS "PlayedPickedUpItem"
-    // in it:
+		// returns true if the event name CONTAINS "PlayedPickedUpItem" in it:
 		if (e.name.IndexOf("PlayedPickedUpItem") >= 0)
 		{
 			array<String> cmd;
@@ -191,12 +190,11 @@ Class DamageHandler : EventHandler
 				if (!item)
 					return;
 				// get pointer to the HUD:
-				let hud = CK7_HUD(statusbar); //iirc K7_HUD is the name of your HUD, amend if necessary
+				let hud = CK7_HUD(statusbar);
 				if (!hud)
 					return;
 				hud.PrintItemNotif(item);
 			}
 		}
-		
 	}
 }
