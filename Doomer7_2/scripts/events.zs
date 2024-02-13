@@ -18,7 +18,16 @@ class CK7_GameplayHandler : EventHandler
 	
 	override void InterfaceProcess(consoleEvent e)
 	{
-		if (e.name ~== "PlayerWasDamaged")
+		if (e.name ~== "K7ChargeChanged")
+		{
+			let hud = CK7_Hud(statusbar);
+			if (hud)
+			{
+				hud.ShowSidePanel();
+			}
+		}
+
+		/*if (e.name ~== "PlayerWasDamaged")
 		{
 			let hud = CK7_Hud(statusbar);
 			if (hud)
@@ -44,7 +53,7 @@ class CK7_GameplayHandler : EventHandler
 					return;
 				hud.PrintItemNotif(item);
 			}
-		}
+		}*/
 	}
 
 	override void CheckReplacement(replaceEvent e)

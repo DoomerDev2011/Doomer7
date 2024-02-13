@@ -1,51 +1,46 @@
 Class CK7_Hud : BaseStatusBar 
 {
-	HUDFont k7HudFont;
-	Inventory a1, a2;
-	int timer;
-	int damageWipeOfs;
 	const HUDRESX = 1920;
 	const HUDRESY = 1080;
-	int damageWipeDuration;
-	TextureID thinBloodTex;
+	const C_FRAMERATE = 60.0;
+	const CHARGETIME = C_FRAMERATE * 3.0;
+
 	transient CVar c_xhair;
 	transient CVar c_xhair_alpha;
+	HUDFont k7HudFont;
+	TextureID thinBloodTex;
+	TextureID backgroundTex;
+	Vector2 backgroundTexSize;
+
+	double chargeOffsetTimer;
+	double prevMSTime;
+	double deltaTime;
+	double fracTic;
 	
 	override void Init()
 	{
 		Super.Init();
-		timer = 0;
-		damageWipeOfs = 0;
-		damageWipeDuration = 200;
-		SetSize( 0, 1920, 1080 );
+		SetSize( 0, HUDRESX, HUDRESY );
 		Font fnt = "K7Font";
 		k7HudFont = HUDFont.Create( fnt, fnt.GetCharWidth("0"), Mono_CellLeft, -8, -8 );
-	}
-
-	override void Tick()
-	{
-		super.Tick();
-		if (damageWipeOfs > 0)
-		{
-			damageWipeOfs -= 1;
-		}
 	}
 	
 	override void Draw( int state, double TicFrac )
 	{
-		BeginHUD( 1, true, 1920, 1080);
-		
 		Super.Draw( state, TicFrac );
-		
-		DrawImage( "KHUDA0", ( 0, 0 ), DI_ITEM_OFFSETS );
-		
-		DrawK7Crosshair();
-		
-		if ( a2 )
+		UpdateDeltaTime();
+		if (state == HUD_None)
 		{
-			DrawString( k7HudFont, FormatNumber( a2.amount, 3 ), ( 70, 400 ) );
+			return;
 		}
-
+		BeginHUD( 1, true, HUDRESX, HUDRESY);
+		
+		if (chargeOffsetTimer > 0.0)
+		{
+			chargeOffsetTimer -= 1 * deltaTime;
+		}
+		DrawSidePanel();
+		DrawK7Crosshair();
 		DrawCharge();
 		DrawThinBlood();
 		
@@ -64,6 +59,50 @@ Class CK7_Hud : BaseStatusBar
 		DrawString( k7HudFont, FormatNumber( GetArmorAmount(), 3 ), (113, 220), DI_TEXT_ALIGN_CENTER );
 	}
 
+	void UpdateDeltaTime()
+	{
+		if (!prevMSTime)
+			prevMSTime = MSTimeF();
+
+		double ftime = MSTimeF() - prevMSTime;
+		prevMSTime = MSTimeF();
+		double dtime = 1000.0 / C_FRAMERATE;
+		deltaTime = (ftime / dtime);
+	}
+
+	double GetHealthFraction()
+	{
+		double frac = double(CPlayer.mo.health) / CPlayer.mo.GetMaxHealth(true);
+		return frac;
+	}
+
+	void DrawSidePanel()
+	{
+		if (!backgroundTex)
+		{
+			backgroundTex = TexMan.CheckForTexture("KHUDA0");
+		}
+		DrawTexture( backgroundTex, ( GetChargeOffsets(), 0 ), DI_SCREEN_LEFT_CENTER|DI_ITEM_LEFT|DI_ITEM_CENTER);
+	}
+
+	double GetChargeOffsets()
+	{
+		if (!backgroundTex)
+		{
+			backgroundTex = TexMan.CheckForTexture("KHUDA0");
+		}
+		if (backgroundTexSize == (0,0))
+		{
+			backgroundTexSize = TexMan.GetScaledSize(backgroundTex);
+		}
+		return CK7_Utils.LinearMap(chargeOffsetTimer, 0, CHARGETIME*0.5, -backgroundTexSize.x, 0, true);
+	}
+
+	void ShowSidePanel()
+	{
+		chargeOffsetTimer = CHARGETIME;
+	}
+
 	// Draw the "Charge Lv. #" string:
 	void DrawCharge()
 	{
@@ -74,6 +113,7 @@ Class CK7_Hud : BaseStatusBar
 		}
 		Vector2 sc = (0.85, 0.85);
 		Vector2 pos = (118, 310);
+		pos.x += GetChargeOffsets();
 		// Note, this is a wrong font. The charge string is supposed to
 		// use a different font, which is more curly. The other problem
 		// is that this font is missing the full stop character, so
@@ -96,6 +136,7 @@ Class CK7_Hud : BaseStatusBar
 			thinBloodTex = TexMan.CheckForTexture('DTHNBLD');
 		}
 		Vector2 pos = (112, 0);
+		pos.x += GetChargeOffsets();
 		DrawTexture(thinBloodTex, pos, DI_SCREEN_LEFT_CENTER|DI_ITEM_CENTER);
 		DrawString (k7HudFont, ""..thinblood.amount, pos + (10, 80), DI_SCREEN_LEFT_CENTER|DI_TEXT_ALIGN_LEFT);
 	}
@@ -116,65 +157,5 @@ Class CK7_Hud : BaseStatusBar
 			return;
 		}
 		DrawImage("K7XHAIR", (0,0), DI_SCREEN_CENTER|DI_ITEM_CENTER, alpha: alpha);
-	}
-	
-	void StartDamageWipe(int duration = 20)
-	{
-		if (damageWipeOfs <= 0)
-		{
-			damageWipeOfs = duration;
-		}
-		else
-		{
-			damageWipeOfs = Clamp(damageWipeOfs + duration*0.25, 0, duration*0.5);
-		}
-		damageWipeDuration = duration;
-	}
-	
-	void DrawDamageWipe()
-	{
-		if (damageWipeOfs <= 0)
-			return;
-	
-		TextureID tex = TexMan.CheckForTexture('K7HUD_BG');
-		if (tex.IsValid())
-		{
-			Vector2 texSize = TexMan.GetScaledSize(tex);
-			double xpos;
-			double slideInTime = damageWipeDuration * 0.75;
-			double slideOutTime = damageWipeDuration * 0.25;
-			if (damageWipeOfs > slideOutTime)
-			{
-				xpos = CK7_Utils.LinearMap(damageWipeOfs, damageWipeDuration, slideInTime, -texSize.x, 0, true);
-				
-			}
-			else
-			{
-				xpos = CK7_Utils.LinearMap(damageWipeOfs, slideOutTime, 0, 0, -texSize.x, true);
-			}
-			DrawTexture(tex, (xpos, 0), flags: DI_SCREEN_LEFT_CENTER|DI_ITEM_LEFT|DI_ITEM_CENTER);
-			//DrawString( k7HudFont, FormatNumber( CPlayer.health, 3 ), (xpos, 150), flags: DI_SCREEN_LEFT_CENTER|DI_ITEM_LEFT|DI_ITEM_CENTER);
-			//DrawString( k7HudFont, "Health", (xpos, 180), flags: DI_SCREEN_LEFT_CENTER|DI_ITEM_LEFT|DI_ITEM_CENTER);
-			//DrawString( k7HudFont, FormatNumber( CK7_ThinBlood.Amount, 3 ), (xpos, 210), flags: DI_SCREEN_LEFT_CENTER|DI_ITEM_LEFT|DI_ITEM_CENTER);
-			//DrawString( k7HudFont, "Thin blood", (xpos, 240), flags: DI_SCREEN_LEFT_CENTER|DI_ITEM_LEFT|DI_ITEM_CENTER);
-			
-			/*
-			DrawString( k7HudFont, FormatNumber( CPlayer.health, 3 ), ( 70, 150 ) );
-			DrawString( k7HudFont, "Health", ( 40, 180 ));
-			DrawString( k7HudFont, FormatNumber( CK7_ThinBlood.Amount, 3 ), ( 40, 210 ));
-			DrawString( k7HudFont, "Thin blood", ( 40, 240 ));
-			*/
-		}
-	}
-	
-	void PrintItemNotif(class<Inventory> item)
-	{
-		StartDamageWipe(60);
-	}
-	
-	double GetHealthFraction()
-	{
-		double frac = double(CPlayer.mo.health) / CPlayer.mo.GetMaxHealth(true);
-		return frac;
 	}
 }

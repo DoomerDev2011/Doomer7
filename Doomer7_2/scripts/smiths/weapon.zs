@@ -320,6 +320,7 @@ Class CK7_Smith_Weapon : Weapon
 					{
 						invoker.m_iSpecialCharges = 0;
 					}
+					EventHandler.SendInterfaceEvent(self.PlayerNumber(), "K7ChargeChanged");
 					A_StartSound( "charge_tube" .. invoker.m_iSpecialCharges, CHAN_WEAPON, CHANF_OVERLAP );
 				}
 				return ResolveState( "Aiming" );
