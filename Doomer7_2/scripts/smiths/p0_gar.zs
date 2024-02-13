@@ -10,6 +10,7 @@ Class CK7_Smith_Gar_Wep : CK7_Smith_Weapon
 		Weapon.SlotNumber 0;
 		Inventory.PickupMessage "You got the Supressed P230!";
 		Inventory.PickupSound "weapon/getppk";
+		CK7_Smith_Weapon.PersonaSoundClass "k7_gar";
 	}
 	
 	override void BeginPlay()

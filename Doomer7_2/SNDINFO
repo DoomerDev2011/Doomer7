@@ -20,6 +20,42 @@ gar_aim sound/gar/aim.ogg
 gar_shoot sound/gar/shoot.ogg
 gar_reload sound/gar/reload.ogg
 
+gar_die sound/gar/die.ogg
+gar_hurt1 sound/gar/hurt1.ogg
+gar_hurt2 sound/gar/hurt2.ogg
+gar_hurt3 sound/gar/hurt3.ogg
+gar_hurt4 sound/gar/hurt4.ogg
+gar_hurt5 sound/gar/hurt5.ogg
+gar_hurt6 sound/gar/hurt6.ogg
+gar_hurt7 sound/gar/hurt7.ogg
+gar_hurt8 sound/gar/hurt8.ogg
+gar_hurt9 sound/gar/hurt9.ogg
+gar_hurt10 sound/gar/hurt10.ogg
+gar_hurt11 sound/gar/hurt11.ogg
+gar_hurt12 sound/gar/hurt12.ogg
+$random gar_hurt {
+	gar_hurt1
+	gar_hurt2
+	gar_hurt3
+	gar_hurt4
+	gar_hurt5
+	gar_hurt6
+	gar_hurt7
+	gar_hurt8
+	gar_hurt9
+	gar_hurt10
+	gar_hurt11
+	gar_hurt12
+}
+
+$playeralias k7_gar male *usefail persona_usefail
+$playeralias k7_gar male *pain100 gar_hurt
+$playersounddup k7_gar male *pain75 *pain100
+$playersounddup k7_gar male *pain50 *pain75
+$playersounddup k7_gar male *pain25 *pain50
+$playeralias k7_gar male *death gar_die
+$playeralias k7_gar male *xdeath gar_die
+
 // Dan
 dan_aim sound/dan/aim.ogg
 dan_shoot sound/dan/shoot.ogg
@@ -65,6 +101,7 @@ $playersounddup k7_dan male *pain75 *pain100
 $playersounddup k7_dan male *pain50 *pain75
 $playersounddup k7_dan male *pain25 *pain50
 $playeralias k7_dan male *death dan_die
+$playeralias k7_dan male *xdeath dan_die
 
 // KAEDE
 ked_aim sound/ked/aim.ogg
@@ -73,10 +110,82 @@ ked_reload sound/ked/reload.ogg
 ked_zoomin sound/ked/zoom_in.ogg
 ked_zoomout sound/ked/zoom_out.ogg
 
+ked_die sound/ked/die.ogg
+ked_hurt1 sound/ked/hurt1.ogg
+ked_hurt2 sound/ked/hurt2.ogg
+ked_hurt3 sound/ked/hurt3.ogg
+ked_hurt4 sound/ked/hurt4.ogg
+ked_hurt5 sound/ked/hurt5.ogg
+ked_hurt6 sound/ked/hurt6.ogg
+ked_hurt7 sound/ked/hurt7.ogg
+ked_hurt8 sound/ked/hurt8.ogg
+ked_hurt9 sound/ked/hurt9.ogg
+ked_hurt10 sound/ked/hurt10.ogg
+ked_hurt11 sound/ked/hurt11.ogg
+ked_hurt12 sound/ked/hurt12.ogg
+$random ked_hurt {
+	ked_hurt1
+	ked_hurt2
+	ked_hurt3
+	ked_hurt4
+	ked_hurt5
+	ked_hurt6
+	ked_hurt7
+	ked_hurt8
+	ked_hurt9
+	ked_hurt10
+	ked_hurt11
+	ked_hurt12
+}
+
+$playeralias k7_ked male *usefail persona_usefail
+$playeralias k7_ked male *pain100 ked_hurt
+$playersounddup k7_ked male *pain75 *pain100
+$playersounddup k7_ked male *pain50 *pain75
+$playersounddup k7_ked male *pain25 *pain50
+$playeralias k7_ked male *death ked_die
+$playeralias k7_ked male *xdeath ked_die
+
 // Kevin
 kvn_aim sound/ksn/aim.ogg
 kvn_shoot sound/kvn/shoot.ogg
 kvn_special_shot sound/kvn/specialshot.ogg
+
+kvn_die sound/kvn/die.ogg
+kvn_hurt1 sound/kvn/hurt1.ogg
+kvn_hurt2 sound/kvn/hurt2.ogg
+kvn_hurt3 sound/kvn/hurt3.ogg
+kvn_hurt4 sound/kvn/hurt4.ogg
+kvn_hurt5 sound/kvn/hurt5.ogg
+kvn_hurt6 sound/kvn/hurt6.ogg
+kvn_hurt7 sound/kvn/hurt7.ogg
+kvn_hurt8 sound/kvn/hurt8.ogg
+kvn_hurt9 sound/kvn/hurt9.ogg
+kvn_hurt10 sound/kvn/hurt10.ogg
+kvn_hurt11 sound/kvn/hurt11.ogg
+kvn_hurt12 sound/kvn/hurt12.ogg
+$random kvn_hurt {
+	kvn_hurt1
+	kvn_hurt2
+	kvn_hurt3
+	kvn_hurt4
+	kvn_hurt5
+	kvn_hurt6
+	kvn_hurt7
+	kvn_hurt8
+	kvn_hurt9
+	kvn_hurt10
+	kvn_hurt11
+	kvn_hurt12
+}
+
+$playeralias k7_kvn male *usefail persona_usefail
+$playeralias k7_kvn male *pain100 kvn_hurt
+$playersounddup k7_kvn male *pain75 *pain100
+$playersounddup k7_kvn male *pain50 *pain75
+$playersounddup k7_kvn male *pain25 *pain50
+$playeralias k7_kvn male *death kvn_die
+$playeralias k7_kvn male *xdeath kvn_die
 
 // Coyote
 cyo_aim sound/cyo/aim.ogg
@@ -115,6 +224,7 @@ $playersounddup k7_cyo male *pain75 *pain100
 $playersounddup k7_cyo male *pain50 *pain75
 $playersounddup k7_cyo male *pain25 *pain50
 $playeralias k7_cyo male *death cyo_die
+$playeralias k7_cyo male *xdeath cyo_die
 
 
 // Con
@@ -139,6 +249,7 @@ $playersounddup k7_con male *pain75 *pain100
 $playersounddup k7_con male *pain50 *pain75
 $playersounddup k7_con male *pain25 *pain50
 $playeralias k7_con male *death con_die
+$playeralias k7_con male *xdeath con_die
 
 
 // MASK
@@ -163,6 +274,7 @@ $playersounddup k7_msk male *pain75 *pain100
 $playersounddup k7_msk male *pain50 *pain75
 $playersounddup k7_msk male *pain25 *pain50
 $playeralias k7_msk male *death msk_die
+$playeralias k7_msk male *xdeath msk_die
 
 
 
@@ -209,6 +321,7 @@ $playersounddup k7_hay male *pain75 *pain100
 $playersounddup k7_hay male *pain50 *pain75
 $playersounddup k7_hay male *pain25 *pain50
 $playeralias k7_hay male *death hay_die
+$playeralias k7_hay male *xdeath hay_die
 
 // HeavenSmile
 hs_step1 sound/hs/step1.ogg

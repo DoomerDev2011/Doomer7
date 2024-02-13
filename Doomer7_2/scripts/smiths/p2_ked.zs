@@ -11,6 +11,7 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 		Weapon.SlotNumber 2;
 		Inventory.PickupMessage "You got the AMT Hardballer!";
 		Inventory.PickupSound "weapon/gethar";
+		CK7_Smith_Weapon.PersonaSoundClass 'k7_ked';
 	}
 	
 	override void BeginPlay()
