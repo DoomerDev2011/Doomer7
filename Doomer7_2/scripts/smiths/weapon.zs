@@ -366,16 +366,29 @@ Class CK7_Smith_Weapon : Weapon
 			Stop;
 		
 		Flash:
-			#### # 0 A_Light( 6 );
-			#### # 0 A_SetBlend( "E6F63F", 0.25, 10 );
-			#### # 0 A_OverlayFlags( LAYER_FLASH, PSPF_RENDERSTYLE, true );
-			#### # 0 A_OverlayFlags( LAYER_FLASH, PSPF_ALPHA, true );
-			#### # 0 A_OverlayRenderStyle( LAYER_FLASH, STYLE_Translucent );
-			#### # 2 bright;
-			#### # 0 A_Light( 4 );
-			#### # 2 bright A_OverlayAlpha( LAYER_FLASH, 0.66 );
-			#### # 0 A_Light( 2 );
-			#### # 2 A_OverlayAlpha( LAYER_FLASH, 0.33 );
+			#### # 2 bright
+			{
+				A_Light( 6 );
+				A_SetBlend( "E6F63F", 0.25, 10 );
+				A_OverlayFlags( OverlayID(), PSPF_RENDERSTYLE, true );
+				A_OverlayFlags( OverlayID(), PSPF_FORCEALPHA, true );
+				A_OverlayRenderStyle( OverlayID(), STYLE_Add );
+				A_OverlayPivot ( OverlayID(), 0.5, 0.5 );
+				double sc = frandom[sfx](0.8, 1.1);
+				A_OverlayScale ( OverlayID(), sc, sc );
+				double ang = frandom[sfx](-10, 10);
+				A_OverlayRotate( OverlayID(), ang );
+			}
+			#### # 2 bright 
+			{
+				A_Light( 4 );
+				A_OverlayAlpha( OverlayID(), 0.66 );
+			}
+			#### # 2 
+			{
+				A_OverlayAlpha( OverlayID(), 0.33 );
+				A_Light( 2 );
+			}
 			#### # 0 A_Light( 0 );
 			Stop;
 		
@@ -431,9 +444,12 @@ Class CK7_Smith_Weapon : Weapon
 					invoker.m_iAmmo--;
 				A_SetTics( ceil( invoker.m_fFireDelay ) );
 			}
-			#### # 1 A_Overlay( LAYER_FUNC, "Fire_Bullet" );
-			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
-			#### # 0 A_AlertMonsters();
+			#### # 1 
+			{
+				A_Overlay( LAYER_FUNC, "Fire_Bullet" );
+				A_Overlay( LAYER_RECOIL, "Recoil" );
+				A_AlertMonsters();
+			}
 			Stop;
 		
 		Fire_Bullet:
@@ -453,11 +469,11 @@ Class CK7_Smith_Weapon : Weapon
 			
 		
 		Aim_Out:
-			#### # 0 A_Overlay( LAYER_ANIM, null );
-			#### # 0 A_ZoomFactor( 1, ZOOM_INSTANT );
-			#### # 0 A_SetCrosshair( 1 );
 			#### # 10
 			{
+				A_Overlay( LAYER_ANIM, null );
+				A_ZoomFactor( 1, ZOOM_INSTANT );
+				A_SetCrosshair( 1 );
 				invoker.LookScale = 1;
 				let smith = CK7_Smith( invoker.owner );
 				smith.m_bAiming = false;
