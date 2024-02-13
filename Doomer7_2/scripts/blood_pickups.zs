@@ -4,6 +4,7 @@ class K7_AmmoBase : Ammo
 	Default
 	{
 		gravity 0.5;
+		YScale 0.834;
 	}
 	override Class<Ammo> GetParentAmmo ()
 	{
