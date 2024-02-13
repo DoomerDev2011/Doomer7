@@ -2,12 +2,12 @@ Class CK7_Hud : BaseStatusBar
 {
 	HUDFont k7HudFont;
 	Inventory a1, a2;
-	Inventory CK7_ThinBlood;
 	int timer;
 	int damageWipeOfs;
 	const HUDRESX = 1920;
 	const HUDRESY = 1080;
 	int damageWipeDuration;
+	TextureID thinBloodTex;
 	transient CVar c_xhair;
 	transient CVar c_xhair_alpha;
 	
@@ -19,9 +19,8 @@ Class CK7_Hud : BaseStatusBar
 		damageWipeDuration = 200;
 		SetSize( 0, 1920, 1080 );
 		Font fnt = "K7Font";
-		k7HudFont = HUDFont.Create( fnt, fnt.GetCharWidth("0"), Mono_CellLeft, 1, 1 );
+		k7HudFont = HUDFont.Create( fnt, fnt.GetCharWidth("0"), Mono_CellLeft, -8, -8 );
 	}
-	
 
 	override void Tick()
 	{
@@ -38,7 +37,6 @@ Class CK7_Hud : BaseStatusBar
 		
 		Super.Draw( state, TicFrac );
 		
-		CK7_ThinBlood = CPlayer.mo.FindInventory('CK7_ThinBlood');
 		DrawImage( "KHUDA0", ( 0, 0 ), DI_ITEM_OFFSETS );
 		
 		DrawK7Crosshair();
@@ -47,6 +45,9 @@ Class CK7_Hud : BaseStatusBar
 		{
 			DrawString( k7HudFont, FormatNumber( a2.amount, 3 ), ( 70, 400 ) );
 		}
+
+		DrawCharge();
+		DrawThinBlood();
 		
 		//DrawDamageWipe();
 		double hudHealth = GetHealthFraction();
@@ -61,6 +62,42 @@ Class CK7_Hud : BaseStatusBar
 		}
 		DrawString( k7HudFont, FormatNumber( CPlayer.health, 3 ), (113, 50), DI_TEXT_ALIGN_CENTER );
 		DrawString( k7HudFont, FormatNumber( GetArmorAmount(), 3 ), (113, 220), DI_TEXT_ALIGN_CENTER );
+	}
+
+	// Draw the "Charge Lv. #" string:
+	void DrawCharge()
+	{
+		let weap = CK7_Smith_Weapon(CPlayer.readyweapon);
+		if (!weap || weap.m_iSpecialChargeCount <= 0)
+		{
+			return;
+		}
+		Vector2 sc = (0.85, 0.85);
+		Vector2 pos = (118, 310);
+		// Note, this is a wrong font. The charge string is supposed to
+		// use a different font, which is more curly. The other problem
+		// is that this font is missing the full stop character, so
+		// it prints "Lv  #" instead of "Lv. #"
+		DrawString( k7HudFont, "Charge", pos, DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_CENTER, scale: sc);
+		pos.y += 40;
+		DrawString( k7HudFont, String.Format("Lv. %d", weap.m_iSpecialCharges), pos, DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_CENTER, scale: sc);
+	}
+
+	// Draw the thin blood icon and counter:
+	void DrawThinBlood()
+	{
+		let thinblood = CK7_ThinBlood(CPlayer.mo.FindInventory('CK7_ThinBlood'));
+		if (!thinblood || thinblood.amount <= 0)
+		{
+			return;
+		}
+		if (!thinBloodTex || !thinBloodTex.IsValid())
+		{
+			thinBloodTex = TexMan.CheckForTexture('DTHNBLD');
+		}
+		Vector2 pos = (112, 0);
+		DrawTexture(thinBloodTex, pos, DI_SCREEN_LEFT_CENTER|DI_ITEM_CENTER);
+		DrawString (k7HudFont, ""..thinblood.amount, pos + (10, 80), DI_SCREEN_LEFT_CENTER|DI_TEXT_ALIGN_LEFT);
 	}
 
 	void DrawK7Crosshair()
@@ -118,8 +155,8 @@ Class CK7_Hud : BaseStatusBar
 			DrawTexture(tex, (xpos, 0), flags: DI_SCREEN_LEFT_CENTER|DI_ITEM_LEFT|DI_ITEM_CENTER);
 			//DrawString( k7HudFont, FormatNumber( CPlayer.health, 3 ), (xpos, 150), flags: DI_SCREEN_LEFT_CENTER|DI_ITEM_LEFT|DI_ITEM_CENTER);
 			//DrawString( k7HudFont, "Health", (xpos, 180), flags: DI_SCREEN_LEFT_CENTER|DI_ITEM_LEFT|DI_ITEM_CENTER);
-			DrawString( k7HudFont, FormatNumber( CK7_ThinBlood.Amount, 3 ), (xpos, 210), flags: DI_SCREEN_LEFT_CENTER|DI_ITEM_LEFT|DI_ITEM_CENTER);
-			DrawString( k7HudFont, "Thin blood", (xpos, 240), flags: DI_SCREEN_LEFT_CENTER|DI_ITEM_LEFT|DI_ITEM_CENTER);
+			//DrawString( k7HudFont, FormatNumber( CK7_ThinBlood.Amount, 3 ), (xpos, 210), flags: DI_SCREEN_LEFT_CENTER|DI_ITEM_LEFT|DI_ITEM_CENTER);
+			//DrawString( k7HudFont, "Thin blood", (xpos, 240), flags: DI_SCREEN_LEFT_CENTER|DI_ITEM_LEFT|DI_ITEM_CENTER);
 			
 			/*
 			DrawString( k7HudFont, FormatNumber( CPlayer.health, 3 ), ( 70, 150 ) );
