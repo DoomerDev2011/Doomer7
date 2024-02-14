@@ -4,7 +4,11 @@ class CK7_GameplayHandler : EventHandler
 	{
 		if (e.thing && e.thing.bISMONSTER && !e.thing.bBOSS)
 		{
-			e.thing.A_DropItem('CK7_ThinBlood');
+			int count = Clamp(e.thing.GetMaxHealth() / 30, 1, 20);
+			for (int i = count; i > 0; i--)
+			{
+				e.thing.A_DropItem('CK7_ThinBlood');
+			}
 		}
 	}
 
