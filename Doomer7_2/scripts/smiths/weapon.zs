@@ -504,7 +504,6 @@ Class CK7_Ammo : Ammo
 
 class CK7_BulletPuff : BulletPuff
 {
-	Line hitLine;
 	enum EHitTypes
 	{
 		HT_NONE,
@@ -526,16 +525,6 @@ class CK7_BulletPuff : BulletPuff
 		+PUFFGETSOWNER
 		vspeed 0;
 		height 4;
-	}
-
-	static CK7_BulletPuff SpawnPuff(vector3 p, Line hitLine = null)
-	{
-		let p = CK7_BulletPuff(Spawn('CK7_BulletPuff', p));
-		if (p)
-		{
-			p.hitLine = hitLine;
-		}
-		return p;
 	}
 
 	void SpawnPuffEffects()
@@ -574,14 +563,7 @@ class CK7_BulletPuff : BulletPuff
 	States
 	{
 	Spawn:
-		AMRK A 1 bright NoDelay
-		{
-			if (!hitLine && blockingline)
-			{
-				hitline = blockingline;
-			}
-			SpawnPuffEffects();
-		}
+		TNT1 A 1 bright NoDelay SpawnPuffEffects();
 		stop;
 	}
 }
