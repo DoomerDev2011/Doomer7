@@ -378,9 +378,9 @@ Class CK7_Smith_Weapon : Weapon
 			Stop;
 		
 		Flash:
-			#### # 2 bright
+			#### # 1 bright
 			{
-				A_Light( 6 );
+				A_Light( 3 );
 				A_SetBlend( "E6F63F", 0.25, 10 );
 				A_OverlayFlags( OverlayID(), PSPF_RENDERSTYLE, true );
 				A_OverlayFlags( OverlayID(), PSPF_FORCEALPHA, true );
@@ -391,15 +391,15 @@ Class CK7_Smith_Weapon : Weapon
 				double ang = frandom[sfx](-10, 10);
 				A_OverlayRotate( OverlayID(), ang );
 			}
-			#### # 2 bright 
+			#### # 1 bright 
 			{
-				A_Light( 4 );
-				A_OverlayAlpha( OverlayID(), 0.66 );
-			}
-			#### # 2 
-			{
-				A_OverlayAlpha( OverlayID(), 0.33 );
-				A_Light( 2 );
+				A_Light( 1 );
+				A_OverlayAlpha( OverlayID(), 0.6 );
+				let psp = player.FindPSprite(OverlayID());
+				if (psp)
+				{
+					psp.scale *= 1.1;
+				}
 			}
 			#### # 0 A_Light( 0 );
 			Stop;
