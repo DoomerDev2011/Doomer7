@@ -4,13 +4,11 @@ Class CK7_Smith_Con
 }
 
 Class CK7_Smith_Con_Wep : CK7_Smith_Weapon
-{	
-
+{
 	float m_fConSpeedTimer;
 	
 	Default
 	{
-		Weapon.SlotNumber 5;
 		Inventory.PickupMessage "You got the automatic pistols!";
 		Inventory.PickupSound "weapon/getglk";
 		CK7_Smith_Weapon.PersonaSoundClass "k7_con";

@@ -33,6 +33,14 @@ Class CK7_Smith : DoomPlayer
 	
 	Default
 	{
+		Player.WeaponSlot 0, "CK7_Smith_Gar_Wep";
+		Player.WeaponSlot 1, "CK7_Smith_Dan_Wep";
+		Player.WeaponSlot 2, "CK7_Smith_Ked_Wep";
+		Player.WeaponSlot 3, "CK7_Smith_Kvn_Wep";
+		Player.WeaponSlot 4, "CK7_Smith_Cyo_Wep";
+		Player.WeaponSlot 5, "CK7_Smith_Con_Wep";
+		Player.WeaponSlot 6, "CK7_Smith_Msk_Wep";
+		Player.WeaponSlot 7, "CK7_Smith_Hay_Wep";
 		Player.StartItem "CK7_Smith_Gar_Wep";
 		Player.StartItem "CK7_Smith_Dan_Wep";
 		Player.StartItem "CK7_Smith_Ked_Wep";

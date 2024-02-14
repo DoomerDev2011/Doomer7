@@ -7,7 +7,6 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 {	
 	Default
 	{
-		Weapon.SlotNumber 3;
 		Inventory.PickupMessage "You got the throwing knives!";
 		Inventory.PickupSound "weapon/getknife";
 		CK7_Smith_Weapon.PersonaSoundClass "k7_kvn";

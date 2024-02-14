@@ -7,7 +7,6 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 {	
 	Default
 	{
-		Weapon.SlotNumber 6;
 		Weapon.BobRangeX 0;
 		Inventory.PickupMessage "You got the M79 Grenade Launchers!";
 		Inventory.PickupSound "weapon/getm79";
