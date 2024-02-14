@@ -6,6 +6,20 @@ class K7_AmmoBase : Ammo
 		gravity 0.5;
 		YScale 0.834;
 	}
+
+	override bool HandlePickup (Inventory item)
+	{
+		let ammoitem = Ammo(item);
+		if (ammoitem != null && ammoitem.GetParentAmmo() == GetClass())
+		{
+			if (Amount < MaxAmount || sv_unlimited_pickup)
+			{
+				EventHandler.SendInterfaceEvent(owner.PlayerNumber(), "K7ShowHudPanel");
+			}
+		}
+		return super.HandlePickup(item);
+	}
+
 	override Class<Ammo> GetParentAmmo ()
 	{
 		class<Object> type = GetClass();
@@ -22,7 +36,7 @@ class K7_AmmoBase : Ammo
 		Super.PostBeginPlay();
 		if (bTossed)
 		{
-			vel.xy *= 1.2;
+			vel.xy *= 1.5;
 			//vel.z *= 1.2;
 		}
 	}
@@ -30,7 +44,7 @@ class K7_AmmoBase : Ammo
 	override void Tick()
 	{
 		super.Tick();
-		if (owner || pos.z <= floorz)
+		if (!bTOSSED || owner || pos.z <= floorz)
 		{
 			return;
 		}

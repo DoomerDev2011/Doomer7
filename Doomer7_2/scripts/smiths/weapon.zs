@@ -158,7 +158,7 @@ Class CK7_Smith_Weapon : Weapon
 		Ready:
 			TNT1 A 0 A_JumpIf( ( CK7_Smith( invoker.owner ).m_bAimHeld ) , "Aim_In" );
 			#### # 1 A_WeaponReady( READY_FLAGS );
-			Goto Ready + 2;
+			loop;
 			
 		Deselect:
 			#### # 0 A_Lower( 512 );
@@ -320,7 +320,7 @@ Class CK7_Smith_Weapon : Weapon
 					{
 						invoker.m_iSpecialCharges = 0;
 					}
-					EventHandler.SendInterfaceEvent(self.PlayerNumber(), "K7ChargeChanged");
+					EventHandler.SendInterfaceEvent(self.PlayerNumber(), "K7ShowHudPanel");
 					A_StartSound( "charge_tube" .. invoker.m_iSpecialCharges, CHAN_WEAPON, CHANF_OVERLAP );
 				}
 				return ResolveState( "Aiming" );

@@ -3,7 +3,10 @@ Class CK7_Hud : BaseStatusBar
 	const HUDRESX = 1920;
 	const HUDRESY = 1080;
 	const C_FRAMERATE = 60.0;
-	const CHARGETIME = C_FRAMERATE * 3.0;
+	const CHARGETIME = C_FRAMERATE * 4.0;
+	const CHARGETIME_HOLD = C_FRAMERATE * 1.5;
+	const CHARGETIME_FWD = 8.0;
+	const CHARGETIME_BACK = -2.0;
 
 	transient CVar c_xhair;
 	transient CVar c_xhair_alpha;
@@ -12,7 +15,8 @@ Class CK7_Hud : BaseStatusBar
 	TextureID backgroundTex;
 	Vector2 backgroundTexSize;
 
-	double chargeOffsetTimer;
+	double sideSlideTimer;
+	double sideSlideDir;
 	double prevMSTime;
 	double deltaTime;
 	double fracTic;
@@ -23,6 +27,8 @@ Class CK7_Hud : BaseStatusBar
 		SetSize( 0, HUDRESX, HUDRESY );
 		Font fnt = "K7Font";
 		k7HudFont = HUDFont.Create( fnt, fnt.GetCharWidth("0"), Mono_CellLeft, -8, -8 );
+		backgroundTex = TexMan.CheckForTexture("KHUDA0");
+		backgroundTexSize = TexMan.GetScaledSize(backgroundTex);
 	}
 	
 	override void Draw( int state, double TicFrac )
@@ -35,10 +41,7 @@ Class CK7_Hud : BaseStatusBar
 		}
 		BeginHUD( 1, true, HUDRESX, HUDRESY);
 		
-		if (chargeOffsetTimer > 0.0)
-		{
-			chargeOffsetTimer -= 1 * deltaTime;
-		}
+		UpdateSideSlideTimer();
 		DrawSidePanel();
 		DrawK7Crosshair();
 		DrawCharge();
@@ -76,31 +79,40 @@ Class CK7_Hud : BaseStatusBar
 		return frac;
 	}
 
-	void DrawSidePanel()
+	void UpdateSideSlideTimer()
 	{
-		if (!backgroundTex)
+		if (sideSlideTimer >= CHARGETIME)
 		{
-			backgroundTex = TexMan.CheckForTexture("KHUDA0");
+			sideSlideDir = CHARGETIME_BACK;
 		}
-		DrawTexture( backgroundTex, ( GetChargeOffsets(), 0 ), DI_SCREEN_LEFT_CENTER|DI_ITEM_LEFT|DI_ITEM_CENTER);
+		let weap = CK7_Smith_Weapon(CPlayer.readyweapon);
+		if (weap && weap.m_iSpecialCharges > 0 && sideSlideDir < 0)
+		{
+			sideSlideTimer = CHARGETIME;
+		}
+		else
+		{
+			sideSlideTimer = Clamp(sideSlideTimer + sideSlideDir * deltaTime, 0, CHARGETIME);
+		}
 	}
 
-	double GetChargeOffsets()
+	void DrawSidePanel()
 	{
-		if (!backgroundTex)
+		DrawTexture( backgroundTex, ( GetSideOffset(), 0 ), DI_SCREEN_LEFT_CENTER|DI_ITEM_LEFT|DI_ITEM_CENTER);
+	}
+
+	double GetSideOffset()
+	{
+		if (sideSlideTimer <= 0)
 		{
-			backgroundTex = TexMan.CheckForTexture("KHUDA0");
+			return -backgroundTexSize.x;
 		}
-		if (backgroundTexSize == (0,0))
-		{
-			backgroundTexSize = TexMan.GetScaledSize(backgroundTex);
-		}
-		return CK7_Utils.LinearMap(chargeOffsetTimer, 0, CHARGETIME*0.5, -backgroundTexSize.x, 0, true);
+		return CK7_Utils.LinearMap(sideSlideTimer, 0, CHARGETIME_HOLD, -backgroundTexSize.x, 0, true);
 	}
 
 	void ShowSidePanel()
 	{
-		chargeOffsetTimer = CHARGETIME;
+		sideSlideDir = CHARGETIME_FWD;
 	}
 
 	// Draw the "Charge Lv. #" string:
@@ -113,7 +125,7 @@ Class CK7_Hud : BaseStatusBar
 		}
 		Vector2 sc = (0.85, 0.85);
 		Vector2 pos = (118, 310);
-		pos.x += GetChargeOffsets();
+		pos.x += GetSideOffset();
 		// Note, this is a wrong font. The charge string is supposed to
 		// use a different font, which is more curly. The other problem
 		// is that this font is missing the full stop character, so
@@ -136,7 +148,7 @@ Class CK7_Hud : BaseStatusBar
 			thinBloodTex = TexMan.CheckForTexture('DTHNBLD');
 		}
 		Vector2 pos = (112, 0);
-		pos.x += GetChargeOffsets();
+		pos.x += GetSideOffset();
 		DrawTexture(thinBloodTex, pos, DI_SCREEN_LEFT_CENTER|DI_ITEM_CENTER);
 		DrawString (k7HudFont, ""..thinblood.amount, pos + (10, 80), DI_SCREEN_LEFT_CENTER|DI_TEXT_ALIGN_LEFT);
 	}

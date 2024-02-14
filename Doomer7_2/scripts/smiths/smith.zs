@@ -122,7 +122,7 @@ Class CK7_Smith : DoomPlayer
 		PPShader.SetUniform1i( "k7post", "resY", Screen.GetHeight() / 8 );
 	}
 
-	States
+	/*States
 	{
 		Spawn:
 			PLAY A -1;
@@ -132,7 +132,6 @@ Class CK7_Smith : DoomPlayer
 			Loop;
 		Pain:
 			#### # 4 A_Pain();
-			
-		
-	}
+			goto See;
+	}*/
 }
