@@ -4,13 +4,16 @@ Class CK7_Smith_Weapon : Weapon
 	const AIMING_FLAGS = ( WRF_ALLOWRELOAD | WRF_DISABLESWITCH );
 	const BULLET_FLAGS = ( FBF_USEAMMO | FBF_NORANDOMPUFFZ );
 	
-	const LAYER_BARS 	= 54;
-	const LAYER_ANIM 	= 2;
-	const LAYER_FUNC 	= -1;
-	const LAYER_RECOIL 	= -2;
-	const LAYER_SHOOT 	= -3;
-	const LAYER_FLASH 	= -5;
-	const LAYER_SPECIAL = -6;
+	enum ELayerNumbers
+	{
+		LAYER_BARS 		= 54,
+		LAYER_ANIM 		= 2,
+		LAYER_FUNC 		= -1,
+		LAYER_RECOIL 	= -2,
+		LAYER_SHOOT 	= -3,
+		LAYER_FLASH 	= -5,
+		LAYER_SPECIAL 	= -6,
+	}
 	
 	/*	Variable Notes
 		m_iPersona is the id of the smith;
@@ -150,7 +153,7 @@ Class CK7_Smith_Weapon : Weapon
 				}
 				let smith = CK7_Smith( invoker.owner );
 				smith.ApplyStats();
-				smith.SetSpeed( invoker.m_fSpeed );
+				//smith.SetSpeed( invoker.m_fSpeed );
 				smith.SetViewHeight( invoker.m_fHeight - 2.5 );
 				invoker.m_iSpecialCharges = 0;
 				return ResolveState( "Ready" );
