@@ -3,8 +3,10 @@ class CK7_Utils
 	static clearscope double LinearMap(double val, double source_min, double source_max, double out_min, double out_max, bool clampIt = false) 
 	{
 		double sourceDiff = (source_max - source_min);
-		if (sourceDiff == 0)
-			sourceDiff = 1;
+		if (sourceDiff == 0.0)
+		{
+			return 0;
+		}
 		double d = (val - source_min) * (out_max - out_min) / sourceDiff + out_min;
 		if (clampit) 
 		{
