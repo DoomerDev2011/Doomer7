@@ -137,6 +137,14 @@ Class CK7_Smith_Weapon : Weapon
 			return;
 		}
 
+		if (owner.health <= 0)
+		{
+			for (let psp = owner.player.PSprites; psp; psp = psp.Next)
+			{
+				psp.y = Clamp(psp.y += 10, WEAPONTOP, WEAPONBOTTOM + WEAPONTOP);
+			}
+		}
+
 		UpdateSoundClass();
 		UpdateCrosshair(weap);
 	}
