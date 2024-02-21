@@ -1,4 +1,4 @@
-Class CK7_Smith_Weapon : Weapon
+Class CK7_Smith_Weapon : Weapon abstract
 {
 	const READY_FLAGS = ( WRF_ALLOWRELOAD | WRF_NOPRIMARY | WRF_NOSECONDARY | WRF_NOBOB );
 	const AIMING_FLAGS = ( WRF_ALLOWRELOAD | WRF_DISABLESWITCH );
