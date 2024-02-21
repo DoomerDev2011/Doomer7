@@ -42,12 +42,12 @@ Class CK7_Smith : DoomPlayer
 		Player.WeaponSlot 7, "CK7_Smith_Msk_Wep";
 		Player.WeaponSlot 8, "CK7_Smith_Hay_Wep";
 		Player.StartItem "CK7_Smith_Gar_Wep";
-		Player.StartItem "CK7_Smith_Dan_Wep";
+		/*Player.StartItem "CK7_Smith_Dan_Wep";
 		Player.StartItem "CK7_Smith_Ked_Wep";
 		Player.StartItem "CK7_Smith_Kvn_Wep";
 		Player.StartItem "CK7_Smith_Cyo_Wep";
 		Player.StartItem "CK7_Smith_Con_Wep";
-		Player.StartItem "CK7_Smith_Msk_Wep";
+		Player.StartItem "CK7_Smith_Msk_Wep";*/
 		//Player.StartItem "CK7_Smith_Hay_Wep";
 	}
 	
@@ -58,11 +58,11 @@ Class CK7_Smith : DoomPlayer
 		
 		m_iStaticStartTime = 0;
 		
-		int sk = G_SkillPropertyInt( SKILLP_ACSReturn );
+		/*int sk = G_SkillPropertyInt( SKILLP_ACSReturn );
 		if ( sk >= 4 )
 		{
 			A_SetInventory( "CK7_Smith_Hay_Wep", 1 );
-		}
+		}*/
 		
 		ApplyStats();
 	}
