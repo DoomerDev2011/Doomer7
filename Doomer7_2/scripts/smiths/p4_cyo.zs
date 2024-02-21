@@ -108,13 +108,13 @@ Class CK7_Smith_Cyo_Wep : CK7_Smith_Weapon
 			
 		Anim_Aim_In:
 			CYOB A 0 A_StartSound( invoker.m_sPersona .. "_aim", CHAN_WEAPON, CHANF_OVERLAP );
-			#### # 1 bright A_WeaponOffset ( 240, -64, 0 );
-			#### # 1 bright A_WeaponOffset ( 171, -35, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 108, -11, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 60, 8, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 27, 21, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 6, 29, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 240, -64, 0 );
+			#### # 1 bright K7_WeaponOffset ( 171, -35, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 108, -11, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 60, 8, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 27, 21, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 6, 29, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
 			Goto Anim_Aiming;
 			
 		Anim_Aiming:
@@ -123,14 +123,14 @@ Class CK7_Smith_Cyo_Wep : CK7_Smith_Weapon
 			{
 				float offx = sin( level.time * 6 ) * 0.5 ;
 				//float offy = sin( level.time * 6 ) * 0.5;
-				A_WeaponOffset( offx, 32 + 0, WOF_INTERPOLATE );
+				K7_WeaponOffset( offx, 32 + 0, WOF_INTERPOLATE );
 			}
 			Loop;
 			
 		Anim_Fire:
 			TNT1 A 0 A_OverlayFlags(LAYER_ANIM, PSPF_ADDBOB, false);
 			CYOB A 0;
-			#### # 0 A_WeaponOffset( 0, 32 );
+			#### # 0 K7_WeaponOffset( 0, 32 );
 			#### # 0 A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
 			#### # 0 A_Overlay( LAYER_FLASH, "FlashA" );
 			#### BC 1 bright;
@@ -143,7 +143,7 @@ Class CK7_Smith_Cyo_Wep : CK7_Smith_Weapon
 		Anim_Altfire:
 			TNT1 A 0 A_OverlayFlags(LAYER_ANIM, PSPF_ADDBOB, false);
 			CYOB A 0;
-			#### # 0 A_WeaponOffset( 0, 32 );
+			#### # 0 K7_WeaponOffset( 0, 32 );
 			#### # 0 A_StartSound( invoker.m_sPersona .. "_special", CHAN_WEAPON, CHANF_OVERLAP );
 			#### # 0 A_Overlay( LAYER_FLASH, "FlashA" );
 			#### BC 1 bright;
@@ -155,20 +155,20 @@ Class CK7_Smith_Cyo_Wep : CK7_Smith_Weapon
 		Anim_Reload_Down:
 			CYOB A 0;
 			#### # 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );
-			#### # 1 bright A_WeaponOffset ( 0, 32, 0);
-			#### # 1 bright A_WeaponOffset ( 2, 32 - 4, WOF_INTERPOLATE);
-			#### # 1 bright A_WeaponOffset ( 8, 32 - 16, WOF_INTERPOLATE);
-			#### # 1 bright A_WeaponOffset ( 32, 32 - 64, WOF_INTERPOLATE);
-			#### # 1 bright A_WeaponOffset ( 128, 32 - 256, WOF_INTERPOLATE);
+			#### # 1 bright K7_WeaponOffset ( 0, 32, 0);
+			#### # 1 bright K7_WeaponOffset ( 2, 32 - 4, WOF_INTERPOLATE);
+			#### # 1 bright K7_WeaponOffset ( 8, 32 - 16, WOF_INTERPOLATE);
+			#### # 1 bright K7_WeaponOffset ( 32, 32 - 64, WOF_INTERPOLATE);
+			#### # 1 bright K7_WeaponOffset ( 128, 32 - 256, WOF_INTERPOLATE);
 			Stop;
 			
 		Anim_Reload_Up:
 			CYOB A 0;
 			#### # 0 A_StartSound( invoker.m_sPersona .. "_aim", CHAN_WEAPON, CHANF_OVERLAP );
-			#### # 1 bright A_WeaponOffset ( 32, 32 - 64, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 8, 32 - 16, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 2, 32 - 4, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 32, 32 - 64, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 8, 32 - 16, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 2, 32 - 4, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
 			Goto Anim_Aiming;
 			
 		Anim_Standing_Reload:

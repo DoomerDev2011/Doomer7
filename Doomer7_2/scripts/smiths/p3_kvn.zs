@@ -72,13 +72,13 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			
 		Anim_Aim_In:
 			KVNB A 0 A_StartSound( invoker.m_sPersona .. "_aim", CHAN_WEAPON, CHANF_OVERLAP );
-			#### # 1 bright A_WeaponOffset ( 50, 42, 0 );
-			#### # 1 bright A_WeaponOffset ( 34, 38, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 22, 36, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 13, 34, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 6, 34, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 2, 34, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 50, 42, 0 );
+			#### # 1 bright K7_WeaponOffset ( 34, 38, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 22, 36, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 13, 34, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 6, 34, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 2, 34, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
 			Goto Anim_Aiming;
 			
 		// TNT1 A 0 A_OverlayFlags(LAYER_ANIM, PSPF_ADDBOB, true); have this to start bobbing again	
@@ -88,11 +88,11 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			{
 				//float offx = sin( level.time * 3 ) * 2.3 ;
 				float offy = 1 + sin( level.time * 6 ) * 0.5;
-				A_WeaponOffset( 0, 32 + offy, WOF_INTERPOLATE );
+				K7_WeaponOffset( 0, 32 + offy, WOF_INTERPOLATE );
 			}
 			Loop;
 		Anim_Fire:
-			KVNB A 0 bright A_WeaponOffset ( 0, 32 );
+			KVNB A 0 bright K7_WeaponOffset ( 0, 32 );
 			#### BCS 1 bright;
 			TNT1 A 7;
 			KVNB # 0 A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
@@ -105,11 +105,11 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			Goto Anim_Aiming;
 			
 		
-		//  A_WeaponOffset( 0, 32, WOF_INTERPOLATE );	have this to recenter frame
+		//  K7_WeaponOffset( 0, 32, WOF_INTERPOLATE );	have this to recenter frame
 		// TNT1 A 0 A_OverlayFlags(LAYER_ANIM, PSPF_ADDBOB, false); have this to stop bobbing during animation
 		Anim_Altfire:
 			TNT1 A 0 A_OverlayFlags(LAYER_ANIM, PSPF_ADDBOB, false);
-			#### # 0 A_WeaponOffset( 0, 32, WOF_INTERPOLATE );
+			#### # 0 K7_WeaponOffset( 0, 32, WOF_INTERPOLATE );
 			KVNA ABC 1 bright;
 			TNT1 A 17;
 			KVNA D 1 {
@@ -136,17 +136,17 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			
 		Anim_Reload_Down:
 			KVNB A 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );
-			#### # 1 bright A_WeaponOffset ( 0, 32, 0);
-			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
-			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
-			#### # 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
-			#### # 1 bright A_WeaponOffset ( 128, 32 + 256, WOF_INTERPOLATE);
+			#### # 1 bright K7_WeaponOffset ( 0, 32, 0);
+			#### # 1 bright K7_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
+			#### # 1 bright K7_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
+			#### # 1 bright K7_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE);
+			#### # 1 bright K7_WeaponOffset ( 128, 32 + 256, WOF_INTERPOLATE);
 			Stop;
 		Anim_Reload_Up:
-			KVNB A 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
+			KVNB A 1 bright K7_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
 			Goto Anim_Aiming;
 		Anim_Standing_Reload:
 			#### # 0 A_StartSound( invoker.m_sPersona .. "_reload_standing", CHAN_WEAPON, CHANF_OVERLAP );

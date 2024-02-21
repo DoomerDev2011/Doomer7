@@ -13,6 +13,8 @@ Class CK7_Smith_Weapon : Weapon abstract
 		LAYER_SHOOT 	= -3,
 		LAYER_FLASH 	= -5,
 		LAYER_SPECIAL 	= -6,
+		LAYER_LEFTGUN	= -10,
+		LAYER_RIGHTGUN	= -11,
 	}
 	
 	/*	Variable Notes
@@ -44,6 +46,8 @@ Class CK7_Smith_Weapon : Weapon abstract
 	transient bool crossHairMode;
 	Name 	pSoundClass;
 	property PersonaSoundClass : pSoundClass;
+	int 	m_WideSpriteOffset;
+	property UltrawideOffset : m_WideSpriteOffset;
 	
 	void AimingBreathe()
 	{
@@ -88,23 +92,82 @@ Class CK7_Smith_Weapon : Weapon abstract
 	{
 		+WEAPON.NOAUTOFIRE
 		+WEAPON.NOALERT
-		+WEAPON.NO_AUTO_SWITCH
+		//+WEAPON.NO_AUTO_SWITCH
 		+WEAPON.NOAUTOAIM
 		+WEAPON.AMMO_OPTIONAL
 		+WEAPON.ALT_AMMO_OPTIONAL
 		+INVENTORY.UNDROPPABLE
 		+INVENTORY.UNTOSSABLE
 		
-		Weapon.AmmoType1 "CK7_Ammo";
+		/*Weapon.AmmoType1 "CK7_Ammo";
 		Weapon.AmmoUse1 0;
 		Weapon.AmmoType2 "CK7_ThinBlood";
-		Weapon.AmmoUse2 0;
+		Weapon.AmmoUse2 0;*/
 		Weapon.KickBack 0;
-		Weapon.SlotNumber 0;
 		Weapon.BobSpeed -2;
 		Weapon.BobRangeX 0.1;
 		Weapon.BobRangeY 1;
 		CK7_Smith_Weapon.PersonaSoundClass "player";
+		CK7_Smith_Weapon.UltrawideOffset 74;
+	}
+	
+	virtual Vector2 K7_AdjustLayerOffsets(double x, double y, int layer = 0)
+	{
+		if (m_WideSpriteOffset != 0)
+		{
+			double aspect = Screen.GetAspectRatio();
+			double of = m_WideSpriteOffset;//k7_testofs;
+			//Console.Printf("Aspect: %f | Ofs: %f", aspect, of);
+			double xofs = CK7_Utils.LinearMap(aspect, 1.777, 2.37, 0, of, true);
+			x += xofs;
+		}
+		return (x,y);		
+	}		
+	
+	action void K7_WeaponOffset(double x, double y, int flags = 0)
+	{
+		K7_OverlayOffset(PSP_WEAPON, x, y, flags);
+	}
+	
+	action void K7_OverlayOffset(int layer, double x, double y, int flags = 0)
+	{
+		let ofs = (x,y);
+		if (!(flags & WOF_ADD))
+		{
+			ofs = invoker.K7_AdjustLayerOffsets(x, y, layer);
+		}
+		A_OverlayOffset(layer, ofs.x, ofs.y, flags);
+	}
+
+	action void K7_WeaponReady(int flags = 0)
+	{
+	
+		if (!player) 
+			return;
+			
+		DoReadyWeaponToSwitch(player, !(flags & WRF_NoSwitch));
+		
+		if ((flags & WRF_NoFire) != WRF_NoFire)
+		{
+			DoReadyWeaponToFire(player.mo, !(flags & WRF_NoPrimary), !(flags & WRF_NoSecondary));
+		}
+		
+		// Calculate offsets first instead of applying (0,32) explicitly:
+		if (player.ReadyWeapon && !(flags & WRF_NoBob))
+		{
+			// Prepare for bobbing action.
+			player.WeaponState |= WF_WEAPONBOBBING;
+			let pspr = player.GetPSprite(PSP_WEAPON);
+			if (pspr)
+			{
+				//let ofs = invoker.K7_AdjustLayerOffsets(0, WEAPONTOP);
+				//pspr.x = ofs.x;
+				//pspr.y = ofs.y;
+			}
+		}
+
+		player.WeaponState |= GetButtonStateFlags(flags);														
+		DoReadyWeaponDisableSwitch(player, flags & WRF_DisableSwitch);
 	}
 
 	void UpdateSoundClass()
@@ -128,7 +191,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 			weap.crosshair = 0;
 		}
 	}
-	
+
 	override void DoEffect()
 	{
 		Super.DoEffect();
@@ -141,7 +204,14 @@ Class CK7_Smith_Weapon : Weapon abstract
 		{
 			return;
 		}
+		
+		/*let p = owner.player.FindPSprite(PSP_WEAPON);
+		if (p)
+		{
+			Console.Printf("PSP_WEAPON ofs: %.1f,%.1f", p.x, p.y);
+		}*/
 
+		// Lower overlays upon death:
 		if (owner.health <= 0)
 		{
 			for (let psp = owner.player.PSprites; psp; psp = psp.Next)
@@ -157,7 +227,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 	States
 	{
 		Select:
-			TNT1 A 1 A_WeaponOffset( 0, 32, 0 );
+			TNT1 A 1 K7_WeaponOffset( 0, 32 );
 			#### # 0
 			{
 				if ( CVar.FindCVar( 'k7_mode' ).GetBool() )
@@ -173,15 +243,18 @@ Class CK7_Smith_Weapon : Weapon abstract
 			}
 		Ready:
 			TNT1 A 0 A_JumpIf( ( CK7_Smith( invoker.owner ).m_bAimHeld ) , "Aim_In" );
-			#### # 1 A_WeaponReady( READY_FLAGS );
+			#### # 1 K7_WeaponReady( READY_FLAGS );
 			loop;
 			
 		Deselect:
-			#### # 0 A_Lower( 512 );
-			#### # 0
+			TNT1 # 0
 			{
 				CK7_Smith( invoker.owner ).m_bZoomedIn = false;
+				A_ClearOverlays(2, 1000);
+				A_ClearOverlays(-1000, -2);
 			}
+			#### # 0 A_Lower;
+			wait;
 			
 		Recoil_Generic:
 			#### A 1 A_SetPitch( pitch - 1 );
@@ -222,7 +295,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 		Aiming:
 			#### # 0 A_JumpIf( ( CK7_Smith( invoker.owner ).m_bZoomedIn ), "Aiming_Zoomed" );
 			#### # 0 A_JumpIf( !( CK7_Smith( invoker.owner ).m_bAimHeld ), "Aim_Out" );
-			#### # 1 A_WeaponReady( ( CVar.FindCVar( 'k7_mode' ).GetBool() ) ? AIMING_FLAGS : AIMING_FLAGS &~ WRF_DISABLESWITCH );
+			#### # 1 K7_WeaponReady( ( CVar.FindCVar( 'k7_mode' ).GetBool() ) ? AIMING_FLAGS : AIMING_FLAGS &~ WRF_DISABLESWITCH );
 			Loop;
 		
 		Aiming_Zoomed: // leave zoom state if this character shouldnt be in it

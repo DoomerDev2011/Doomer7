@@ -13,6 +13,32 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 		CK7_Smith_Weapon.PersonaSoundClass "k7_msk";
 	}
 	
+	action void K7_SetupGunLayer(name sname = 'MA1K')
+	{
+		let psp = Player.FindPSprite(OverlayID());
+		if (!psp)
+		{
+			return;
+		}
+		A_OverlayFlags(OverlayID(), PSPF_ADDWEAPON, false);
+		psp.y += WEAPONTOP;
+		if (OverlayID() == LAYER_RIGHTGUN)
+		{
+			psp.sprite = GetSpriteIndex(sname);
+		}
+		K7_OverlayOffset(OverlayID(), 0, WEAPONTOP);
+	}
+	
+	override Vector2 K7_AdjustLayerOffsets(double x, double y, int layer)
+	{
+		let ofs = super.K7_AdjustLayerOffsets(x, y, layer);
+		if (layer == LAYER_LEFTGUN)
+		{
+			ofs.x *= -1;
+		}
+		return ofs;
+	}
+	
 	override void BeginPlay()
 	{
 		Super.BeginPlay();
@@ -29,6 +55,10 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 	
 	States
 	{
+		SpriteCache:
+			MA1K A 0;
+			MA1B A 0;
+			stop;
 		Spawn:
 			M000 A -1 bright;
 			stop;
@@ -123,36 +153,69 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 		
 			
 		Anim_Aim_In:
-			MASK A 0 bright A_WeaponOffset ( 0, 82, 0 );
-			#### # 0 A_StartSound( invoker.m_sPersona .. "_aim", CHAN_WEAPON, CHANF_OVERLAP );
-			#### # 1 bright;
-			#### # 1 bright A_WeaponOffset ( 0, 68, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 0, 54, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 0, 45, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 0, 38, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 0, 33, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
-			Goto Anim_Aiming;
-		Anim_Aiming:
-			MASK A 1 bright
+			TNT1 A 7
 			{
-				//float offx = sin( level.time * 3 ) * 2.3 ;
-				float offy = 1 + sin( level.time * 3 ) * 0.5;
-				A_WeaponOffset( 0, 32 + offy, WOF_INTERPOLATE );
+				A_StartSound( invoker.m_sPersona .. "_aim", CHAN_WEAPON, CHANF_OVERLAP );
+				A_Overlay(LAYER_LEFTGUN, "Anim_Aim_In_SingleGun");
+				A_Overlay(LAYER_RIGHTGUN, "Anim_Aim_In_SingleGun");
+			}				
+			Goto Anim_Aiming;
+		Anim_Aim_In_SingleGun:
+			MASK A 0 K7_SetupGunLayer('MA1K');
+			#### # 1 bright K7_OverlayOffset(OverlayID(), 0, 82, 0 );
+			#### # 1 bright K7_OverlayOffset(OverlayID(), 0, 68, WOF_INTERPOLATE );
+			#### # 1 bright K7_OverlayOffset(OverlayID(), 0, 54, WOF_INTERPOLATE );
+			#### # 1 bright K7_OverlayOffset(OverlayID(), 0, 45, WOF_INTERPOLATE );
+			#### # 1 bright K7_OverlayOffset(OverlayID(), 0, 38, WOF_INTERPOLATE );
+			#### # 1 bright K7_OverlayOffset(OverlayID(), 0, 33, WOF_INTERPOLATE );
+			#### # 1 bright K7_OverlayOffset(OverlayID(), 0, 32, WOF_INTERPOLATE );
+			Goto Anim_Aiming_SingleGun;
+		
+		Anim_Aiming:
+			TNT1 A -1
+			{
+				A_Overlay(LAYER_LEFTGUN, "Anim_Aiming_SingleGun");
+				A_Overlay(LAYER_RIGHTGUN, "Anim_Aiming_SingleGun");
 			}
-			Loop;
+			stop;
+		Anim_Aiming_SingleGun:
+			MASK A 0 K7_SetupGunLayer('MA1K');
+			#### A 1 bright
+			{
+				float offy = 1 + sin( level.time * 3 ) * 0.5;
+				K7_OverlayOffset( OverlayID(), 0, 32 + offy, WOF_INTERPOLATE );
+			}
+			wait;
+			
 		Anim_Fire_Special1:
 		Anim_Fire:
-			MASK A 0 bright A_WeaponOffset( 0, 32 );
+			TNT1 A 0 bright 
+			{
+				K7_WeaponOffset( 0, 32 );
+				A_Overlay(LAYER_LEFTGUN, "Anim_Fire_SingleGun");
+				A_Overlay(LAYER_RIGHTGUN, "Anim_Fire_SingleGun");
+			}
 			#### # 0 A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
 			#### # 0 A_Overlay( LAYER_FLASH, "FlashA" );
 			#### CDEFGHIJKLM 1 bright;
 			#### NPRTUVXZ 2 bright;
-			MASB BD 2 bright;
-			Goto Anim_Aiming;
+			TNT1 BD 2 bright;
+			Goto Anim_Aiming;		
+		Anim_Fire_SingleGun:
+			MASK A 0 K7_SetupGunLayer('MA1K');
+			#### CDEFGHIJKLM 1 bright;
+			#### NPRTUVXZ 2 bright;
+			MASB A 0 K7_SetupGunLayer('MA1B');
+			#### BD 2 bright;
+			Goto Anim_Aiming_SingleGun;
 			
 		Anim_Fire_Special2:
-			MASK A 0 bright A_WeaponOffset( 0, 32 );
+			MASK A 0 bright 
+			{
+				K7_WeaponOffset( 0, 32 );
+				A_Overlay(LAYER_LEFTGUN, "Anim_Fire_Special2_SingleGun");
+				A_Overlay(LAYER_RIGHTGUN, "Anim_Fire_Special2_SingleGun");
+			}
 			#### # 0 A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
 			#### A 0 A_StartSound( "msk_special_vo", CHAN_VOICE );
 			#### # 0 A_Overlay( LAYER_FLASH, "FlashA" );
@@ -160,25 +223,49 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 			#### NPRTUVXZ 2 bright;
 			MASB BD 2 bright;
 			Goto Anim_Aiming;
+		Anim_Fire_Special2_SingleGun:
+			MASK A 0 K7_SetupGunLayer('MA1K');
+			#### CDEFGHIJKLM 1 bright;
+			#### NPRTUVXZ 2 bright;
+			MASB A 0 K7_SetupGunLayer('MA1B');
+			#### BD 2 bright;
+			Goto Anim_Aiming_SingleGun;
 			
 		Anim_Reload_Down:
-			MASK A 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );
-			#### # 1 bright A_WeaponOffset ( 0, 32, 0);
-			#### # 1 bright A_WeaponOffset ( 0, 32 + 4, WOF_INTERPOLATE);
-			#### # 1 bright A_WeaponOffset ( 0, 32 + 16, WOF_INTERPOLATE);
-			#### # 1 bright A_WeaponOffset ( 0, 32 + 64, WOF_INTERPOLATE);
-			#### # 1 bright A_WeaponOffset ( 0, 32 + 256, WOF_INTERPOLATE);
+			TNT1 A 5
+			{
+				A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );
+				A_Overlay(LAYER_LEFTGUN, "Anim_Reload_SideGun");
+				A_Overlay(LAYER_RIGHTGUN, "Anim_Reload_SideGun");
+			}
 			Stop;
-		Anim_Reload_Up:
-			MASK A 1 bright A_WeaponOffset ( 0, 32 + 64, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 0, 32 + 16, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 0, 32 + 4, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
-			Goto Anim_Aiming;
-		Anim_Standing_Reload:
-			#### # 0 A_StartSound( invoker.m_sPersona .. "_reload_standing", CHAN_WEAPON, CHANF_OVERLAP );
+		Anim_Reload_SideGun:
+			MASK A 0 K7_SetupGunLayer('MA1K');
+			#### # 1 bright K7_OverlayOffset(OverlayID(), 0, 32, 0);
+			#### # 1 bright K7_OverlayOffset(OverlayID(), 0, 32 + 4, WOF_INTERPOLATE);
+			#### # 1 bright K7_OverlayOffset(OverlayID(), 0, 32 + 16, WOF_INTERPOLATE);
+			#### # 1 bright K7_OverlayOffset(OverlayID(), 0, 32 + 64, WOF_INTERPOLATE);
+			#### # 1 bright K7_OverlayOffset(OverlayID(), 0, 32 + 256, WOF_INTERPOLATE);
 			Stop;
 			
+		Anim_Reload_Up:
+			TNT1 A 4 
+			{
+				A_Overlay(LAYER_LEFTGUN, "Anim_Reload_Up_SideGun");
+				A_Overlay(LAYER_RIGHTGUN, "Anim_Reload_Up_SideGun");
+			}
+			Goto Anim_Aiming;
+		Anim_Reload_Up_SideGun:
+			MASK A 0 K7_SetupGunLayer('MA1K');
+			#### # 1 bright K7_OverlayOffset(OverlayID(), 0, 32 + 64, WOF_INTERPOLATE );
+			#### # 1 bright K7_OverlayOffset(OverlayID(), 0, 32 + 16, WOF_INTERPOLATE );
+			#### # 1 bright K7_OverlayOffset(OverlayID(), 0, 32 + 4, WOF_INTERPOLATE );
+			#### # 1 bright K7_OverlayOffset(OverlayID(), 0, 32, WOF_INTERPOLATE );
+			Goto Anim_Aiming_SingleGun;
+			
+		Anim_Standing_Reload:
+			#### # 0 A_StartSound( invoker.m_sPersona .. "_reload_standing", CHAN_WEAPON, CHANF_OVERLAP );
+			Stop;			
 	}
 }
 

@@ -10,6 +10,7 @@ Class CK7_Smith_Hay_Wep : CK7_Smith_Weapon
 		Inventory.PickupMessage "You got the Tommygun!";
 		Inventory.PickupSound "weapon/gettmg";
 		CK7_Smith_Weapon.PersonaSoundClass "k7_hay";
+		CK7_Smith_Weapon.UltrawideOffset -75;
 	}
 	
 	override void BeginPlay()
@@ -59,13 +60,13 @@ Class CK7_Smith_Hay_Wep : CK7_Smith_Weapon
 			}
 		Anim_Aim_In:
 			HAYB A 0 A_StartSound( invoker.m_sPersona .. "_aim", CHAN_WEAPON, CHANF_OVERLAP );
-			#### # 1 bright A_WeaponOffset ( 0 - 5, 32 + 10, 0 );
-			#### # 1 bright A_WeaponOffset ( 0 - 2.5, 32 + 5, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 0 - 1.25, 32 + 2.5, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 0 - 0.75, 32 + 1.25, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 0 - 0.375, 32 + 0.75 , WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 0 - 0.1875, 32 + 0.375, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 0 - 5, 32 + 10, 0 );
+			#### # 1 bright K7_WeaponOffset ( 0 - 2.5, 32 + 5, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 0 - 1.25, 32 + 2.5, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 0 - 0.75, 32 + 1.25, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 0 - 0.375, 32 + 0.75 , WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 0 - 0.1875, 32 + 0.375, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
 			Goto Anim_Aiming;
 		Anim_Aiming:
 			HAYB A 1 bright
@@ -73,28 +74,28 @@ Class CK7_Smith_Hay_Wep : CK7_Smith_Weapon
 				float anim_time = ( level.time * 3 );
 				float offx = sin( anim_time ) * 2.3 ;
 				float offy = 1 + sin( anim_time * 2 ) * 0.5;
-				A_WeaponOffset( offx, 32 + offy, WOF_INTERPOLATE );
+				K7_WeaponOffset( offx, 32 + offy, WOF_INTERPOLATE );
 			}
 			Loop;
 		Anim_Fire:
-			HAYB B 0 A_WeaponOffset( 0, 32 );
+			HAYB B 0 K7_WeaponOffset( 0, 32 );
 			#### # 0 bright A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
 			#### # 0 A_Overlay( LAYER_FLASH, "FlashA" );
 			#### BCDEF 1 bright;
 			Goto Anim_Aiming;
 		Anim_Reload_Down:
 			HAYB A 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );
-			#### # 1 bright A_WeaponOffset ( 0, 32, 0);
-			#### # 1 bright A_WeaponOffset ( -2, 32 + 4, WOF_INTERPOLATE);
-			#### # 1 bright A_WeaponOffset ( -8, 32 + 16, WOF_INTERPOLATE);
-			#### # 1 bright A_WeaponOffset ( -32, 32 + 64, WOF_INTERPOLATE);
-			#### # 1 bright A_WeaponOffset ( -128, 32 + 256, WOF_INTERPOLATE);
+			#### # 1 bright K7_WeaponOffset ( 0, 32, 0);
+			#### # 1 bright K7_WeaponOffset ( -2, 32 + 4, WOF_INTERPOLATE);
+			#### # 1 bright K7_WeaponOffset ( -8, 32 + 16, WOF_INTERPOLATE);
+			#### # 1 bright K7_WeaponOffset ( -32, 32 + 64, WOF_INTERPOLATE);
+			#### # 1 bright K7_WeaponOffset ( -128, 32 + 256, WOF_INTERPOLATE);
 			Stop;
 		Anim_Reload_Up:
-			HAYB A 1 bright A_WeaponOffset ( -32, 32 + 64, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( -8, 32 + 16, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( -2, 32 + 4, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
+			HAYB A 1 bright K7_WeaponOffset ( -32, 32 + 64, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( -8, 32 + 16, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( -2, 32 + 4, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
 			Goto Anim_Aiming;
 		Anim_Standing_Reload:
 			#### # 0 A_StartSound( invoker.m_sPersona .. "_reload_standing", CHAN_WEAPON, CHANF_OVERLAP );

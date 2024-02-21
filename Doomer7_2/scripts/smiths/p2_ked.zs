@@ -71,7 +71,7 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 					A_StartSound( invoker.m_sPersona .. "_zoomout", CHAN_WEAPON, CHANF_OVERLAP );
 				}
 			}
-			#### # 0 A_Lower( 512 );
+			goto super::Deselect;
 			
 			
 		Reload:
@@ -148,8 +148,8 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 		
 		Anim_Aim_In:
 			KEDB A 0 A_StartSound( invoker.m_sPersona .. "_aim", CHAN_WEAPON, CHANF_OVERLAP );
-			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
 			Goto Anim_Aiming;
 		
 		Anim_Aiming:
@@ -157,18 +157,18 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 			{
 				float offx = sin( level.time * 3 ) * 2.3 ;
 				float offy = 1 + sin( level.time * 6 ) * 0.5;
-				A_WeaponOffset( offx, 32 + offy, WOF_INTERPOLATE );
+				K7_WeaponOffset( offx, 32 + offy, WOF_INTERPOLATE );
 			}
 			Loop;
 			
 		Anim_Zoom_In:
 			KEDB A 0;
 			#### # 0 A_StartSound( invoker.m_sPersona .. "_zoomin", CHAN_WEAPON, CHANF_OVERLAP );
-			#### # 1 bright A_WeaponOffset ( 0, 32, 0 );
-			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 128, 32 + 256, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 0, 32, 0 );
+			#### # 1 bright K7_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 128, 32 + 256, WOF_INTERPOLATE );
 			Goto Anim_Zoomed;
 			
 		Anim_Zoomed:
@@ -189,16 +189,16 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 		Anim_Zoom_Out:
 			KEDB A 0;
 			#### # 0 A_StartSound( invoker.m_sPersona .. "_zoomout", CHAN_WEAPON, CHANF_OVERLAP );
-			#### # 1 bright A_WeaponOffset ( 128, 32 + 256, 0 );
-			#### # 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 128, 32 + 256, 0 );
+			#### # 1 bright K7_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
 			Goto Anim_Aiming;
 			
 		Anim_Fire:
 			KEDB A 0;
-			#### # 0 A_WeaponOffset( 0, 32 );
+			#### # 0 K7_WeaponOffset( 0, 32 );
 			#### # 0 A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
 			#### # 0 A_Overlay( LAYER_FLASH, "FlashA" );
 			#### BCDEFGHIJ 2 bright;
@@ -214,19 +214,19 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 				}
 			}	
 			#### # 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );
-			#### # 1 bright A_WeaponOffset ( 0, 32, 0);
-			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 128, 32 + 256, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 0, 32, 0);
+			#### # 1 bright K7_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 128, 32 + 256, WOF_INTERPOLATE );
 			Stop;
 		
 		Anim_Reload_Up:
 			KEDB A 0;
-			#### # 1 bright A_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE );
-			#### # 1 bright A_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE );
+			#### # 1 bright K7_WeaponOffset ( 0, 32, WOF_INTERPOLATE );
 			Goto Anim_Aiming;
 			
 		
