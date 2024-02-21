@@ -75,6 +75,11 @@ Class CK7_Smith_Weapon : Weapon abstract
 	override void PostBeginPlay()
 	{
 		super.PostBeginPlay();
+		if (bTossed)
+		{
+			Destroy();
+			return;
+		}
 		
 		m_iAmmo = m_iClipSize;
 	}
