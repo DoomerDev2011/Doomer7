@@ -104,10 +104,10 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 					invoker.m_iAmmo--;
 				}
 				A_SetTics( ceil( invoker.m_fFireDelay ) );
+				A_Overlay( LAYER_RECOIL, "Recoil" );
+				A_FireProjectile("K7_Mask_M79_Grenade",0,1,-10,0);
+				A_FireProjectile("K7_Mask_M79_Grenade",0,1,10,0);
 			}
-			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
-			#### # 0 A_FireProjectile("K7_Mask_M79_Grenade",0,1,-10,0);
-			#### # 0 A_FireProjectile("K7_Mask_M79_Grenade",0,1,10,0);
 			Stop;
 			
 		Shoot_Special2:
@@ -120,10 +120,10 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 				A_SetTics( ceil( invoker.m_fFireDelay ) );
 				invoker.m_iSpecialCharges = 0;
 				invoker.A_TakeInventory( "CK7_ThinBlood", 2 );
+				A_Overlay( LAYER_RECOIL, "Recoil" );
+				A_FireProjectile("K7_Mask_M79_Grenade",0,1,-10,0);
+				A_FireProjectile("K7_Mask_M79_Grenade",0,1,10,0);
 			}
-			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
-			#### # 0 A_FireProjectile("K7_Mask_M79_Charge_Grenade",0,1,-10,0);
-			#### # 0 A_FireProjectile("K7_Mask_M79_Charge_Grenade",0,1,10,0);
 			Stop;
 			
 		/*
@@ -194,9 +194,9 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 				K7_WeaponOffset( 0, 32 );
 				A_Overlay(LAYER_LEFTGUN, "Anim_Fire_SingleGun");
 				A_Overlay(LAYER_RIGHTGUN, "Anim_Fire_SingleGun");
+				A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
+				A_Overlay( LAYER_FLASH, "FlashA" );
 			}
-			#### # 0 A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
-			#### # 0 A_Overlay( LAYER_FLASH, "FlashA" );
 			#### CDEFGHIJKLM 1 bright;
 			#### NPRTUVXZ 2 bright;
 			TNT1 BD 2 bright;
@@ -210,18 +210,18 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 			Goto Anim_Aiming_SingleGun;
 			
 		Anim_Fire_Special2:
-			MASK A 0 bright 
+			TNT1 A 0 bright 
 			{
 				K7_WeaponOffset( 0, 32 );
 				A_Overlay(LAYER_LEFTGUN, "Anim_Fire_Special2_SingleGun");
 				A_Overlay(LAYER_RIGHTGUN, "Anim_Fire_Special2_SingleGun");
+				A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
+				A_StartSound( "msk_special_vo", CHAN_VOICE );
+				A_Overlay( LAYER_FLASH, "FlashA" );
 			}
-			#### # 0 A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
-			#### A 0 A_StartSound( "msk_special_vo", CHAN_VOICE );
-			#### # 0 A_Overlay( LAYER_FLASH, "FlashA" );
-			#### CDEFGHIJKLM 1 bright;
-			#### NPRTUVXZ 2 bright;
-			MASB BD 2 bright;
+			#### CDEFGHIJKLM 1;
+			#### NPRTUVXZ 2;
+			TNT1 BD 2;
 			Goto Anim_Aiming;
 		Anim_Fire_Special2_SingleGun:
 			MASK A 0 K7_SetupGunLayer('MA1K');
