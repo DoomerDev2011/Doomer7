@@ -43,8 +43,7 @@ class CK7_GameplayHandler : EventHandler
 
 	override void CheckReplacement(replaceEvent e)
 	{
-		if (e.Replacee is 'DoomWeapon' ||
-			e.Replacee is 'Clip' ||
+		if (e.Replacee is 'Clip' ||
 			e.Replacee is 'Shell' ||
 			e.Replacee is 'RocketAmmo' ||
 			e.Replacee is 'Cell'
@@ -52,6 +51,31 @@ class CK7_GameplayHandler : EventHandler
 		{
 			e.Replacement = 'CK7_EmptyPickup';
 		}
+		if (e.Replacee is 'Shotgun')
+		{
+			e.Replacement = 'CK7_Smith_Dan_Wep';
+		}
+		else if (e.Replacee is 'Chaingun')
+		{
+			e.Replacement = 'CK7_Smith_Ked_Wep';
+		}
+		else if (e.Replacee is 'SuperShotgun')
+		{
+			e.Replacement = random[wsp](0,1) == 1? 'CK7_Smith_Kvn_Wep' : 'CK7_Smith_Cyo_Wep';
+		}
+		else if (e.Replacee is 'RocketLauncher')
+		{
+			e.Replacement = random[wsp](0,1) == 1? 'CK7_Smith_Cyo_Wep' : 'CK7_Smith_Con_Wep';
+		}
+		else if (e.Replacee is 'PlasmaRifle')
+		{
+			e.Replacement = random[wsp](0,1) == 1? 'CK7_Smith_Con_Wep' : 'CK7_Smith_Msk_Wep';
+		}
+		else if (e.Replacee is 'BFG9000')
+		{
+			e.Replacement = 'CK7_Smith_Hay_Wep';
+		}
+			
 		//if (e.Replacee == 'HealthBonus')
 		//{
 		//	e.Replacement = 'CK7_HealthBonus';
