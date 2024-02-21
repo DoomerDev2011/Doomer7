@@ -230,7 +230,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 			TNT1 A 1 K7_WeaponOffset( 0, 32 );
 			#### # 0
 			{
-				if ( CVar.FindCVar( 'k7_mode' ).GetBool() )
+				if ( k7_mode )
 				{
 					invoker.m_iAmmo = invoker.m_iClipSize;
 				}
@@ -267,7 +267,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 		Aim_In:
 			#### # 0
 			{
-				if ( CVar.FindCVar( 'k7_mode' ).GetBool() )
+				if ( k7_mode )
 				{
 					Thing_Stop( 0 );
 					CK7_Smith( invoker.owner ).SetSpeed( 0 );
@@ -276,7 +276,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 			#### # 5;
 			#### # 0
 			{
-				if ( CVar.FindCVar( 'k7_mode' ).GetBool() )
+				if ( k7_mode )
 				{
 					invoker.LookScale = 0.5;
 					A_ZoomFactor( 2.75, ZOOM_INSTANT );
@@ -295,7 +295,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 		Aiming:
 			#### # 0 A_JumpIf( ( CK7_Smith( invoker.owner ).m_bZoomedIn ), "Aiming_Zoomed" );
 			#### # 0 A_JumpIf( !( CK7_Smith( invoker.owner ).m_bAimHeld ), "Aim_Out" );
-			#### # 1 K7_WeaponReady( ( CVar.FindCVar( 'k7_mode' ).GetBool() ) ? AIMING_FLAGS : AIMING_FLAGS &~ WRF_DISABLESWITCH );
+			#### # 1 K7_WeaponReady( ( k7_mode ) ? AIMING_FLAGS : AIMING_FLAGS &~ WRF_DISABLESWITCH );
 			Loop;
 		
 		Aiming_Zoomed: // leave zoom state if this character shouldnt be in it

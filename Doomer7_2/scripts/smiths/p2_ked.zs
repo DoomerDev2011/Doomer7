@@ -125,7 +125,7 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 		Aiming_Zoomed:
 			TNT1 A 0;
 			#### # 0 A_JumpIf( !( CK7_Smith( invoker.owner ).m_bAimHeld ), "Aim_Out" );
-			#### # 1 A_WeaponReady( ( CVar.FindCVar( 'k7_mode' ).GetBool() ) ? AIMING_FLAGS : AIMING_FLAGS &~ WRF_DISABLESWITCH );
+			#### # 1 A_WeaponReady( ( k7_mode ) ? AIMING_FLAGS : AIMING_FLAGS &~ WRF_DISABLESWITCH );
 			Loop;
 		
 		Zoom_Out:
