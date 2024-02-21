@@ -5,7 +5,6 @@ Class K7_Dan_Taurus : K7_SmithSyndicate_Weapon
 {
 	default
 	{
-		Weapon.SlotNumber 1;
 		Weapon.BobSpeed -1.5;
 		Weapon.BobStyle "InverseAlpha";
 		Weapon.BobRangeX 0.33;

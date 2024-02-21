@@ -2,7 +2,6 @@ Class K7_Garcian_PPK : K7_SmithSyndicate_Weapon
 {
 	default
 	{
-		Weapon.SlotNumber 0;
 		Weapon.SelectionOrder 0;
 		Weapon.BobSpeed 1.66;
 		Weapon.BobRangeX 0.2;
