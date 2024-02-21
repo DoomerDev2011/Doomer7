@@ -54,4 +54,7 @@ Sprite "STTCE0", 640, 360
 	Patch "STTCE0", 0, 0
 }
 
+Sprite "M000A0", 1, 1
+{}
+
 // End of texture definitions

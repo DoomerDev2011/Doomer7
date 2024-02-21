@@ -10,7 +10,7 @@ Model CK7_Smith_Gar_Wep{
 	RollOffset 90
 	Offset 0 0 8
 	Rotation-Speed 5
-	FrameIndex GARP A 0 0
+	FrameIndex M000 A 0 0
 }
 
 //Code that implements a 3d model for Dan's weapon
@@ -24,7 +24,7 @@ Model CK7_Smith_Dan_Wep{
 	RollOffset 90
 	Offset 0 0 8
 	Rotation-Speed 5
-	FrameIndex DANP A 0 0
+	FrameIndex M000 A 0 0
 }
 
 //Code that implements a 3d model for Coyote's weapon
@@ -38,7 +38,7 @@ Model CK7_Smith_Cyo_Wep{
 	RollOffset 90
 	Offset 0 0 8
 	Rotation-Speed 5
-	FrameIndex COYP A 0 0
+	FrameIndex M000 A 0 0
 }
 
 Model CK7_Smith_Hay_Wep{
@@ -51,7 +51,7 @@ Model CK7_Smith_Hay_Wep{
 	RollOffset 90
 	Offset 0 0 -15
 	Rotation-Speed 5
-	FrameIndex YHAP A 0 0
+	FrameIndex M000 A 0 0
 }
 
 Model CK7_Smith_Ked_Wep{
@@ -70,7 +70,7 @@ Model CK7_Smith_Ked_Wep{
 	RollOffset 90
 	Offset 0 0 8
 	Rotation-Speed 5
-	FrameIndex KAEP A 0 0
+	FrameIndex M000 A 0 0
 }
 
 Model CK7_Smith_Msk_Wep{
@@ -89,7 +89,7 @@ Model CK7_Smith_Msk_Wep{
 	RollOffset 90
 	Offset 0 0 8
 	Rotation-Speed 5
-	FrameIndex MASP A 0 0
+	FrameIndex M000 A 0 0
 }
 
 Model CK7_Smith_Con_Wep{
@@ -102,7 +102,7 @@ Model CK7_Smith_Con_Wep{
 	RollOffset 90
 	Offset 0 0 8
 	Rotation-Speed 5
-	FrameIndex CONP A 0 0
+	FrameIndex M000 A 0 0
 }
 
 Model CK7_Smith_Kvn_Wep{
@@ -115,7 +115,7 @@ Model CK7_Smith_Kvn_Wep{
 	RollOffset 90
 	Offset 0 0 8
 	Rotation-Speed 5
-	FrameIndex KEVP A 0 0
+	FrameIndex M000 A 0 0
 }
 
 Model K7_Mask_M79_Grenade{
@@ -126,7 +126,7 @@ Model K7_Mask_M79_Grenade{
 	RollOffset 90
 	AngleOffset 90
 	Offset 0 0 3
-	FrameIndex MGRE A 0 0
+	FrameIndex M000 A 0 0
 }
 	
 	

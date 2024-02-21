@@ -36,8 +36,8 @@ Class CK7_Smith_Con_Wep : CK7_Smith_Weapon
 	States
 	{
 		Spawn:
-			CONP A -1 bright;
-			Loop;
+			M000 A -1 bright;
+			stop;
 		Recoil:
 			TNT1 A 0;
 			#### # 1 A_SetPitch( pitch + invoker.m_fRecoil * frandom( -1, 1 ) );

@@ -31,8 +31,8 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 	States
 	{
 		Spawn:
-			KEVP A -1 bright;
-			Loop;
+			M000 A -1 bright;
+			stop;
 		Recoil:
 			TNT1 A 0;
 			Goto Recoil_Generic;

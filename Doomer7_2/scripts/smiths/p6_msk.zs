@@ -30,8 +30,8 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 	States
 	{
 		Spawn:
-			MASP A -1 bright;
-			Loop;
+			M000 A -1 bright;
+			stop;
 		Recoil:
 			TNT1 A 0;
 			#### A 1 A_SetPitch( pitch - invoker.m_fRecoil );

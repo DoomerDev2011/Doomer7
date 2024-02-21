@@ -29,8 +29,8 @@ Class CK7_Smith_Cyo_Wep : CK7_Smith_Weapon
 	States
 	{
 		Spawn:
-			COYP A -1 bright;
-			Loop;
+			M000 A -1 bright;
+			stop;
 			
 		Recoil:
 			TNT1 A 0;
