@@ -8,6 +8,11 @@ Class CK7_Hud : BaseStatusBar
 	const CHARGETIME_FWD = 8.0;
 	const CHARGETIME_BACK = -2.0;
 
+	CK7_GameplayHandler handler;
+	K7_LookTargetController lookController;
+	double targetTimer;
+	const CROSSHAIRTIME = C_FRAMERATE * 1.5;
+
 	transient CVar c_xhair;
 	transient CVar c_xhair_alpha;
 	HUDFont k7HudFont;
@@ -42,24 +47,23 @@ Class CK7_Hud : BaseStatusBar
 		BeginHUD( 1, true, HUDRESX, HUDRESY);
 		
 		UpdateSideSlideTimer();
-		DrawSidePanel();
-		DrawK7Crosshair();
-		DrawCharge();
-		DrawThinBlood();
-		
-		//DrawDamageWipe();
-		double hudHealth = GetHealthFraction();
-		if (hudHealth >= .75){
-			DrawImage( "KEYESA0", (57,90), DI_ITEM_OFFSETS, 1.0, (-1,-1), (.115,.115));
-		}else if( hudHealth >= 0.5){
-			DrawImage( "KEYESB0", (57,90), DI_ITEM_OFFSETS, 1.0, (-1,-1), (.115,.115));
-		}else if( hudHealth >= 0.25){
-			DrawImage( "KEYESC0", (57,90), DI_ITEM_OFFSETS, 1.0, (-1,-1), (.115,.115));
-		}else if( hudHealth >= 0){
-			DrawImage( "KEYESD0", (57,90), DI_ITEM_OFFSETS, 1.0, (-1,-1), (.115,.115));
+		if (!autoMapActive)
+		{
+			DrawSidePanel();
+			DrawK7Crosshair();
+			DrawCharge();
+			DrawThinBlood();
 		}
-		DrawString( k7HudFont, FormatNumber( CPlayer.health, 3 ), (113, 50), DI_TEXT_ALIGN_CENTER );
-		DrawString( k7HudFont, FormatNumber( GetArmorAmount(), 3 ), (113, 220), DI_TEXT_ALIGN_CENTER );
+		
+		DrawHealth();
+	}
+
+	double SinePulse(double frequency = TICRATE, double startVal = 0.0, double endVal = 1.0)
+	{
+		//return 0.5 + 0.5 * sin(360.0 * deltatime / (frequency*1000.0));
+		double time = Level.mapTime;
+		double pulseVal = 0.5 + 0.5 * sin(360.0 * (time + fracTic) / frequency);
+		return CK7_Utils.LinearMap(pulseVal, 0.0, 1.0, startVal, endVal);
 	}
 
 	void UpdateDeltaTime()
@@ -77,6 +81,24 @@ Class CK7_Hud : BaseStatusBar
 	{
 		double frac = double(CPlayer.mo.health) / CPlayer.mo.GetMaxHealth(true);
 		return frac;
+	}
+
+	void DrawHealth()
+	{
+		double hudHealth = GetHealthFraction();
+		String img;
+		if (hudHealth >= .75){
+			img = "KEYESA0";
+		}else if( hudHealth >= 0.5){
+			img = "KEYESB0";
+		}else if( hudHealth >= 0.25){
+			img = "KEYESC0";
+		}else {
+			img = "KEYESD0";
+		}
+		DrawImage( img, (57,90), DI_ITEM_OFFSETS, 1.0, (-1,-1), (.115,.115));
+		DrawString( k7HudFont, FormatNumber( CPlayer.health, 3 ), (113, 50), DI_TEXT_ALIGN_CENTER );
+		DrawString( k7HudFont, FormatNumber( GetArmorAmount(), 3 ), (113, 220), DI_TEXT_ALIGN_CENTER );
 	}
 
 	void UpdateSideSlideTimer()
@@ -118,8 +140,9 @@ Class CK7_Hud : BaseStatusBar
 	// Draw the "Charge Lv. #" string:
 	void DrawCharge()
 	{
-		let weap = CK7_Smith_Weapon(CPlayer.readyweapon);
-		if (!weap || weap.m_iSpecialChargeCount <= 0)
+		int chargecount, charges;
+		[chargecount, charges] = GetWeaponCharge();
+		if (!chargecount)
 		{
 			return;
 		}
@@ -132,7 +155,7 @@ Class CK7_Hud : BaseStatusBar
 		// it prints "Lv  #" instead of "Lv. #"
 		DrawString( k7HudFont, "Charge", pos, DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_CENTER, scale: sc);
 		pos.y += 40;
-		DrawString( k7HudFont, String.Format("Lv. %d", weap.m_iSpecialCharges), pos, DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_CENTER, scale: sc);
+		DrawString( k7HudFont, String.Format("Lv. %d", charges), pos, DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_CENTER, scale: sc);
 	}
 
 	// Draw the thin blood icon and counter:
@@ -153,6 +176,16 @@ Class CK7_Hud : BaseStatusBar
 		DrawString (k7HudFont, ""..thinblood.amount, pos + (10, 80), DI_SCREEN_LEFT_CENTER|DI_TEXT_ALIGN_LEFT);
 	}
 
+	int, int GetWeaponCharge()
+	{
+		let weap = CK7_Smith_Weapon(CPlayer.readyweapon);
+		if (!weap)
+		{
+			return 0, 0;
+		}
+		return weap.m_iSpecialChargeCount, weap.m_iSpecialCharges;
+	}
+
 	void DrawK7Crosshair()
 	{
 		if (!c_xhair)
@@ -168,6 +201,66 @@ Class CK7_Hud : BaseStatusBar
 		{
 			return;
 		}
-		DrawImage("K7XHAIR", (0,0), DI_SCREEN_CENTER|DI_ITEM_CENTER, alpha: alpha);
+		// Color levels: yellow, pink, magenta, blue
+		Color col = 0xffc47933;
+		int style = STYLE_Add;
+		int chargecount, charges;
+		[chargecount, charges] = GetWeaponCharge();
+		if (chargecount)
+		{
+			int pulsefreq;
+			switch (charges)
+			{
+			case 1:
+				col = 0xfff80040;
+				pulsefreq = 5;
+				break;
+			case 2:
+				col = 0xffaa03ac;
+				pulsefreq = 4;
+				break;
+			case 3:
+				col = 0xff398cfd;
+				pulsefreq = 3;
+				break;
+			}
+			if (charges)
+			{
+				//style = Style_Add;
+				alpha = SinePulse(pulsefreq, alpha*0.8, alpha);
+			}
+		}
+
+		if (chargecount && charges)
+		{
+			DrawImage("K7RETCB2", (0,0), DI_SCREEN_CENTER|DI_ITEM_CENTER, alpha: alpha*0.5, style:style);
+		}
+		DrawImage("K7RETCB1", (0,0), DI_SCREEN_CENTER|DI_ITEM_CENTER, alpha: alpha, style:style, col:col);
+		if (!lookController)
+		{
+			let handler = CK7_GameplayHandler(EventHandler.Find('CK7_GameplayHandler'));
+			if (handler)
+			{
+				lookController = handler.lookControllers[consoleplayer];
+			}
+		}
+		else
+		{
+			if (lookController.looktarget)
+			{
+				targetTimer = Clamp(targetTimer + 6*deltatime, 0, CROSSHAIRTIME);
+			}
+			else
+			{
+				targetTimer = Clamp(targetTimer - 3*deltatime, 0, CROSSHAIRTIME);
+			}
+			double ang = CK7_Utils.LinearMap(targetTimer, 0, CROSSHAIRTIME*0.8, 0, -60, true);
+			double sc = CK7_Utils.LinearMap(targetTimer, 0, CROSSHAIRTIME*0.8, 1.0, 1.48, true);
+			if (chargecount && charges)
+			{
+				DrawImageRotated("K7RETCR2", (0,0), DI_SCREEN_CENTER, ang, alpha*0.5, (sc, sc), style:style);
+			}
+			DrawImageRotated("K7RETCR1", (0,0), DI_SCREEN_CENTER, ang, alpha, (sc, sc), style:style, col:col);
+		}
 	}
 }

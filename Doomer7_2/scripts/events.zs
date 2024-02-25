@@ -1,5 +1,7 @@
 class CK7_GameplayHandler : EventHandler
 {
+	K7_LookTargetController lookControllers[MAXPLAYERS];
+
 	override void WorldThingDied(worldEvent e)
 	{
 		if (e.thing && e.thing.bISMONSTER && !e.thing.bBOSS)
@@ -11,14 +13,6 @@ class CK7_GameplayHandler : EventHandler
 			}
 		}
 	}
-
-	/*override void WorldThingDamaged(WorldEvent e)
-	{
-		if (e.thing.player && e.Damage > 0)
-		{
-			EventHandler.SendInterfaceEvent(e.thing.PlayerNumber(), "PlayerWasDamaged");
-		}
-	}*/
 	
 	override void InterfaceProcess(consoleEvent e)
 	{
@@ -30,15 +24,6 @@ class CK7_GameplayHandler : EventHandler
 				hud.ShowSidePanel();
 			}
 		}
-
-		/*if (e.name ~== "PlayerWasDamaged")
-		{
-			let hud = CK7_Hud(statusbar);
-			if (hud)
-			{
-				hud.StartDamageWipe(60);
-			}
-		}*/
 	}
 
 	override void CheckReplacement(replaceEvent e)
@@ -80,5 +65,22 @@ class CK7_GameplayHandler : EventHandler
 		//{
 		//	e.Replacement = 'CK7_HealthBonus';
 		//}
+	}
+
+	override void PlayerSpawned(playerEvent e)
+	{
+		int i = e.PlayerNumber;
+		if (!PlayerInGame[i])
+			return;
+		PlayerInfo player = players[i];
+		PlayerPawn pmo = player.mo;
+		if (pmo && !CK7_Utils.IsVoodooDoll(pmo))
+		{
+			let ltc = K7_LookTargetController.Create(pmo);
+			if (ltc)
+			{
+				lookControllers[i] = ltc;
+			}
+		}
 	}
 }

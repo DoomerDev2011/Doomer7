@@ -1,5 +1,10 @@
 class CK7_Utils
 {
+	static clearscope bool IsVoodooDoll(PlayerPawn mo)
+	{
+		return !mo.player || !mo.player.mo || mo.player.mo != mo;
+	}
+
 	static clearscope double LinearMap(double val, double source_min, double source_max, double out_min, double out_max, bool clampIt = false) 
 	{
 		double sourceDiff = (source_max - source_min);
@@ -64,5 +69,43 @@ class CK7_Utils
 		}
 		
 		return hitnormal, false;
+	}
+}
+
+class K7_LookTargetController : Thinker
+{
+	protected PlayerPawn pp;
+	Actor looktarget;
+	static K7_LookTargetController Create(PlayerPawn pp)
+	{
+		let ltc = New("K7_LookTargetController");
+		if (ltc)
+		{
+			ltc.pp = pp;
+		}
+		return ltc;
+	}
+
+	override void Tick()
+	{
+		if (!pp)
+		{
+			Destroy();
+			return;
+		}
+		if (!pp.player || pp.health <= 0)
+			return;
+		
+		FLineTraceData lt;
+		pp.LineTrace(pp.angle, 2048, pp.pitch, offsetz: pp.height * 0.5 - pp.floorclip + pp.AttackZOffset*pp.player.crouchFactor, data:lt);
+		let ha = lt.HitActor;
+		if (lt.HitType == TRACE_HitActor && ha && ha.bISMONSTER && ha.bSHOOTABLE && ha.health > 0)
+		{
+			looktarget = ha;
+		}
+		else
+		{
+			looktarget = null;
+		}
 	}
 }
