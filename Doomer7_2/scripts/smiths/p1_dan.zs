@@ -155,33 +155,125 @@ Class CK7_Smith_Dan_Wep : CK7_Smith_Weapon
 	}
 }
 
-Class K7_Dan_CollateralShot : PlasmaBall
+Class K7_Dan_CollateralShot : Actor
 {
 	Default
 	{
+		Projectile;
+		+NODAMAGETHRUST
+		+FORCEPAIN
+		+BRIGHT
 		Radius 11;
 		Height 8;
 		Speed 20;
 		DamageFunction (450);
-		Projectile;
-		-RANDOMIZE
-		-DEHEXPLOSION
-		-ROCKETTRAIL
-		+NODAMAGETHRUST
-		+FORCEPAIN
 		RenderStyle "Add";
-		Alpha 1;
 		SeeSound "";
 		DeathSound "dan_special_explode";
 	}
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		A_FaceMovementDirection();
+	}
 	
 	States {
-		Spawn:
-		DANC A -1;
+	Spawn:
+		DANC A 1 
+		{
+			FSpawnParticleParams pp;
+			pp.color1 = color(255, 128, 0);
+			pp.lifetime = 8;
+			pp.flags = SPF_FULLBRIGHT|SPF_REPLACE;
+			pp.style = Style_Translucent;
+			pp.startalpha = 1.0;
+			pp.size = 10;
+			pp.vel = vel;
+
+			bool doTrail = target && Distance3D(target) >= speed * 4;
+
+			for (int i = 8; i > 0; i--)
+			{
+				FLineTraceData lt;
+				LineTrace(frandom(0,360), 38, frandom(-90, 90), data:lt);
+				pp.pos = lt.HitLocation;
+				Level.SpawnParticle(pp);
+
+				if (doTrail)
+				{
+					LineTrace(angle + 180 + frandom(-60,60), 64, frandom(-60, 60), data:lt);
+					pp.pos = lt.HitLocation;
+					Vector3 dir = Level.Vec3Diff(pos, lt.HitLocation).Unit();
+					pp.vel = dir * 4;
+					//pp.accel = pp.vel * -0.015;
+					pp.lifetime = TICRATE*3;
+					pp.startalpha = 0.4;
+					pp.fadestep = -1;
+					pp.size = 8;
+					Level.SpawnParticle(pp);
+				}
+			}
+		}
 		Loop;
 		
-		Death:
-		TNT1 A 1;
+	Death:
+		TNT1 A 1
+		{
+			Vector3 exPos;
+			for (int i = -2; i <= 2; i++)
+			{
+				exPos.xy = pos.xy + Actor.RotateVector((0, 72*i), angle);
+				exPos.z = pos.z;
+				exPos += (frandom(-12,12), frandom(-12,12), frandom(-16,16));
+				let ex = Spawn('K7_CollateralShotExplosion', exPos);
+				if (ex)
+				{
+					ex.scale.x = 1.0 - 0.3 * abs(i);
+					ex.scale.y = ex.scale.x;
+				}
+			}
+
+			FSpawnParticleParams pp;
+			pp.color1 = color(255, 128, 0);
+			pp.lifetime = 60;
+			pp.lifetime = TICRATE;
+			pp.flags = SPF_FULLBRIGHT|SPF_REPLACE;
+			pp.style = Style_Add;
+			pp.startalpha = 1.0;
+			pp.size = 18;
+			pp.sizestep = -(pp.size / pp.lifetime);
+
+			FLineTraceData lt;
+			for (int i = 80; i > 0; i--)
+			{
+				LineTrace(frandom(0,360), 48, frandom(-90, 90), data:lt);
+				Vector3 dir = Level.Vec3Diff(pos, lt.HitLocation).Unit();
+				pp.pos = lt.HitLocation;
+				pp.vel = dir * 8;
+				Level.SpawnParticle(pp);
+			}
+		}
+		Stop;
+	}
+}
+
+class K7_CollateralShotExplosion : Actor
+{
+	Default
+	{
+		+NOINTERACTION
+		+NOBLOCKMAP
+		+ROLLSPRITE
+		+BRIGHT
+		+FORCEXYBILLBOARD
+		RenderStyle "Add";
+	}
+
+	States {
+	Spawn:	
+		COLE ABCDEFGHIJ 1;
+		COLE KLMNOPQRSTUVWX 2;
 		Stop;
 	}
 }
