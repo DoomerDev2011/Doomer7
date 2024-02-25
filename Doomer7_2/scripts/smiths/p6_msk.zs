@@ -271,8 +271,11 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 
 class K7_Mask_M79_Grenade : Actor
 {
-	default{
-		PROJECTILE;
+	static const name smokeTexNames[] = { 'masksmkA', 'masksmkB', 'masksmkC', 'masksmkD' };
+
+	Default
+	{
+		Projectile;
 		+HEXENBOUNCE
 		-NOGRAVITY
 		+EXPLODEONWATER
@@ -285,62 +288,58 @@ class K7_Mask_M79_Grenade : Actor
 		Deathsound "weapon/MaskExplosion";
 	}
 
+	override void Tick()
+	{
+		Vector3 oldPos = pos;
+		Super.Tick();
+		if (isFrozen() || !InstateSequence(curstate, spawnstate) || !(target && Distance3D(target) > speed+radius+target.radius))
+		{
+			return;
+		}
+
+		Vector3 path = Level.Vec3Diff(pos, oldPos);
+		Vector3 dir = path.Unit();
+		double dist = 8;
+		int steps = round(path.Length() / dist);
+		FSpawnParticleParams sm;
+		sm.color1 = "";
+		sm.size = 13;
+		sm.startalpha = 0.6;
+		sm.fadestep = -1;
+		sm.lifetime = 32;
+		sm.sizestep = sm.size * 0.02;
+		for (int i = 0; i < steps; i++)
+		{
+			sm.texture = TexMan.CheckForTexture(smokeTexNames[random(0, smokeTexNames.Size()-1)]);
+			sm.pos = oldpos + (frandom(-2,2),frandom(-2,2),frandom(-2,2));
+			sm.startroll = frandom(0,360);
+			sm.rollvel = frandom(3, 6) * randompick(-1,1);
+			sm.rollacc = -(sm.rollvel / sm.lifetime);
+			Level.SpawnParticle(sm);
+			oldPos += dir * dist;
+		}
+	}
+
 	States {
-		Spawn:
-		MGRE A 0 A_CountDown();
-		MGRE A 1 A_SpawnProjectile("GrenadePuff", 3, 0, 0, CMF_AIMOFFSET);
+	Spawn:
+		MGRE A 1 A_CountDown();
 		Loop;
 		
-		Death:
-		MISL B 0 Bright A_NoGravity();
-		MISL B 0 Bright A_SetTranslucent(0.5, 1);
-		MISL B 8 Bright A_Explode;
-		MISL C 6 Bright;
-		MISL D 4 BRIGHT;
+	Death:
+		TNT1 A 0
+		{
+			A_Stop();
+			bNOGRAVITY = true;
+			bBRIGHT = true;
+			A_SetRenderstyle(1.0, STYLE_Add);
+			A_Explode();
+		}
+		MAEX ABCDEFGHIJ 1 { scale *= 1.02; }
+		MAEX KLMNOPQRSTUVWX 2;
 		Stop;
 	}
 }
 
-class K7_Mask_M79_Charge_Grenade : Actor
+class K7_Mask_M79_Charge_Grenade : K7_Mask_M79_Grenade
 {
-	default{
-		PROJECTILE;
-		+HEXENBOUNCE
-		-NOGRAVITY
-		+EXPLODEONWATER
-		Radius 11;
-		Height 8;
-		Speed 130;
-		Damage 30;
-		BounceCount 1;
-		ReactionTime 139;
-		Deathsound "weapon/MaskExplosion";
-	}
-
-	States {
-		Spawn:
-		MGRE A 0 A_CountDown();
-		MGRE A 1 A_SpawnProjectile("GrenadePuff", 3, 0, 0, CMF_AIMOFFSET);
-		Loop;
-		
-		Death:
-		MISL B 0 Bright A_NoGravity();
-		MISL B 0 Bright A_SetTranslucent(0.5, 1);
-		MISL B 8 Bright A_Explode;
-		MISL C 6 Bright;
-		MISL D 4 BRIGHT;
-		Stop;
-	}
-}
-
-Class GrenadePuff : BulletPuff{
-	default{
-		+ClientSideOnly
-	}
-
-	States{
-		Spawn:
-		PUFF ABCD 4;
-		Stop;
-	}
 }
