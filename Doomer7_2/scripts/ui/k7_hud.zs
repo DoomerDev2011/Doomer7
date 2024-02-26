@@ -36,10 +36,10 @@ Class CK7_Hud : BaseStatusBar
 		Super.Init();
 		SetSize( 0, HUDRESX, HUDRESY );
 		Font fnt = "K7Font";
-		k7HudFont = HUDFont.Create( fnt, fnt.GetCharWidth("0"), Mono_CellLeft, -8, -8 );
+		k7HudFont = HUDFont.Create( fnt, fnt.GetCharWidth("0"), Mono_CellLeft, -8, -6 );
 		fnt = "Hiragino";
 		k7italicFont = HUDFont.Create( fnt, 1, false, -6, -6 );
-		backgroundTex = TexMan.CheckForTexture("KHUDA0");
+		backgroundTex = TexMan.CheckForTexture("K7HUD_BG");
 		backgroundTexSize = TexMan.GetScaledSize(backgroundTex);
 	}
 	
@@ -53,15 +53,14 @@ Class CK7_Hud : BaseStatusBar
 		}
 		BeginHUD( 1, true, HUDRESX, HUDRESY);
 		
+		DrawSidePanel();
 		UpdateSideSlideTimer();
 		if (!autoMapActive)
 		{
-			DrawSidePanel();
 			DrawK7Crosshair();
-			DrawCharge();
-			DrawThinBlood();
 		}
-		
+		DrawCharge();
+		DrawThinBlood();
 		DrawHealth();
 	}
 
@@ -104,8 +103,9 @@ Class CK7_Hud : BaseStatusBar
 			img = "KEYESD0";
 		}
 		DrawImage( img, (57,90), DI_ITEM_OFFSETS, 1.0, (-1,-1), (.115,.115));
-		DrawString( k7HudFont, FormatNumber( CPlayer.health, 3 ), (113, 50), DI_TEXT_ALIGN_CENTER );
-		DrawString( k7HudFont, FormatNumber( GetArmorAmount(), 3 ), (113, 220), DI_TEXT_ALIGN_CENTER );
+		Vector2 sc = (0.75,0.75);
+		DrawString( k7HudFont, ""..CPlayer.health, (backgroundTexSize.x*0.5 - 64, 32), DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_CENTER, scale:sc );
+		DrawString( k7HudFont, ""..GetArmorAmount(), (backgroundTexSize.x*0.5 + 64, 32), DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_CENTER, scale:sc );
 	}
 
 	void UpdateSideSlideTimer()
@@ -127,7 +127,13 @@ Class CK7_Hud : BaseStatusBar
 
 	void DrawSidePanel()
 	{
-		DrawTexture( backgroundTex, ( GetSideOffset(), 0 ), DI_SCREEN_LEFT_CENTER|DI_ITEM_LEFT|DI_ITEM_CENTER);
+		Vector2 pos = ( GetSideOffset(), 0 );
+		DrawTexture( backgroundTex, pos, DI_SCREEN_LEFT_CENTER|DI_ITEM_LEFT|DI_ITEM_CENTER);
+		Vector2 cPos = pos + (backgroundTexSize.x*0.5, 156);
+		Vector2 sc = (0.85, 0.85);
+		DrawImage("k7comp_0", cPos, DI_SCREEN_LEFT_TOP|DI_ITEM_CENTER, scale:sc);
+		DrawImageRotated("k7comp_1", cPos, DI_SCREEN_LEFT_TOP|DI_ITEM_CENTER, CPlayer.mo.angle - 90, scale:(1. / sc.x, 1. / sc.y), style: STYLE_Add);
+		DrawImage("k7comp_2", cPos, DI_SCREEN_LEFT_TOP|DI_ITEM_CENTER, scale:sc);
 	}
 
 	double GetSideOffset()
@@ -233,7 +239,7 @@ Class CK7_Hud : BaseStatusBar
 				pltex = "tbldpl3";
 				break;
 			}
-			// draw platform:
+			// Highlights:
 			DrawImage(pltex, plPos, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM, SinePulse(pulsefreq, 0.8, 1), style: STYLE_Add, col: col);
 		}
 
