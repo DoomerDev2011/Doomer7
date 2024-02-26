@@ -9,6 +9,10 @@ Class CK7_Hud : BaseStatusBar
 	const CHARGETIME_BACK = -2.0;
 
 	CK7_GameplayHandler handler;
+
+	double vialTimer;
+	const MAXVIALTIMER = C_FRAMERATE * 1.0;
+
 	K7_LookTargetController lookController;
 	double targetTimer;
 	const CROSSHAIRTIME = C_FRAMERATE * 1.5;
@@ -135,6 +139,7 @@ Class CK7_Hud : BaseStatusBar
 	void ShowSidePanel()
 	{
 		sideSlideDir = CHARGETIME_FWD;
+		vialTimer = MAXVIALTIMER;
 	}
 
 	// Draw the "Charge Lv. #" string:
@@ -161,6 +166,8 @@ Class CK7_Hud : BaseStatusBar
 	// Draw the thin blood icon and counter:
 	void DrawThinBlood()
 	{
+		vialTimer = Clamp(vialTimer - 4.0 * deltaTime, 0, MAXVIALTIMER);
+
 		let thinblood = CK7_ThinBlood(CPlayer.mo.FindInventory('CK7_ThinBlood'));
 		if (!thinblood || thinblood.amount <= 0)
 		{
@@ -170,54 +177,67 @@ Class CK7_Hud : BaseStatusBar
 		{
 			thinBloodTex = TexMan.CheckForTexture('DTHNBLD');
 		}
+		// Vial position:
 		Vector2 pos = (112, 48);
+		// Side offset from the panel:
 		pos.x += GetSideOffset();
+		// Position for the platform:
 		Vector2 plPos = pos + (0, 20);
+		// Platform:
 		DrawImage("tbldpl0", plPos, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM);
-		int chargecount, charges;
-		[chargecount, charges] = GetWeaponCharge();
-		if (chargecount)
-		{
-			if (charges > 0)
-			{
-				DrawTexture(thinBloodTex, pos, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM);
-			}
-			if (charges > 1)
-			{
-				DrawTexture(thinBloodTex, pos + (-52, -25), DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM);
-			}
-			if (charges > 2)
-			{
-				DrawTexture(thinBloodTex, pos + (52, -25), DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM);
-			}
 
-			int pulsefreq;
-			Color col;
-			String pltex;
+		Color col;
+		int pulseFreq, charges;
+		[col, pulseFreq, charges] = GetChargeVisuals();
+		if (charges < 2)
+		{
+			vialTimer = 0;
+		}
+
+		Vector2 vp_c = pos;
+		Vector2 vp_l = pos + (-52, -25);
+		Vector2 vp_r = pos + (52, -25);
+		// Central vial (always drawn if has any):
+		if (thinblood.amount > 0)
+		{
+			Vector2 p = vp_c  - ((vp_c - vp_r) / MAXVIALTIMER) * vialTimer;
+			DrawTexture(thinBloodTex, p, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM);
+		}
+		// Left vial (lv. 2):
+		if (charges > 1)
+		{
+			Vector2 p = vp_l - ((vp_l - vp_c) / MAXVIALTIMER) * vialTimer;
+			DrawTexture(thinBloodTex, p, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM);
+		}
+		// Right vial (lv. 3):
+		if (charges > 2)
+		{
+			Vector2 p = vp_r - ((vp_r - vp_l) / MAXVIALTIMER) * vialTimer;
+			DrawTexture(thinBloodTex, p, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM);
+		}
+		// Find platform texture:
+		String pltex;
+		if (charges)
+		{
 			switch (charges)
 			{
 			case 1:
-				col = 0xfff80040;
-				pulsefreq = 5;
 				pltex = "tbldpl1";
 				break;
 			case 2:
-				col = 0xffaa03ac;
-				pulsefreq = 4;
 				pltex = "tbldpl2";
 				break;
 			case 3:
-				col = 0xff398cfd;
-				pulsefreq = 3;
 				pltex = "tbldpl3";
 				break;
 			}
-			if (charges)
-			{
-				DrawImage(pltex, plPos, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM, SinePulse(pulsefreq, 0.8, 1), style: STYLE_Add, col: col);
-			}
+			// draw platform:
+			DrawImage(pltex, plPos, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM, SinePulse(pulsefreq, 0.8, 1), style: STYLE_Add, col: col);
 		}
 
+		// Draw amount string, deducting current charge:
+		int chargecount;
+		[chargecount, charges] = GetWeaponCharge();
 		int amt = thinblood.amount - (chargecount? charges : 0);
 		DrawString (k7HudFont, "x"..amt, plPos, DI_SCREEN_LEFT_CENTER|DI_TEXT_ALIGN_LEFT);
 	}
@@ -230,6 +250,33 @@ Class CK7_Hud : BaseStatusBar
 			return 0, 0;
 		}
 		return weap.m_iSpecialChargeCount, weap.m_iSpecialCharges;
+	}
+
+	Color, int, int GetChargeVisuals()
+	{
+		Color col = 0xffc47933;
+		int pulsefreq;
+		int chargecount, charges;
+		[chargecount, charges] = GetWeaponCharge();
+		if (chargecount)
+		{
+			switch (charges)
+			{
+			case 1:
+				col = 0xfff80040;
+				pulsefreq = 5;
+				break;
+			case 2:
+				col = 0xffaa03ac;
+				pulsefreq = 4;
+				break;
+			case 3:
+				col = 0xff398cfd;
+				pulsefreq = 3;
+				break;
+			}
+		}
+		return col, pulsefreq, charges;
 	}
 
 	void DrawK7Crosshair()
@@ -248,39 +295,17 @@ Class CK7_Hud : BaseStatusBar
 			return;
 		}
 		// Color levels: yellow, pink, magenta, blue
-		Color col = 0xffc47933;
 		int style = STYLE_Add;
-		int chargecount, charges;
-		[chargecount, charges] = GetWeaponCharge();
-		if (chargecount)
+		Color col;
+		int pulseFreq, charges;
+		[col, pulseFreq, charges] = GetChargeVisuals();
+		if (charges)
 		{
-			int pulsefreq;
-			switch (charges)
-			{
-			case 1:
-				col = 0xfff80040;
-				pulsefreq = 5;
-				break;
-			case 2:
-				col = 0xffaa03ac;
-				pulsefreq = 4;
-				break;
-			case 3:
-				col = 0xff398cfd;
-				pulsefreq = 3;
-				break;
-			}
-			if (charges)
-			{
-				//style = Style_Add;
-				alpha = SinePulse(pulsefreq, alpha*0.8, alpha);
-			}
-		}
-
-		if (chargecount && charges)
-		{
+			//style = Style_Add;
+			alpha = SinePulse(pulsefreq, alpha*0.8, alpha);
 			DrawImage("K7RETCB2", (0,0), DI_SCREEN_CENTER|DI_ITEM_CENTER, alpha: alpha*0.5, style:style);
 		}
+
 		DrawImage("K7RETCB1", (0,0), DI_SCREEN_CENTER|DI_ITEM_CENTER, alpha: alpha, style:style, col:col);
 		if (!lookController)
 		{
@@ -302,7 +327,7 @@ Class CK7_Hud : BaseStatusBar
 			}
 			double ang = CK7_Utils.LinearMap(targetTimer, 0, CROSSHAIRTIME*0.8, 0, -60, true);
 			double sc = CK7_Utils.LinearMap(targetTimer, 0, CROSSHAIRTIME*0.8, 1.0, 1.48, true);
-			if (chargecount && charges)
+			if (charges)
 			{
 				DrawImageRotated("K7RETCR2", (0,0), DI_SCREEN_CENTER, ang, alpha*0.5, (sc, sc), style:style);
 			}
