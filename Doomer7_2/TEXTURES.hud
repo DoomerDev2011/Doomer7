@@ -21,9 +21,4 @@ Texture "KEYESD0", 1042, 1042
 	Patch "KEYESD0", 0, 0
 }
 
-Texture "KHUDA0", 225, 1080
-{
-	Patch "KHUDA0", 0, 0
-}
-
 // End of texture definitions
