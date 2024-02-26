@@ -170,10 +170,56 @@ Class CK7_Hud : BaseStatusBar
 		{
 			thinBloodTex = TexMan.CheckForTexture('DTHNBLD');
 		}
-		Vector2 pos = (112, 0);
+		Vector2 pos = (112, 48);
 		pos.x += GetSideOffset();
-		DrawTexture(thinBloodTex, pos, DI_SCREEN_LEFT_CENTER|DI_ITEM_CENTER);
-		DrawString (k7HudFont, ""..thinblood.amount, pos + (10, 80), DI_SCREEN_LEFT_CENTER|DI_TEXT_ALIGN_LEFT);
+		Vector2 plPos = pos + (0, 20);
+		DrawImage("tbldpl0", plPos, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM);
+		int chargecount, charges;
+		[chargecount, charges] = GetWeaponCharge();
+		if (chargecount)
+		{
+			if (charges > 0)
+			{
+				DrawTexture(thinBloodTex, pos, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM);
+			}
+			if (charges > 1)
+			{
+				DrawTexture(thinBloodTex, pos + (-52, -25), DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM);
+			}
+			if (charges > 2)
+			{
+				DrawTexture(thinBloodTex, pos + (52, -25), DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM);
+			}
+
+			int pulsefreq;
+			Color col;
+			String pltex;
+			switch (charges)
+			{
+			case 1:
+				col = 0xfff80040;
+				pulsefreq = 5;
+				pltex = "tbldpl1";
+				break;
+			case 2:
+				col = 0xffaa03ac;
+				pulsefreq = 4;
+				pltex = "tbldpl2";
+				break;
+			case 3:
+				col = 0xff398cfd;
+				pulsefreq = 3;
+				pltex = "tbldpl3";
+				break;
+			}
+			if (charges)
+			{
+				DrawImage(pltex, plPos, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM, SinePulse(pulsefreq, 0.8, 1), style: STYLE_Add, col: col);
+			}
+		}
+
+		int amt = thinblood.amount - (chargecount? charges : 0);
+		DrawString (k7HudFont, "x"..amt, plPos, DI_SCREEN_LEFT_CENTER|DI_TEXT_ALIGN_LEFT);
 	}
 
 	int, int GetWeaponCharge()
