@@ -20,6 +20,7 @@ Class CK7_Hud : BaseStatusBar
 	transient CVar c_xhair;
 	transient CVar c_xhair_alpha;
 	HUDFont k7HudFont;
+	HUDFont k7italicFont;
 	TextureID thinBloodTex;
 	TextureID backgroundTex;
 	Vector2 backgroundTexSize;
@@ -36,6 +37,8 @@ Class CK7_Hud : BaseStatusBar
 		SetSize( 0, HUDRESX, HUDRESY );
 		Font fnt = "K7Font";
 		k7HudFont = HUDFont.Create( fnt, fnt.GetCharWidth("0"), Mono_CellLeft, -8, -8 );
+		fnt = "Hiragino";
+		k7italicFont = HUDFont.Create( fnt, 1, false, -6, -6 );
 		backgroundTex = TexMan.CheckForTexture("KHUDA0");
 		backgroundTexSize = TexMan.GetScaledSize(backgroundTex);
 	}
@@ -151,16 +154,15 @@ Class CK7_Hud : BaseStatusBar
 		{
 			return;
 		}
-		Vector2 sc = (0.85, 0.85);
-		Vector2 pos = (118, 310);
+		Vector2 pos = (118, 290);
 		pos.x += GetSideOffset();
 		// Note, this is a wrong font. The charge string is supposed to
 		// use a different font, which is more curly. The other problem
 		// is that this font is missing the full stop character, so
 		// it prints "Lv  #" instead of "Lv. #"
-		DrawString( k7HudFont, "Charge", pos, DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_CENTER, scale: sc);
-		pos.y += 40;
-		DrawString( k7HudFont, String.Format("Lv. %d", charges), pos, DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_CENTER, scale: sc);
+		DrawString( k7italicFont, "Charge", pos, DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_CENTER);
+		pos.y += 50;
+		DrawString( k7italicFont, String.Format("Lv. %d", charges), pos, DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_CENTER);
 	}
 
 	// Draw the thin blood icon and counter:
@@ -239,7 +241,7 @@ Class CK7_Hud : BaseStatusBar
 		int chargecount;
 		[chargecount, charges] = GetWeaponCharge();
 		int amt = thinblood.amount - (chargecount? charges : 0);
-		DrawString (k7HudFont, "x"..amt, plPos, DI_SCREEN_LEFT_CENTER|DI_TEXT_ALIGN_LEFT);
+		DrawString (k7italicFont, "x"..amt, plPos - (0, 16), DI_SCREEN_LEFT_CENTER|DI_TEXT_ALIGN_LEFT);
 	}
 
 	int, int GetWeaponCharge()
