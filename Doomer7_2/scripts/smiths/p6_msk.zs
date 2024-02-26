@@ -121,8 +121,8 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 				invoker.m_iSpecialCharges = 0;
 				invoker.A_TakeInventory( "CK7_ThinBlood", 2 );
 				A_Overlay( LAYER_RECOIL, "Recoil" );
-				A_FireProjectile("K7_Mask_M79_Grenade",0,1,-10,0);
-				A_FireProjectile("K7_Mask_M79_Grenade",0,1,10,0);
+				A_FireProjectile("K7_Mask_M79_Charge_Grenade",0,1,-10,0);
+				A_FireProjectile("K7_Mask_M79_Charge_Grenade",0,1,10,0);
 			}
 			Stop;
 			
@@ -276,15 +276,13 @@ class K7_Mask_M79_Grenade : Actor
 	Default
 	{
 		Projectile;
-		+HEXENBOUNCE
 		-NOGRAVITY
-		+EXPLODEONWATER
 		Radius 11;
 		Height 8;
 		Speed 130;
 		Damage 15;
-		BounceCount 1;
 		ReactionTime 139;
+		ExplosionRadius 128;
 		Deathsound "weapon/MaskExplosion";
 	}
 
@@ -320,9 +318,15 @@ class K7_Mask_M79_Grenade : Actor
 		}
 	}
 
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		A_AttachLight('0', DynamicLight.PointLight, color(255, 128, 0), 80, 0, DYNAMICLIGHT.LF_ATTENUATE);
+	}
+
 	States {
 	Spawn:
-		MGRE A 1 A_CountDown();
+		TNT1 A 1 A_CountDown();
 		Loop;
 		
 	Death:
@@ -333,8 +337,10 @@ class K7_Mask_M79_Grenade : Actor
 			bBRIGHT = true;
 			A_SetRenderstyle(1.0, STYLE_Add);
 			A_Explode();
+			A_AttachLight('0', DynamicLight.FlickerLight, color(255, 80, 0), 80, 128, DYNAMICLIGHT.LF_ATTENUATE, param: 0.5);
 		}
 		MAEX ABCDEFGHIJ 1 { scale *= 1.02; }
+		TNT1 A 0 A_RemoveLight('0');
 		MAEX KLMNOPQRSTUVWX 2;
 		Stop;
 	}
@@ -342,4 +348,37 @@ class K7_Mask_M79_Grenade : Actor
 
 class K7_Mask_M79_Charge_Grenade : K7_Mask_M79_Grenade
 {
+	Default
+	{
+		Damage 30;
+		ExplosionRadius 180;
+	}
+
+	States
+	{
+	Death:
+		TNT1 A 0
+		{
+			FSpawnParticleParams pp;
+			pp.color1 = color(255, 128, 0);
+			pp.lifetime = 60;
+			pp.flags = SPF_FULLBRIGHT|SPF_REPLACE;
+			pp.style = Style_Add;
+			pp.startalpha = 1.0;
+			pp.size = 20;
+			pp.sizestep = -(pp.size / pp.lifetime);
+			pp.pos = pos;
+
+			FLineTraceData lt;
+			for (int i = 80; i > 0; i--)
+			{
+				pp.vel.x = frandom(-10, 10);
+				pp.vel.y = frandom(-10, 10);
+				pp.vel.z = frandom(10, 20);
+				pp.accel.z = -gravity;
+				Level.SpawnParticle(pp);
+			}
+		}
+		goto super::Death;
+	}
 }
