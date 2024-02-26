@@ -235,7 +235,7 @@ Class K7_Dan_CollateralShot : Actor
 			}
 
 			FSpawnParticleParams pp;
-			pp.color1 = color(255, 128, 0);
+			pp.color1 = color(255, 200, 0);
 			pp.lifetime = 60;
 			pp.lifetime = TICRATE;
 			pp.flags = SPF_FULLBRIGHT|SPF_REPLACE;
