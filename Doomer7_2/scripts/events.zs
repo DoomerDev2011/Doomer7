@@ -75,7 +75,7 @@ class CK7_GameplayHandler : EventHandler
 		{
 			e.Replacement = 'CK7_EmptyPickup';
 		}
-		if (e.Replacee is 'Shotgun')
+		if (e.Replacee is 'Shotgun' || e.Replacee is 'Chainsaw')
 		{
 			e.Replacement = 'CK7_Smith_Dan_Wep';
 		}
