@@ -4,15 +4,54 @@ class CK7_GameplayHandler : EventHandler
 
 	override void WorldThingDied(worldEvent e)
 	{
-		if (e.thing && e.thing.bISMONSTER && !e.thing.bBOSS)
+		if (e.thing && e.thing.bISMONSTER)
 		{
-			int count = Clamp(e.thing.GetMaxHealth() / 30, 1, 20);
-			for (int i = count; i > 0; i--)
+			// Initial value: 1-10 mapped to monster's health (between 20 and 1000):
+			int dropcount = round(CK7_Utils.LinearMap(e.thing.GetMaxHealth(), 20, 1000, 1, 10, true));
+			// Double amount for bosses:
+			if (e.thing.bBoss)
 			{
-				e.thing.A_DropItem('CK7_ThinBlood');
+				dropcount *= 2;
+			}
+			let killer = e.thing.target;
+			if (killer)
+			{
+				// Factor in player's health, from x4.0 (starting with 0 hp) to x1.0 (at 100 HP and beyond):
+				double healthFactor = CK7_Utils.LinearMap(killer.health, 0, 100, 4, 1, true);
+				dropcount = round(dropcount * healthFactor);
+				// Factor in the amount of  thin blood in player's inventory, from x1.0 (10 vials or fewer)
+				// to x0.0 (20 vials):
+				double invfactor = CK7_Utils.LinearMap(killer.CountInv('CK7_ThinBlood'), 10, 20, 1.0, 0.0, true);
+				dropcount = round(dropcount * invfactor);
+			}
+			for (dropcount; dropcount > 0; dropcount--)
+			{
+				e.thing.A_DropItem('CK7_ThinBlood', 1);
 			}
 		}
 	}
+
+	/*array <DeathParticleData> vpThings;
+	
+	override void RenderOverlay(renderEvent e)
+	{
+		if (vpThings.Size() <= 0)
+			return;
+		let pmo = players[consoleplayer].mo;
+		if (!pmo)
+			return;
+		let vp = CK7_StatusBarScreen.GetRenderEventViewProj(e);
+		bool front;
+		Vector2 vpPos;
+		for (int i = 0; i < vpThings.Size(); i++)
+		{
+			let d = vpThings[i];
+			if (!d)
+				continue;
+			[front, vpPos] = CK7_StatusBarScreen.ProjectToHUD(vp, d.pos);
+			Screen.DrawTexture(d.tex, false, vpPos.x, vpPos.y);
+		}
+	}*/
 	
 	override void InterfaceProcess(consoleEvent e)
 	{
