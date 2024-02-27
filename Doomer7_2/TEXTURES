@@ -14,7 +14,7 @@ Sprite "BLDVA0", 28, 108
 	XScale 6.000
 	YScale 6.000
 	Offset 14, 108
-	Patch "DTHNBLD", -6, 0
+	Patch "k7bvial1", -6, 0
 }
 
 Sprite "STTCA0", 640, 360
