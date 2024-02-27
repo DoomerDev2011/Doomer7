@@ -22,6 +22,7 @@ Class CK7_Hud : BaseStatusBar
 	HUDFont k7HudFont;
 	HUDFont k7italicFont;
 	TextureID thinBloodTex;
+	TextureID thinBloodTexEmpty;
 	TextureID backgroundTex;
 	Vector2 backgroundTexSize;
 
@@ -177,13 +178,17 @@ Class CK7_Hud : BaseStatusBar
 		vialTimer = Clamp(vialTimer - 4.0 * deltaTime, 0, MAXVIALTIMER);
 
 		let thinblood = CK7_ThinBlood(CPlayer.mo.FindInventory('CK7_ThinBlood'));
-		if (!thinblood || thinblood.amount <= 0)
+		if (!thinblood)
 		{
 			return;
 		}
 		if (!thinBloodTex || !thinBloodTex.IsValid())
 		{
-			thinBloodTex = TexMan.CheckForTexture('DTHNBLD');
+			thinBloodTex = TexMan.CheckForTexture('k7bvial1');
+		}
+		if (!thinBloodTexEmpty || !thinBloodTexEmpty.IsValid())
+		{
+			thinBloodTexEmpty = TexMan.CheckForTexture('k7bvial0');
 		}
 		// Vial position:
 		Vector2 pos = (112, 48);
@@ -205,24 +210,23 @@ Class CK7_Hud : BaseStatusBar
 		Vector2 vp_c = pos;
 		Vector2 vp_l = pos + (-52, -25);
 		Vector2 vp_r = pos + (52, -25);
+		Vector2 vp;
+		TextureID vtex;
 		// Central vial (always drawn if has any):
-		if (thinblood.amount > 0)
-		{
-			Vector2 p = vp_c  - ((vp_c - vp_r) / MAXVIALTIMER) * vialTimer;
-			DrawTexture(thinBloodTex, p, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM);
-		}
+		vtex = charges > 0 ? thinBloodTex : thinBloodTexEmpty;
+		vp = vp_c  - ((vp_c - vp_r) / MAXVIALTIMER) * vialTimer;
+		DrawTexture(vtex, vp, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM);
+
 		// Left vial (lv. 2):
-		if (charges > 1)
-		{
-			Vector2 p = vp_l - ((vp_l - vp_c) / MAXVIALTIMER) * vialTimer;
-			DrawTexture(thinBloodTex, p, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM);
-		}
+		vtex = charges > 1 ? thinBloodTex : thinBloodTexEmpty;
+		vp = vp_l - ((vp_l - vp_c) / MAXVIALTIMER) * vialTimer;
+		DrawTexture(vtex, vp, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM);
+
 		// Right vial (lv. 3):
-		if (charges > 2)
-		{
-			Vector2 p = vp_r - ((vp_r - vp_l) / MAXVIALTIMER) * vialTimer;
-			DrawTexture(thinBloodTex, p, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM);
-		}
+		vtex = charges > 2 ? thinBloodTex : thinBloodTexEmpty;
+		vp = vp_r - ((vp_r - vp_l) / MAXVIALTIMER) * vialTimer;
+		DrawTexture(vtex, vp, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM);
+
 		// Find platform texture:
 		String pltex;
 		if (charges)
