@@ -117,13 +117,12 @@ Class CK7_Smith_Weapon : Weapon abstract
 		if (m_WideSpriteOffset != 0)
 		{
 			double aspect = Screen.GetAspectRatio();
-			double of = m_WideSpriteOffset;//k7_testofs;
-			//Console.Printf("Aspect: %f | Ofs: %f", aspect, of);
+			double of = m_WideSpriteOffset;
 			double xofs = CK7_Utils.LinearMap(aspect, 1.777, 2.37, 0, of, true);
 			x += xofs;
 		}
-		return (x,y);		
-	}		
+		return (x,y);
+	}
 	
 	action void K7_WeaponOffset(double x, double y, int flags = 0)
 	{
@@ -239,15 +238,6 @@ Class CK7_Smith_Weapon : Weapon abstract
 		{
 			Console.Printf("PSP_WEAPON ofs: %.1f,%.1f", p.x, p.y);
 		}*/
-
-		// Lower overlays upon death:
-		if (owner.health <= 0)
-		{
-			for (let psp = owner.player.PSprites; psp; psp = psp.Next)
-			{
-				psp.y = Clamp(psp.y += 10, WEAPONTOP, WEAPONBOTTOM + WEAPONTOP);
-			}
-		}
 
 		UpdateSoundClass();
 		UpdateCrosshair(weap);
