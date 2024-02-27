@@ -5,6 +5,7 @@ class K7_AmmoBase : Ammo
 	{
 		gravity 0.5;
 		YScale 0.834;
+		+BRIGHT
 	}
 
 	override bool HandlePickup (Inventory item)
@@ -52,12 +53,11 @@ class K7_AmmoBase : Ammo
 		p.pos = pos + ( frandom[bpart](-4, 4), frandom[bpart](-4, 4), frandom[bpart](-4, 4) );
 		p.color1 = color(200,0,0);
 		p.flags = SPF_FULLBRIGHT;
-		p.size = 3;
-		p.lifetime = 20;
 		p.startalpha = 1.0;
-		p.fadestep = -1;
-		p.vel = ( frandom[bpart](-2, 2), frandom[bpart](-2, 2), frandom[bpart](-2, 2) );
-		p.accel = p.vel * -0.05;
+		p.size = 5;
+		p.lifetime = 25;
+		p.sizestep = -(p.size / p.lifetime);
+		p.vel.z = 0.3;
 		Level.SpawnParticle(p);
 	}
 }
@@ -77,12 +77,11 @@ Class CK7_ThinBlood : K7_AmmoBase
 	States
 	{
 		Spawn:
-			BLDV A 1;
-			Loop;
-		
+			BLDV A -1;
+			stop;
 	}
-	
 }
+
 // Upgrade Currency
 Class CK7_ThickBlood : K7_AmmoBase
 {
