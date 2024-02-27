@@ -98,6 +98,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 		+WEAPON.ALT_AMMO_OPTIONAL
 		+INVENTORY.UNDROPPABLE
 		+INVENTORY.UNTOSSABLE
+		+INVENTORY.RESTRICTABSOLUTELY
 		
 		/*Weapon.AmmoType1 "CK7_Ammo";
 		Weapon.AmmoUse1 0;
@@ -190,6 +191,15 @@ Class CK7_Smith_Weapon : Weapon abstract
 		{
 			weap.crosshair = 0;
 		}
+	}
+
+	override bool CanPickup(Actor toucher)
+	{
+		if (!toucher || !(toucher is 'CK7_Smith'))
+		{
+			return false;
+		}
+		return Super.CanPickup(toucher);
 	}
 
 	override void PlayPickupSound (Actor toucher)
