@@ -597,6 +597,7 @@ class CK7_BulletPuff : BulletPuff
 		HT_FLOOR,
 		HT_CEILING,
 	}
+
 	static const Color puffColors[] = 
 	{
 		"956d00",
@@ -611,6 +612,7 @@ class CK7_BulletPuff : BulletPuff
 		+PUFFGETSOWNER
 		vspeed 0;
 		height 4;
+		Decal 'BulletChip';
 	}
 
 	void SpawnPuffEffects()
