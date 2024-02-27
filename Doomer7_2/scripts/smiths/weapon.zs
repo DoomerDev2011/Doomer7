@@ -192,6 +192,16 @@ Class CK7_Smith_Weapon : Weapon abstract
 		}
 	}
 
+	override void PlayPickupSound (Actor toucher)
+	{
+		int flags = CHANF_MAYBE_LOCAL|CHANF_OVERLAP;
+		if (toucher && toucher.CheckLocalView())
+		{
+			flags |= CHANF_NOPAUSE;
+		}
+		toucher.A_StartSound(PickupSound, CHAN_AUTO, flags, 1, ATTN_NORM);
+	}
+
 	override void DoEffect()
 	{
 		Super.DoEffect();
