@@ -67,15 +67,15 @@ Class CK7_Smith : DoomPlayer
 		ApplyStats();
 	}
 	
-	override void Tick()
+	override void PlayerThink()
 	{
-		Super.Tick();
+		Super.PlayerThink();
 		
 		int input = GetPlayerInput( MODINPUT_BUTTONS, AAPTR_DEFAULT );
 		int input_old = GetPlayerInput( MODINPUT_OLDBUTTONS, AAPTR_DEFAULT );
 		
 		// Aim Button
-		m_bAimHeld = (  input & BT_USER1 ) || ( !CVar.FindCVar( "k7_mode" ).GetBool() );
+		m_bAimHeld = ( input & BT_USER1 ) || ( !CVar.FindCVar( "k7_mode" ).GetBool() );
 		
 		// Special Button
 		m_bSpecialPressed = ( input & BT_USER2 ) &~ ( input_old & BT_USER2 );
@@ -95,7 +95,6 @@ Class CK7_Smith : DoomPlayer
 		m_fSpeed = 1.5;
 		m_fSpeedFactor = 1;
 		SetSpeed( m_fSpeed );
-		
 	}
 	
 	void SetViewHeight( float new_height )
@@ -105,7 +104,6 @@ Class CK7_Smith : DoomPlayer
 		
 		float mid = ( Height / 2 );
 		AttackZOffset = ViewHeight - mid;
-		
 	}
 
 	void SetSpeed( float new_speed )
