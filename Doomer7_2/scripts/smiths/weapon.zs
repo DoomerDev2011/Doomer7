@@ -142,10 +142,26 @@ Class CK7_Smith_Weapon : Weapon abstract
 
 	action void K7_WeaponReady(int flags = 0)
 	{
-	
+		//Console.Printf("Calling \cDK7_WeaponReady()\c- from \cY%s\c-, layer \cY%d\c-", invoker.GetClassName(), OverlayID());
 		if (!player) 
 			return;
-			
+		
+		if ((player.cmd.buttons & BT_ALTATTACK) && !(player.oldbuttons & BT_ALTATTACK))
+		{
+			int iCount = min( invoker.m_iSpecialChargeCount, CountInv('CK7_ThinBlood') );
+			if ( iCount > 0 )
+			{
+				invoker.m_iSpecialCharges++;
+				if ( invoker.m_iSpecialCharges > iCount )
+				{
+					invoker.m_iSpecialCharges = 0;
+				}
+				EventHandler.SendInterfaceEvent(self.PlayerNumber(), "K7ShowHudPanel");
+				A_StartSound( "charge_tube" .. invoker.m_iSpecialCharges, CHAN_WEAPON, CHANF_OVERLAP );
+				return;
+			}
+		}
+
 		DoReadyWeaponToSwitch(player, !(flags & WRF_NoSwitch));
 		
 		if ((flags & WRF_NoFire) != WRF_NoFire)
@@ -153,21 +169,14 @@ Class CK7_Smith_Weapon : Weapon abstract
 			DoReadyWeaponToFire(player.mo, !(flags & WRF_NoPrimary), !(flags & WRF_NoSecondary));
 		}
 		
-		// Calculate offsets first instead of applying (0,32) explicitly:
+		// Don't modify offsets:
 		if (player.ReadyWeapon && !(flags & WRF_NoBob))
 		{
 			// Prepare for bobbing action.
 			player.WeaponState |= WF_WEAPONBOBBING;
-			let pspr = player.GetPSprite(PSP_WEAPON);
-			if (pspr)
-			{
-				//let ofs = invoker.K7_AdjustLayerOffsets(0, WEAPONTOP);
-				//pspr.x = ofs.x;
-				//pspr.y = ofs.y;
-			}
 		}
 
-		player.WeaponState |= GetButtonStateFlags(flags);														
+		player.WeaponState |= GetButtonStateFlags(flags);
 		DoReadyWeaponDisableSwitch(player, flags & WRF_DisableSwitch);
 	}
 
@@ -262,8 +271,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 				return ResolveState( "Ready" );
 			}
 		Ready:
-			TNT1 A 0 A_JumpIf( ( CK7_Smith( invoker.owner ).m_bAimHeld ) , "Aim_In" );
-			#### # 1 K7_WeaponReady( READY_FLAGS );
+			TNT1 A 1 A_JumpIf( ( CK7_Smith( invoker.owner ).m_bAimHeld ) , "Aim_In" );
 			loop;
 			
 		Deselect:
@@ -415,23 +423,6 @@ Class CK7_Smith_Weapon : Weapon abstract
 			{
 				CK7_Smith( invoker.owner ).m_bZoomedIn = false;
 				return ResolveState( "Fire" );
-			}
-		
-		Altfire:
-			#### # 0
-			{
-				int iCount = min( invoker.m_iSpecialChargeCount, CountInv('CK7_ThinBlood') );
-				if ( iCount > 0 )
-				{
-					invoker.m_iSpecialCharges++;
-					if ( invoker.m_iSpecialCharges > iCount )
-					{
-						invoker.m_iSpecialCharges = 0;
-					}
-					EventHandler.SendInterfaceEvent(self.PlayerNumber(), "K7ShowHudPanel");
-					A_StartSound( "charge_tube" .. invoker.m_iSpecialCharges, CHAN_WEAPON, CHANF_OVERLAP );
-				}
-				return ResolveState( "Aiming" );
 			}
 		
 		FlashA:
