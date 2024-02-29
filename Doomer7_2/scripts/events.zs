@@ -22,7 +22,7 @@ class CK7_GameplayHandler : EventHandler
 				// Factor in the amount of  thin blood in player's inventory, from x1.0 (10 vials or fewer)
 				// to x0.0 (20 vials):
 				double invfactor = CK7_Utils.LinearMap(killer.CountInv('CK7_ThinBlood'), 10, 20, 1.0, 0.0, true);
-				dropcount = *= invfactor;
+				dropcount *= invfactor;
 			}
 			int count = round(dropcount);
 			for (count; count > 0; count--)
