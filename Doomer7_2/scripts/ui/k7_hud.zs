@@ -56,13 +56,14 @@ Class CK7_Hud : BaseStatusBar
 		
 		DrawSidePanel();
 		UpdateSideSlideTimer();
+		DrawKeys();
+		DrawCharge();
+		DrawThinBlood();
+		DrawHealth();
 		if (!autoMapActive)
 		{
 			DrawK7Crosshair();
 		}
-		DrawCharge();
-		DrawThinBlood();
-		DrawHealth();
 	}
 
 	double SinePulse(double frequency = TICRATE, double startVal = 0.0, double endVal = 1.0)
@@ -344,6 +345,37 @@ Class CK7_Hud : BaseStatusBar
 				DrawImageRotated("K7RETCR2", (0,0), DI_SCREEN_CENTER, ang, alpha*0.5, (sc, sc), style:style);
 			}
 			DrawImageRotated("K7RETCR1", (0,0), DI_SCREEN_CENTER, ang, alpha, (sc, sc), style:style, col:col);
+		}
+	}
+
+	void DrawKeys(int rows = 3)
+	{
+		if (!CPlayer.mo.FindInventory('Key', true))
+			return;
+			
+		int indent = 4;
+		Vector2 startPos = (-indent, indent);
+		Vector2 keyPos = startPos;
+		Vector2 iconSize = (32,32);
+		Vector2 scale;
+		for(let item = CPlayer.mo.Inv; item; item = item.Inv)
+		{
+			let k = Key(item);
+			if (!k)
+				continue;
+
+			TextureID icon = GetInventoryIcon(k, 0);
+			if (!icon || !icon.isValid())
+				continue;
+			
+			Vector2 size = TexMan.GetScaledSize(icon);
+			DrawTexture(icon, keypos, DI_SCREEN_RIGHT_TOP|DI_ITEM_LEFT_TOP, scale: (iconSize.x / size.x, iconsize.y / size.y));
+			keypos.y += iconSize.y + indent;
+			if (keypos.y >= startPos.y + (iconSize.y + indent)*rows)
+			{
+				keyPos.y = startPos.y;
+				keyPos.x -= (iconSize.x + indent);
+			}
 		}
 	}
 }
