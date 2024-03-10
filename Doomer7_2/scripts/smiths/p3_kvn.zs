@@ -10,6 +10,7 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 		Inventory.PickupMessage "You got the throwing knives!";
 		Inventory.PickupSound "weapon/getknife";
 		CK7_Smith_Weapon.PersonaSoundClass "k7_kvn";
+		CK7_Smith_Weapon.UltrawideOffset 0;
 	}
 	
 	override void BeginPlay()
