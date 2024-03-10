@@ -48,6 +48,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 	property PersonaSoundClass : pSoundClass;
 	int 	m_WideSpriteOffset;
 	property UltrawideOffset : m_WideSpriteOffset;
+	uint 	m_doChargeDelay;
 	
 	void AimingBreathe()
 	{
@@ -141,15 +142,19 @@ Class CK7_Smith_Weapon : Weapon abstract
 
 	action void K7_WeaponReady(int flags = 0)
 	{
-		//Console.Printf("Calling \cDK7_WeaponReady()\c- from \cY%s\c-, layer \cY%d\c-", invoker.GetClassName(), OverlayID());
 		if (!player) 
 			return;
 		
-		if ((player.cmd.buttons & BT_ALTATTACK) && !(player.oldbuttons & BT_ALTATTACK))
+		// the m_doChargeDelay was added mostly to fix an obscure Kevin
+		// bug that for some reason triggered this twice despite the
+		// oldbuttons check. Maybe K7_WeaponReady was being called again?
+		// in any case, this is a useful safeguard.
+		if ((player.cmd.buttons & BT_ALTATTACK) && !(player.oldbuttons & BT_ALTATTACK) && invoker.m_doChargeDelay <= 0)
 		{
 			int iCount = min( invoker.m_iSpecialChargeCount, CountInv('CK7_ThinBlood') );
 			if ( iCount > 0 )
 			{
+				invoker.m_doChargeDelay = 3;
 				invoker.m_iSpecialCharges++;
 				if ( invoker.m_iSpecialCharges > iCount )
 				{
@@ -227,18 +232,15 @@ Class CK7_Smith_Weapon : Weapon abstract
 		{
 			return;
 		}
+		if (m_doChargeDelay > 0)
+		{
+			m_doChargeDelay--;
+		}
 		let weap = owner.player.readyweapon;
 		if (!weap || weap != self)
 		{
 			return;
 		}
-		
-		/*let p = owner.player.FindPSprite(PSP_WEAPON);
-		if (p)
-		{
-			Console.Printf("PSP_WEAPON ofs: %.1f,%.1f", p.x, p.y);
-		}*/
-
 		UpdateSoundClass();
 		UpdateCrosshair(weap);
 	}
