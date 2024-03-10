@@ -164,10 +164,6 @@ Class CK7_Hud : BaseStatusBar
 		}
 		Vector2 pos = (118, 290);
 		pos.x += GetSideOffset();
-		// Note, this is a wrong font. The charge string is supposed to
-		// use a different font, which is more curly. The other problem
-		// is that this font is missing the full stop character, so
-		// it prints "Lv  #" instead of "Lv. #"
 		DrawString( k7italicFont, "Charge", pos, DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_CENTER);
 		pos.y += 50;
 		DrawString( k7italicFont, String.Format("Lv. %d", charges), pos, DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_CENTER);
@@ -357,7 +353,6 @@ Class CK7_Hud : BaseStatusBar
 		Vector2 startPos = (-indent, indent);
 		Vector2 keyPos = startPos;
 		Vector2 iconSize = (32,32);
-		Vector2 scale;
 		for(let item = CPlayer.mo.Inv; item; item = item.Inv)
 		{
 			let k = Key(item);
