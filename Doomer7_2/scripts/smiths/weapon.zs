@@ -49,6 +49,22 @@ Class CK7_Smith_Weapon : Weapon abstract
 	int 	m_WideSpriteOffset;
 	property UltrawideOffset : m_WideSpriteOffset;
 	uint 	m_doChargeDelay;
+
+	property Persona 					: m_sPersona;
+	property PersonaSpeed 				: m_fSpeed;
+	property PersonaDamage				: m_fDamage;
+	property PersonaSpread 				: m_fSpread;
+	property PersonaFireDelay 			: m_fFireDelay;
+	property PersonaRecoil 				: m_fRecoil;
+	property PersonaClipSize 			: m_iClipSize;
+	property PersonaRefireTime 			: m_fRefire;
+	property PersonaHeight 				: m_fHeight;
+	property PersonaViewHeight 			: m_fViewHeight;
+	property PersonaReloadTime 			: m_fReloadTime;
+	property PersonaReloadTimeStanding 	: m_fReloadTimeStanding;
+	property PersonaSpecialFactor 		: m_fSpecialFactor;
+	property PersonaSpecialDuration 	: m_fSpecialDuration;
+	property PersonaCharges 			: m_iSpecialChargeCount;
 	
 	void AimingBreathe()
 	{
@@ -58,23 +74,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 	override void BeginPlay()
 	{
 		Super.BeginPlay();
-		
 		m_iPersona = slotnumber;
-		m_sPersona = "none";
-		
-		m_fSpeed = 1.0;
-		
-		m_fDamage = 40;
-		m_fSpread = 0.2;
-		m_fRecoil = 2.5;
-		m_iClipSize = 6;
-		m_fRefire = 15;
-		m_fHeight = 52;
-		m_fViewHeight = 0.8;
-		m_fReloadTime = 42;
-		m_fReloadTimeStanding = 70;
-		m_fSpecialFactor = 1;
-		m_fSpecialDuration = 1;
 	}
 	
 	override void PostBeginPlay()
@@ -100,6 +100,20 @@ Class CK7_Smith_Weapon : Weapon abstract
 		+INVENTORY.UNDROPPABLE
 		+INVENTORY.UNTOSSABLE
 		+INVENTORY.RESTRICTABSOLUTELY
+
+		CK7_Smith_Weapon.Persona "none";
+		CK7_Smith_Weapon.PersonaDamage 40;
+		CK7_Smith_Weapon.PersonaSpeed 1.0;
+		CK7_Smith_Weapon.PersonaSpread 0.2;
+		CK7_Smith_Weapon.PersonaRecoil 2.5;
+		CK7_Smith_Weapon.PersonaClipSize 6;
+		CK7_Smith_Weapon.PersonaRefireTime 15;
+		CK7_Smith_Weapon.PersonaViewHeight 0.8;
+		CK7_Smith_Weapon.PersonaHeight 52;
+		CK7_Smith_Weapon.PersonaReloadTime 42;
+		CK7_Smith_Weapon.PersonaReloadTimeStanding 70;
+		CK7_Smith_Weapon.PersonaSpecialFactor 1;
+		CK7_Smith_Weapon.PersonaSpecialDuration 1;
 		
 		/*Weapon.AmmoType1 "CK7_Ammo";
 		Weapon.AmmoUse1 0;
@@ -174,7 +188,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 		}
 		
 		// Don't modify offsets:
-		if (player.ReadyWeapon && !(flags & WRF_NoBob))
+		if (!(flags & WRF_NoBob))
 		{
 			// Prepare for bobbing action.
 			player.WeaponState |= WF_WEAPONBOBBING;
@@ -225,6 +239,27 @@ Class CK7_Smith_Weapon : Weapon abstract
 		toucher.A_StartSound(PickupSound, CHAN_AUTO, flags, 1, ATTN_NORM);
 	}
 
+	// debug function
+	string GetLayerName(int id)
+	{
+		String str;
+		switch (id)
+		{
+		case PSP_WEAPON: str = "PSP_WEAPON"; break;
+		case LAYER_BARS: str = "LAYER_BARS"; break;
+		case LAYER_ANIM: str = "LAYER_ANIM"; break;
+		case LAYER_FUNC: str = "LAYER_FUNC"; break;
+		case LAYER_RECOIL: str = "LAYER_RECOIL"; break;
+		case LAYER_SHOOT: str = "LAYER_SHOOT"; break;
+		case LAYER_FLASH: str = "LAYER_FLASH"; break;
+		case LAYER_SPECIAL: str = "LAYER_SPECIAL"; break;
+		case LAYER_LEFTGUN: str = "LAYER_LEFTGUN"; break;
+		case LAYER_RIGHTGUN: str = "LAYER_RIGHTGUN"; break;
+		default: str = "#"..id;
+		}
+		return str;
+	}
+
 	override void DoEffect()
 	{
 		Super.DoEffect();
@@ -243,6 +278,19 @@ Class CK7_Smith_Weapon : Weapon abstract
 		}
 		UpdateSoundClass();
 		UpdateCrosshair(weap);
+		
+		if (!k7_pspreport)
+			return;
+		String info = String.Format("Active \cY%s\c- PSprites:\n", self.GetTag());
+		for (let psp = owner.player.psprites; psp; psp = psp.next)
+		{
+			if (!psp)
+				continue;
+
+			String str = String.Format("\cd%s\c-", GetLayerName(psp.id));
+			info = String.Format("%s%s\n", info, str);
+		}
+		Console.MidPrint(smallfont, info);
 	}
 	
 	States

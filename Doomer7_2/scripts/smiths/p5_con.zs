@@ -12,25 +12,25 @@ Class CK7_Smith_Con_Wep : CK7_Smith_Weapon
 		Inventory.PickupMessage "You got the automatic pistols!";
 		Inventory.PickupSound "weapon/getglk";
 		CK7_Smith_Weapon.PersonaSoundClass "k7_con";
+ 		CK7_Smith_Weapon.Persona "con";
+ 		CK7_Smith_Weapon.PersonaDamage 15;
+ 		CK7_Smith_Weapon.PersonaRecoil 2.5;
+ 		CK7_Smith_Weapon.PersonaSpread 2;
+ 		CK7_Smith_Weapon.PersonaClipSize 6;
+ 		CK7_Smith_Weapon.PersonaRefireTime 16;
+ 		CK7_Smith_Weapon.PersonaSpeed 1.66;
+ 		CK7_Smith_Weapon.PersonaViewHeight 0.4;
+ 		CK7_Smith_Weapon.PersonaReloadTime 42;
+ 		CK7_Smith_Weapon.PersonaHeight 40;
+ 		CK7_Smith_Weapon.PersonaSpecialFactor 2.1;
+ 		CK7_Smith_Weapon.PersonaSpecialDuration 8.5;
 	}
 	
 	override void BeginPlay()
 	{
 		Super.BeginPlay();
-		m_sPersona = "con";
-		m_fDamage = 15;
-		m_fRecoil = 2.5;
-		m_fSpread = 2;
-		m_iClipSize = 6;
-		m_fRefire = 16;
-		m_fSpeed = 1.66;
-		m_fViewHeight = 0.4;
-		m_fReloadTime = 42;
-		m_fHeight = 40;
 		m_bAutoFire = true;
 		m_fConSpeedTimer = 0;
-		m_fSpecialFactor = 2.1;
-		m_fSpecialDuration = 8.5;
 	}
 	
 	States

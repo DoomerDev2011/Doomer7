@@ -11,20 +11,20 @@ Class CK7_Smith_Hay_Wep : CK7_Smith_Weapon
 		Inventory.PickupSound "weapon/gettmg";
 		CK7_Smith_Weapon.PersonaSoundClass "k7_hay";
 		CK7_Smith_Weapon.UltrawideOffset -75;
+ 		CK7_Smith_Weapon.Persona "hay";
+ 		CK7_Smith_Weapon.PersonaDamage 19;
+ 		CK7_Smith_Weapon.PersonaRecoil 2.5;
+ 		CK7_Smith_Weapon.PersonaSpread 1.66;
+ 		CK7_Smith_Weapon.PersonaClipSize 50;
+ 		CK7_Smith_Weapon.PersonaRefireTime 6;
+ 		CK7_Smith_Weapon.PersonaViewHeight 0.8;
+ 		CK7_Smith_Weapon.PersonaHeight 60;
+ 		CK7_Smith_Weapon.PersonaReloadTime 65;
 	}
 	
 	override void BeginPlay()
 	{
 		Super.BeginPlay();
-		m_sPersona = "hay";
-		m_fDamage = 19;
-		m_fRecoil = 2.5;
-		m_fSpread = 1.66;
-		m_iClipSize = 50;
-		m_fRefire = 6;
-		m_fViewHeight = 0.8;
-		m_fHeight = 60;
-		m_fReloadTime = 65;
 		m_bAutoFire = true;
 	}
 	

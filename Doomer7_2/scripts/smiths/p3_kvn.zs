@@ -11,22 +11,17 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 		Inventory.PickupSound "weapon/getknife";
 		CK7_Smith_Weapon.PersonaSoundClass "k7_kvn";
 		CK7_Smith_Weapon.UltrawideOffset 0;
-	}
-	
-	override void BeginPlay()
-	{
-		Super.BeginPlay();
-		m_sPersona = "kvn";
-		m_fDamage = 30;
-		m_fSpread = 0;
-		m_fRecoil = 2;
-		m_iClipSize = -1;
-		m_fRefire = 30;
-		m_fViewHeight = 0.6;
-		m_fHeight = 50;
-		m_fReloadTime = 0;
-		m_fFireDelay = 10;
-		m_iSpecialChargeCount = 1;
+ 		CK7_Smith_Weapon.Persona "kvn";
+ 		CK7_Smith_Weapon.PersonaDamage 30;
+ 		CK7_Smith_Weapon.PersonaSpread 0;
+ 		CK7_Smith_Weapon.PersonaRecoil 2;
+ 		CK7_Smith_Weapon.PersonaClipSize -1;
+ 		CK7_Smith_Weapon.PersonaRefireTime 30;
+ 		CK7_Smith_Weapon.PersonaViewHeight 0.6;
+ 		CK7_Smith_Weapon.PersonaHeight 50;
+ 		CK7_Smith_Weapon.PersonaReloadTime 0;
+ 		CK7_Smith_Weapon.PersonaFireDelay 10;
+ 		CK7_Smith_Weapon.PersonaCharges 1;
 	}
 	
 	States
@@ -53,23 +48,20 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 					BULLET_FLAGS
 				);
 			}
-			Stop;		
+			Stop;
 			
 		Shoot_Special1:
 			#### # 0
 			{
 				invoker.m_iSpecialCharges = 0;
+				invoker.m_fRefire = 85;
 				invoker.A_TakeInventory( "CK7_ThinBlood", 1 );
 			}
 			TNT1 A 0 A_Overlay(LAYER_ANIM, "Anim_Altfire");
 			#### # 19;
 			#### # 1 A_Overlay( LAYER_FUNC, "Fire_Special_Bullet" );
 			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
-			#### # 84;
-			#### # 0
-			{
-				return ResolveState( "Aiming" );
-			} 	
+			stop;
 			
 		Anim_Aim_In:
 			KVNB A 0 A_StartSound( invoker.m_sPersona .. "_aim", CHAN_WEAPON, CHANF_OVERLAP );
@@ -93,7 +85,11 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			}
 			Loop;
 		Anim_Fire:
-			KVNB A 0 bright K7_WeaponOffset ( 0, 32 );
+			KVNB A 0
+			{
+				K7_WeaponOffset ( 0, 32 );
+				invoker.m_fRefire = invoker.default.m_fRefire;
+			}
 			#### BCS 1 bright;
 			TNT1 A 7;
 			KVNB # 0 A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
@@ -122,6 +118,7 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			KVND ABCEFGHIJKLMNOPQRSTUVWXYZ 1 bright; 
 			KVNE ABCDEF 1 bright;
 			KVNB A 1 bright;
+			stop;
 			/*
 			KVNA DEGHIJK 1 bright; 
 			KVNA MOQSUWY 1 bright;

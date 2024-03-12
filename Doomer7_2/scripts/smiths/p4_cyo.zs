@@ -10,20 +10,15 @@ Class CK7_Smith_Cyo_Wep : CK7_Smith_Weapon
 		Inventory.PickupMessage "You got the Enfield revolver!";
 		Inventory.PickupSound "weapon/getrev";
 		CK7_Smith_Weapon.PersonaSoundClass "k7_cyo";
-	}
-	
-	override void BeginPlay()
-	{
-		Super.BeginPlay();
-		m_sPersona = "cyo";
-		m_fDamage = 35;
-		m_fRecoil = 2.5;
-		m_iClipSize = 6;
-		m_fRefire = 18;
-		m_fViewHeight = 0.8;
-		m_fHeight = 60;
-		m_fReloadTime = 42;
-		m_iSpecialChargeCount = 1;
+ 		CK7_Smith_Weapon.Persona "cyo";
+ 		CK7_Smith_Weapon.PersonaSpeed 35;
+ 		CK7_Smith_Weapon.PersonaRecoil 2.5;
+ 		CK7_Smith_Weapon.PersonaClipSize 6;
+ 		CK7_Smith_Weapon.PersonaRefireTime 18;
+ 		CK7_Smith_Weapon.PersonaViewHeight 0.8;
+ 		CK7_Smith_Weapon.PersonaHeight 60;
+ 		CK7_Smith_Weapon.PersonaReloadTime 42;
+ 		CK7_Smith_Weapon.PersonaCharges 1;
 	}
 	
 	States

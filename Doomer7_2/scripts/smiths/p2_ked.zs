@@ -11,20 +11,14 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 		Inventory.PickupMessage "You got the AMT Hardballer!";
 		Inventory.PickupSound "weapon/gethar";
 		CK7_Smith_Weapon.PersonaSoundClass 'k7_ked';
-	}
-	
-	override void BeginPlay()
-	{
-		Super.BeginPlay();
-		m_sPersona = "ked";
-		m_fDamage = 30;
-		m_fRecoil = 3;
-		m_iClipSize = 10;
-		m_fRefire = 15;
-		m_fViewHeight = 0.4;
-		m_fHeight = 55;
-		m_fReloadTime = 35 * 3.5;
-		
+ 		CK7_Smith_Weapon.Persona "ked";
+ 		CK7_Smith_Weapon.PersonaDamage 30;
+ 		CK7_Smith_Weapon.PersonaRecoil 3;
+ 		CK7_Smith_Weapon.PersonaClipSize 10;
+ 		CK7_Smith_Weapon.PersonaRefireTime 15;
+ 		CK7_Smith_Weapon.PersonaViewHeight 0.4;
+ 		CK7_Smith_Weapon.PersonaHeight 55;
+ 		CK7_Smith_Weapon.PersonaReloadTime 122.5;
 	}
 	
 	States

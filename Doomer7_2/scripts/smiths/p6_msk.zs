@@ -11,6 +11,15 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 		Inventory.PickupMessage "You got the M79 Grenade Launchers!";
 		Inventory.PickupSound "weapon/getm79";
 		CK7_Smith_Weapon.PersonaSoundClass "k7_msk";
+ 		CK7_Smith_Weapon.Persona "msk";
+ 		CK7_Smith_Weapon.PersonaDamage 48;
+ 		CK7_Smith_Weapon.PersonaRecoil 6;
+ 		CK7_Smith_Weapon.PersonaClipSize 1;
+ 		CK7_Smith_Weapon.PersonaRefireTime 28;
+ 		CK7_Smith_Weapon.PersonaViewHeight 0.985;
+ 		CK7_Smith_Weapon.PersonaHeight 80;
+ 		CK7_Smith_Weapon.PersonaReloadTime 39;
+ 		CK7_Smith_Weapon.PersonaCharges 2;
 	}
 	
 	action void K7_SetupGunLayer(name sname = 'MA1K')
@@ -37,20 +46,6 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 			ofs.x *= -1;
 		}
 		return ofs;
-	}
-	
-	override void BeginPlay()
-	{
-		Super.BeginPlay();
-		m_sPersona = "msk";
-		m_fDamage = 48;
-		m_fRecoil = 6;
-		m_iClipSize = 1;
-		m_fRefire = 28;
-		m_fViewHeight = 0.985;
-		m_fHeight = 80;
-		m_fReloadTime = 39;
-		m_iSpecialChargeCount = 2;
 	}
 	
 	States
