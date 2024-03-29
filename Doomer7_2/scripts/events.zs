@@ -76,29 +76,37 @@ class CK7_GameplayHandler : EventHandler
 		{
 			e.Replacement = 'CK7_EmptyPickup';
 		}
-		if (e.Replacee is 'Shotgun' || e.Replacee is 'Chainsaw')
+		if (e.Replacee is 'Chainsaw')
 		{
-			e.Replacement = 'CK7_Smith_Dan_Wep';
+			e.Replacement = 'CK7_Smith_Kvn_Wep';
+		}
+		else if (e.Replacee is 'Shotgun')
+		{
+			e.Replacement = random[wsp](0,1) == 1? 'CK7_Smith_Dan_Wep' : 'CK7_Smith_Cyo_Wep';
 		}
 		else if (e.Replacee is 'Chaingun')
 		{
-			e.Replacement = 'CK7_Smith_Ked_Wep';
+			e.Replacement = 'CK7_Smith_Con_Wep';
 		}
 		else if (e.Replacee is 'SuperShotgun')
 		{
-			e.Replacement = random[wsp](0,1) == 1? 'CK7_Smith_Kvn_Wep' : 'CK7_Smith_Cyo_Wep';
+			e.Replacement = random[wsp](0,1) == 1? 'CK7_Smith_Dan_Wep' : 'CK7_Smith_Cyo_Wep';
 		}
 		else if (e.Replacee is 'RocketLauncher')
 		{
-			e.Replacement = random[wsp](0,1) == 1? 'CK7_Smith_Cyo_Wep' : 'CK7_Smith_Con_Wep';
+			e.Replacement = 'CK7_Smith_Ked_Wep';
 		}
 		else if (e.Replacee is 'PlasmaRifle')
 		{
-			e.Replacement = random[wsp](0,1) == 1? 'CK7_Smith_Con_Wep' : 'CK7_Smith_Msk_Wep';
+			e.Replacement = 'CK7_Smith_Hay_Wep';
 		}
 		else if (e.Replacee is 'BFG9000')
 		{
-			e.Replacement = 'CK7_Smith_Hay_Wep';
+			e.Replacement = 'CK7_Smith_Msk_Wep';
+		}
+		else if (e.Replacee is 'HealthBonus' || e.Replacee is 'Medikit' || e.Replacee is 'Stimpack')
+		{
+			e.Replacement = 'CK7_ThinBlood';
 		}
 			
 		//if (e.Replacee == 'HealthBonus')

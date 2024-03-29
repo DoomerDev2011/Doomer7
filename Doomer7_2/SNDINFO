@@ -13,6 +13,7 @@ persona_scan sound/shared/scan.ogg
 persona_powera sound/shared/special1.ogg
 persona_powerb sound/shared/special2.ogg
 persona_usefail sound/shared/usefail.ogg
+persona_heal sound/shared/heal.ogg
 pickup_blood sound/pickup/pickup_blood.ogg
 
 // Garcian
@@ -450,6 +451,8 @@ weapon/fireknife FIRKN
 
 grunt/newAttack NEWATK
 weapon/MaskExplosion MGRS
+
+
 
 // Pickups
 

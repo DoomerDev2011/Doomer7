@@ -10,13 +10,14 @@ Class CK7_Smith_Dan_Wep : CK7_Smith_Weapon
 		Weapon.AmmoType2 "CK7_ThinBlood";
 		Inventory.PickupMessage "You got the Colt .357 revolver!";
 		Inventory.PickupSound "weapon/getmag";
+		CK7_Smith_Weapon.PersonaSoundClass 'k7_dan';
  		CK7_Smith_Weapon.Persona "dan";
- 		CK7_Smith_Weapon.PersonaDamage 45;
+ 		CK7_Smith_Weapon.PersonaDamage 33;
  		CK7_Smith_Weapon.PersonaRecoil 3;
  		CK7_Smith_Weapon.PersonaClipSize 6;
  		CK7_Smith_Weapon.PersonaRefireTime 18;
  		CK7_Smith_Weapon.PersonaViewHeight 0.85;
- 		CK7_Smith_Weapon.PersonaHeight 60;
+ 		CK7_Smith_Weapon.PersonaHeight 45;
  		CK7_Smith_Weapon.PersonaReloadTime 60;
  		CK7_Smith_Weapon.PersonaCharges 3;
 	}

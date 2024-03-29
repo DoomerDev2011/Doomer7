@@ -17,7 +17,7 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
  		CK7_Smith_Weapon.PersonaClipSize 1;
  		CK7_Smith_Weapon.PersonaRefireTime 28;
  		CK7_Smith_Weapon.PersonaViewHeight 0.985;
- 		CK7_Smith_Weapon.PersonaHeight 80;
+ 		CK7_Smith_Weapon.PersonaHeight 60;
  		CK7_Smith_Weapon.PersonaReloadTime 39;
  		CK7_Smith_Weapon.PersonaCharges 2;
 	}
@@ -100,8 +100,8 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 				}
 				A_SetTics( ceil( invoker.m_fFireDelay ) );
 				A_Overlay( LAYER_RECOIL, "Recoil" );
-				A_FireProjectile("K7_Mask_M79_Grenade",0,1,-10,0);
-				A_FireProjectile("K7_Mask_M79_Grenade",0,1,10,0);
+				A_FireProjectile("K7_Mask_M79_Grenade",0,1,-15,-5);
+				A_FireProjectile("K7_Mask_M79_Grenade",0,1,15,-5);
 			}
 			Stop;
 			
@@ -116,8 +116,8 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 				invoker.m_iSpecialCharges = 0;
 				invoker.A_TakeInventory( "CK7_ThinBlood", 2 );
 				A_Overlay( LAYER_RECOIL, "Recoil" );
-				A_FireProjectile("K7_Mask_M79_Charge_Grenade",0,1,-10,0);
-				A_FireProjectile("K7_Mask_M79_Charge_Grenade",0,1,10,0);
+				A_FireProjectile("K7_Mask_M79_Charge_Grenade",0,1,-15,-5);
+				A_FireProjectile("K7_Mask_M79_Charge_Grenade",0,1,15,-5);
 			}
 			Stop;
 			
@@ -272,10 +272,11 @@ class K7_Mask_M79_Grenade : Actor
 	{
 		Projectile;
 		-NOGRAVITY
+		+EXTREMEDEATH
 		Radius 11;
 		Height 8;
 		Speed 130;
-		Damage 15;
+		Damage 20;
 		ReactionTime 139;
 		ExplosionRadius 128;
 		Deathsound "weapon/MaskExplosion";

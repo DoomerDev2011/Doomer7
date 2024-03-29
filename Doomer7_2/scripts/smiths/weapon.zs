@@ -660,6 +660,7 @@ class CK7_BulletPuff : BulletPuff
 	Default
 	{
 		+PUFFGETSOWNER
+		+NOEXTREMEDEATH
 		vspeed 0;
 		height 4;
 		Decal 'BulletChip';

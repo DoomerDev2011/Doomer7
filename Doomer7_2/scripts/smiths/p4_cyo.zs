@@ -11,12 +11,12 @@ Class CK7_Smith_Cyo_Wep : CK7_Smith_Weapon
 		Inventory.PickupSound "weapon/getrev";
 		CK7_Smith_Weapon.PersonaSoundClass "k7_cyo";
  		CK7_Smith_Weapon.Persona "cyo";
- 		CK7_Smith_Weapon.PersonaSpeed 35;
+ 		CK7_Smith_Weapon.PersonaSpeed 25;
  		CK7_Smith_Weapon.PersonaRecoil 2.5;
  		CK7_Smith_Weapon.PersonaClipSize 6;
  		CK7_Smith_Weapon.PersonaRefireTime 18;
  		CK7_Smith_Weapon.PersonaViewHeight 0.8;
- 		CK7_Smith_Weapon.PersonaHeight 60;
+ 		CK7_Smith_Weapon.PersonaHeight 45;
  		CK7_Smith_Weapon.PersonaReloadTime 42;
  		CK7_Smith_Weapon.PersonaCharges 1;
 	}

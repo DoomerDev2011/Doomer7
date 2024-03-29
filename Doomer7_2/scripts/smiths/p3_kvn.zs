@@ -12,13 +12,13 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 		CK7_Smith_Weapon.PersonaSoundClass "k7_kvn";
 		CK7_Smith_Weapon.UltrawideOffset 0;
  		CK7_Smith_Weapon.Persona "kvn";
- 		CK7_Smith_Weapon.PersonaDamage 30;
+ 		CK7_Smith_Weapon.PersonaDamage 15;
  		CK7_Smith_Weapon.PersonaSpread 0;
  		CK7_Smith_Weapon.PersonaRecoil 2;
  		CK7_Smith_Weapon.PersonaClipSize -1;
  		CK7_Smith_Weapon.PersonaRefireTime 30;
  		CK7_Smith_Weapon.PersonaViewHeight 0.6;
- 		CK7_Smith_Weapon.PersonaHeight 50;
+ 		CK7_Smith_Weapon.PersonaHeight 35;
  		CK7_Smith_Weapon.PersonaReloadTime 0;
  		CK7_Smith_Weapon.PersonaFireDelay 10;
  		CK7_Smith_Weapon.PersonaCharges 1;

@@ -12,12 +12,12 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 		Inventory.PickupSound "weapon/gethar";
 		CK7_Smith_Weapon.PersonaSoundClass 'k7_ked';
  		CK7_Smith_Weapon.Persona "ked";
- 		CK7_Smith_Weapon.PersonaDamage 30;
+ 		CK7_Smith_Weapon.PersonaDamage 37;
  		CK7_Smith_Weapon.PersonaRecoil 3;
  		CK7_Smith_Weapon.PersonaClipSize 10;
  		CK7_Smith_Weapon.PersonaRefireTime 15;
  		CK7_Smith_Weapon.PersonaViewHeight 0.4;
- 		CK7_Smith_Weapon.PersonaHeight 55;
+ 		CK7_Smith_Weapon.PersonaHeight 40;
  		CK7_Smith_Weapon.PersonaReloadTime 122.5;
 	}
 	

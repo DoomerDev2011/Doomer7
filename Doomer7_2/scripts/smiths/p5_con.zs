@@ -13,7 +13,7 @@ Class CK7_Smith_Con_Wep : CK7_Smith_Weapon
 		Inventory.PickupSound "weapon/getglk";
 		CK7_Smith_Weapon.PersonaSoundClass "k7_con";
  		CK7_Smith_Weapon.Persona "con";
- 		CK7_Smith_Weapon.PersonaDamage 15;
+ 		CK7_Smith_Weapon.PersonaDamage 11;
  		CK7_Smith_Weapon.PersonaRecoil 2.5;
  		CK7_Smith_Weapon.PersonaSpread 2;
  		CK7_Smith_Weapon.PersonaClipSize 6;
@@ -21,7 +21,7 @@ Class CK7_Smith_Con_Wep : CK7_Smith_Weapon
  		CK7_Smith_Weapon.PersonaSpeed 1.66;
  		CK7_Smith_Weapon.PersonaViewHeight 0.4;
  		CK7_Smith_Weapon.PersonaReloadTime 42;
- 		CK7_Smith_Weapon.PersonaHeight 40;
+ 		CK7_Smith_Weapon.PersonaHeight 32;
  		CK7_Smith_Weapon.PersonaSpecialFactor 2.1;
  		CK7_Smith_Weapon.PersonaSpecialDuration 8.5;
 	}

@@ -18,7 +18,7 @@ Class CK7_Smith_Hay_Wep : CK7_Smith_Weapon
  		CK7_Smith_Weapon.PersonaClipSize 50;
  		CK7_Smith_Weapon.PersonaRefireTime 6;
  		CK7_Smith_Weapon.PersonaViewHeight 0.8;
- 		CK7_Smith_Weapon.PersonaHeight 60;
+ 		CK7_Smith_Weapon.PersonaHeight 45;
  		CK7_Smith_Weapon.PersonaReloadTime 65;
 	}
 	

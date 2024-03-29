@@ -80,7 +80,18 @@ Class CK7_ThinBlood : K7_AmmoBase
 			BLDV A -1;
 			stop;
 	}
+	
+	override bool Use(bool pickup)
+		{
+			if (owner && owner.GiveBody(25))
+			{
+				owner.A_StartSound("persona_heal", CHAN_AUTO);
+				return true;
+			}
+			return false;
+		}
 }
+
 
 // Upgrade Currency
 Class CK7_ThickBlood : K7_AmmoBase
@@ -93,3 +104,4 @@ Class CK7_ThickBlood : K7_AmmoBase
 		Inventory.PickupMessage "Picked up some thick blood";
 	}
 }
+
