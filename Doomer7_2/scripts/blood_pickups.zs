@@ -83,7 +83,7 @@ Class CK7_ThinBlood : K7_AmmoBase
 	
 	override bool Use(bool pickup)
 		{
-			if (owner && owner.GiveBody(25))
+			if (owner && owner.GiveBody(10))
 			{
 				owner.A_StartSound("persona_heal", CHAN_AUTO);
 				return true;
