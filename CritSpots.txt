@@ -1,0 +1,316 @@
+//add this to CK7_GameplayHandler
+{
+	override void WorldThingSpawned (WorldEvent e)
+	{
+		if (e.thing && e.thing.bISMONSTER)
+		{
+			//here set any other condition you'll like
+			//If(Random(0,1)>0)
+			//{
+				Actor Crit = actor.Spawn("CK7_HS_CritSpot",e.thing.pos);
+				Crit.master = e.thing;
+				Crit.Speed = e.thing.radius - FRandom(2,30);
+				Crit.SpriteAngle = Frandom(0,360);
+				Crit.ReactionTime = Random(0,e.thing.height);
+			//}
+		}
+	}
+}
+
+Class CK7_HS_CritSpot : Actor
+{
+	//This actor uses SpriteAngle for the relative angle its at, 
+	//Speed for how far away it is and Reactiontime for its height
+	//you could make other variables with better names, i just didnt wanna
+	Default
+	{
+		Radius 5;
+		Height 8;
+	}
+	states
+	{
+		Spawn:
+			TNT1 A 1 {
+				if(!Master) Destroy();
+				else if(master.bSHOOTABLE) 
+				{
+					Vector3 NewPos = Master.pos + (0,0,reactiontime) + AngleToVector(Spriteangle+master.angle,Speed);
+					Vector3 Pvel = Vel + (NewPos - Pos)*0.3;// this is to try to smooth out its position
+					Float rad = radius - 2;
+					SetOrigin( NewPos, true);
+					Vel = Master.Vel;
+					For(int p; p < 12; p++)
+					{
+						A_SpawnParticle("FFDD00",SPF_FULLBRIGHT,3,4,0,Frandom(-rad,rad),Frandom(-rad,rad),Frandom(2,height-2),
+							pvel.x,pvel.y,pvel.z,
+							Frandom(-1,1),Frandom(-1,1),Frandom(-1,1),1,0.1);
+					}
+				}
+				//it stays existing while its enemy is dead so it still appears if it gets revived
+			}
+			Loop;
+	}
+}
+
+//add this to CK7_Smith
+{
+	CK7_Hitscan Hitscan; //The LineTracer class
+	
+	override void BeginPlay()
+	{
+		Super.BeginPlay();
+		m_fHeight = 52;
+		
+		m_iStaticStartTime = 0;
+		
+		hitscan = new("CK7_Hitscan"); //create the class
+		/*int sk = G_SkillPropertyInt( SKILLP_ACSReturn );
+		if ( sk >= 4 )
+		{
+			A_SetInventory( "CK7_Smith_Hay_Wep", 1 );
+		}*/
+		
+		ApplyStats();
+	}
+}
+
+// the LineTracer class that lets you hit the critspots
+// see more on https://zdoom.org/wiki/Classes:LineTracer
+class CK7_Hitscan : LineTracer
+{
+	actor Master; //the one who fire it
+	actor victim; //who got hit
+	Vector3 LandPos; //the first landing position
+	bool Crit; //if it hit a crit spot
+	array<line> Crosshit; //dynamic array containing lines with attack hit trigger
+	
+    override ETraceStatus TraceCallback()
+    {
+		//when it hits an actor that isnt the player
+        if (results.HitType == TRACE_HitActor && results.HitActor != Master)
+        {
+			Crit = false;
+			If(results.HitActor is "CK7_HS_CritSpot" && results.HitActor.master.bSHOOTABLE) 
+			{
+				If(victim && victim != results.HitActor.master) Return TRACE_Stop;
+				Crit = true;
+				victim = results.HitActor.master;
+				LandPos = results.HitPos;
+				Return TRACE_Stop;
+			}
+			If(results.HitActor.bSHOOTABLE) 
+			{
+				If(victim) Return TRACE_Stop;
+				victim = results.HitActor;
+				LandPos = results.HitPos;
+				return TRACE_Skip; //passes through to try to hit its critspot
+			}
+			return TRACE_Skip;
+        }
+		else if (victim) //if it hits anything else after already hitting a victim
+		{
+			Return TRACE_Stop;
+		}
+		
+		If (results.HitType == Trace_HitFloor || results.HitType == Trace_HitCeiling
+			|| results.HitType == TRACE_HasHitSky)
+		{	
+			Return TRACE_Stop;
+		}
+		
+		If (results.HitLine)
+		{
+			If (results.HitLine.activation & SPAC_Impact) crosshit.push(results.HitLine);
+			If (results.Tier != TIER_Middle || results.HitLine.Sidedef[Line.Back] == Null || BlockingLineInTheWay(results.HitLine,BLITW_HitscansOnly) )
+			{
+				Return TRACE_Stop;
+			}
+		}
+		
+        return TRACE_Skip;
+    }
+	
+	
+	//these next functions are from inkoalawetrust on discord
+	Enum BLITWFlags
+	{
+		BLITW_HitscansToo 	= 1 << 0,	//Check for hitscan blocking lines too.
+		BLITW_HitscansOnly	= 1 << 1	//Check ONLY for hitscan blocking lines.
+	}
+	
+	//Is the line the trace went through blocking ?
+	Bool BlockingLineInTheWay (Line Blocking, Int Flags)
+	{
+		If (!Blocking) Return False;
+		
+		//Stop at sight blocking lines (Can't see past them) and everything-blocking lines.
+		If (Blocking.Flags & Line.ML_BLOCKEVERYTHING || Blocking.Flags & Line.ML_BLOCKSIGHT)
+			Return True;
+		
+		If (!Flags)
+			If (Blocking.Flags & Line.ML_BLOCKPROJECTILE)
+				Return True;
+		Else If (Flags & BLITW_HitscansToo)
+			If (Blocking.Flags & (Line.ML_BLOCKPROJECTILE | Line.ML_BLOCKHITSCAN))
+				Return True;
+		Else If (Flags & BLITW_HitscansOnly)
+			If (Blocking.Flags & Line.ML_BLOCKHITSCAN)
+				Return True;
+		
+		Return False;
+	}
+	
+	//Check if the trace hit any level geometry. This is very useful for all LOF checks, except if the projectile can literally go through level geometry.
+	//BUG: This check fails on 3D floors with FF_THINFLOOR. This however seems to be a GZDoom bug. And I'm not knowledgeable enough to PR a fix lol.
+	//: Check for collision with non-shoot through 3D middle textures. The only method for doing this is not exposed to ZScript, so I need to PR it at some point.
+	Bool HitLevelGeometry (TraceResults Result)
+	{
+		//Hit a floor or ceiling.
+		If (Result.HitType == Trace_HitFloor || Result.HitType == Trace_HitCeiling)
+			Return True;
+		
+		If (Result.HitLine)
+		{
+			//Hit a linedef with void space behind it.
+			If (Result.HitLine.Sidedef[Line.Back] == Null)
+				Return True;
+			
+			//Hit a raised floor or lowered ceiling wall.
+			If (Result.Tier != TIER_Middle)
+				Return True;
+		}
+		
+		Return False;
+	}
+}
+
+//new bullet state and function for CK7_Smith_Weapon
+{
+	Fire_Bullet:
+			#### # 0
+			{	
+				//if(Invoker.CanCrit)
+				//{
+					K7_FireBullet(invoker.m_fDamage,invoker.m_fSpread);
+				/*}
+				else
+				{
+					A_FireBullets
+					(
+						invoker.m_fSpread,
+						invoker.m_fSpread,
+						-1,
+						invoker.m_fDamage*Frandom(2,3),
+						"CK7_BulletPuff",
+						BULLET_FLAGS|FBF_NORANDOM
+					);
+				}*/
+			}
+			Stop;
+			
+	Action Void K7_FireBullet(int damage, double spread)
+	{
+		//access the LineTracer class from the player, if there isnt one make it
+		If(!CK7_Smith(self).hitscan) CK7_Smith(self).hitscan = new("CK7_Hitscan");
+		CK7_Hitscan HitScan = CK7_Smith(self).hitscan;// cast pointer to just type "Hitscan"
+		Hitscan.master = self; //the player, so it doesn't hit them
+		Hitscan.victim = null; //reset these variables before the shot
+		Hitscan.crit = false;
+		Hitscan.crosshit.clear();
+		
+		//this next part is to have circular spread and to fix that bug where horizontal spread gets thinner when you look up or down
+		//if you just want it simple use randomize the angles on the else block
+		Vector3 dir;
+		double pch = BulletSlope(); // Get the autoaimed pitch
+		If(spread)
+		{
+			vector2 Spr = AngleToVector(Frandom(0,360),spread*Frandom(0,1));
+			Quat base = Quat.FromAngles(angle, pch, roll);
+			Vector3 forward = (1,0,0);
+			Quat ofs = Quat.AxisAngle((0,0,1), Spr.x);
+			Quat sid = Quat.AxisAngle((0,1,0), Spr.y);
+			dir = base * ofs * sid * forward;
+		}
+		else 
+		{
+			dir = (cos(angle)*cos(pch), sin(angle)*cos(pch), sin(-pch));
+		}
+		
+		//↓ this start is the default attack height
+		//vector3 Start = Pos + (0,0,height * 0.5 + player.mo.AttackZOffset*player.crouchFactor ); 
+		//↓ this one makes it fire exactly where your view is, true to the crosshair
+		vector3 Start = (pos.x,pos.y,player.viewz+1); 
+		
+		Hitscan.Trace(Start, CurSector, Dir, 9000, TRACE_HitSky);
+		
+		Actor puff = Spawn("CK7_BulletPuff",hitscan.results.hitpos - results.hitvector);
+		Puff.Angle = atan2(dir.y, dir.x); //VectorAngle( Dir.x, Dir.y );
+		Puff.Pitch = -asin(dir.z); //-VectorAngle( ( Dir.xy.length(),Dir.z) );
+		puff.target = self;
+		If(Hitscan.victim)
+		{
+			Int damg = damage*Frandom(2,3);
+			if(hitscan.crit) 
+			{
+				damg = damage*8;
+				if(hitscan.victim.default.health <= 150) damg = Max(damg,hitscan.victim.default.health*3);
+				puff.bNOEXTREMEDEATH = false;
+				For(int p; p < 60; p++)
+				{
+					Double pang = Random(0,360);
+					Double ppic = Random(-90,90);
+					Vector3 pvel = (cos(pang)*cos(ppic), sin(pang)*cos(ppic), sin(ppic))*Random(5,14);
+					puff.A_SpawnParticle("FF0000",SPF_FULLBRIGHT,8,6,0,0,0,0,
+					pvel.x,pvel.y,pvel.z,
+					-0.15*pvel.x,-0.15*pvel.y,-0.15*pvel.z,1,0);
+				}
+				If(hitscan.victim.health - damg <= 0 && random(0,3)>2)
+					CK7_CritVoiceLine(New("CK7_CritVoiceLine")).Player = Self;
+				hitscan.victim.A_StartSound("hs_death",12,CHANF_OVERLAP,1,0);
+			}
+			Int Ouch = Hitscan.victim.DamageMobj(puff,self,damg,"Hitscan",DMG_INFLICTOR_IS_PUFF|DMG_PLAYERATTACK,puff.angle);
+			If(Ouch && Hitscan.victim && !Hitscan.victim.bNOBLOOD) Hitscan.victim.SpawnBlood(Hitscan.Landpos,puff.angle,Ouch);
+			puff.SetOrigin(Hitscan.landpos,false);
+			puff.setstatelabel("null");
+		}
+		else 
+		{
+			if (hitscan.results.HitType == TRACE_HasHitSky) puff.setstatelabel("null");
+			for(int l; l < Hitscan.crosshit.Size(); l++ )
+			{
+				Hitscan.crosshit[l].Activate(self, 0, SPAC_Impact);
+			}
+			puff.A_SprayDecal("BulletChip",30,(0,0,-1),hitscan.results.HitVector);
+		}
+	}
+}
+
+
+//Also set projectileKickback to CK7_BulletPuff so it works
+//and it can now use its own angles to get the wall normal or the fire function can give it already
+{
+	Default
+	{
+		ProjectileKickback 100;
+	}
+}
+
+//just plays the voiceline delayed
+Class CK7_CritVoiceLine : Thinker
+{
+	Actor Player;
+	Int Count;
+	
+	Override void Tick()
+	{
+		If(Player)
+		{
+			Count++;
+			If(count>20) {
+				Player.A_StartSound("*taunt",2,CHANF_NOSTOP);
+				Destroy();
+			}
+		}
+		else Destroy();
+	}
+}

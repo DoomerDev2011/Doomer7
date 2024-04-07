@@ -364,7 +364,7 @@ Class CK7_Hud : BaseStatusBar
 				continue;
 			
 			Vector2 size = TexMan.GetScaledSize(icon);
-			DrawTexture(icon, keypos, DI_SCREEN_RIGHT_TOP|DI_ITEM_LEFT_TOP, scale: (iconSize.x / size.x, iconsize.y / size.y));
+			DrawTexture(icon, keypos, DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP, scale: (iconSize.x / size.x, iconsize.y / size.y));
 			keypos.y += iconSize.y + indent;
 			if (keypos.y >= startPos.y + (iconSize.y + indent)*rows)
 			{

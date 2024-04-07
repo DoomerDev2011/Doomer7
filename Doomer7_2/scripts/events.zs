@@ -31,6 +31,22 @@ class CK7_GameplayHandler : EventHandler
 			}
 		}
 	}
+	
+	override void WorldThingSpawned (WorldEvent e)
+	{
+		if (e.thing && e.thing.bISMONSTER)
+		{
+			//here set any other condition you'll like
+			//If(Random(0,1)>0)
+			//{
+				Actor Crit = actor.Spawn("CK7_HS_CritSpot",e.thing.pos);
+				Crit.master = e.thing;
+				Crit.Speed = e.thing.radius - FRandom(2,30);
+				Crit.SpriteAngle = Frandom(0,360);
+				Crit.ReactionTime = Random(0,e.thing.height);
+			//}
+		}
+	}
 
 	/*array <DeathParticleData> vpThings;
 	
@@ -130,6 +146,41 @@ class CK7_GameplayHandler : EventHandler
 				lookControllers[i] = ltc;
 			}
 		}
+	}
+}
+
+Class CK7_HS_CritSpot : Actor
+{
+	//This actor uses SpriteAngle for the relative angle its at, 
+	//Speed for how far away it is and Reactiontime for its height
+	//you could make other variables with better names, i just didnt wanna
+	Default
+	{
+		Radius 5;
+		Height 8;
+	}
+	states
+	{
+		Spawn:
+			TNT1 A 1 {
+				if(!Master) Destroy();
+				else if(master.bSHOOTABLE) 
+				{
+					Vector3 NewPos = Master.pos + (0,0,reactiontime) + AngleToVector(Spriteangle+master.angle,Speed);
+					Vector3 Pvel = Vel + (NewPos - Pos)*0.3;// this is to try to smooth out its position
+					Float rad = radius - 2;
+					SetOrigin( NewPos, true);
+					Vel = Master.Vel;
+					For(int p; p < 12; p++)
+					{
+						A_SpawnParticle("FFDD00",SPF_FULLBRIGHT,3,4,0,Frandom(-rad,rad),Frandom(-rad,rad),Frandom(2,height-2),
+							pvel.x,pvel.y,pvel.z,
+							Frandom(-1,1),Frandom(-1,1),Frandom(-1,1),1,0.1);
+					}
+				}
+				//it stays existing while its enemy is dead so it still appears if it gets revived
+			}
+			Loop;
 	}
 }
 

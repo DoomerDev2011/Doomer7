@@ -104,8 +104,3 @@ Class CK7_HeavenSmile : Actor
 			Stop;
 	}
 }
-
-Class CK7_HS_CritSpot : Actor
-{
-	
-}

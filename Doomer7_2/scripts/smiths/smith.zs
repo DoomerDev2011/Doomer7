@@ -12,6 +12,7 @@ const CHAN_WEAPON_CHARGE = CHAN_6;
 
 Class CK7_Smith : DoomPlayer
 {
+	CK7_Hitscan Hitscan; //The LineTracer class
 	bool 	m_bAimHeld;
 	bool 	m_bSpecialPressed;
 	bool 	m_bHealPressed;
@@ -57,7 +58,7 @@ Class CK7_Smith : DoomPlayer
 		m_fHeight = 52;
 		
 		m_iStaticStartTime = 0;
-		
+		hitscan = new("CK7_Hitscan"); //create the class
 		/*int sk = G_SkillPropertyInt( SKILLP_ACSReturn );
 		if ( sk >= 4 )
 		{
