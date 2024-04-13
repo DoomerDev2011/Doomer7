@@ -74,9 +74,10 @@ class CK7_Utils
 
 class K7_LookTargetController : Thinker
 {
-	protected PlayerPawn pp;
+	PLayerPawn pp;
 	Actor looktarget;
-	static K7_LookTargetController Create(PlayerPawn pp)
+	sightline sightline;
+	static K7_LookTargetController Create(PLayerPawn pp)
 	{
 		let ltc = New("K7_LookTargetController");
 		if (ltc)
@@ -84,6 +85,41 @@ class K7_LookTargetController : Thinker
 			ltc.pp = pp;
 		}
 		return ltc;
+	}
+	
+	//has the function of CheckSight() but with exact position and direction
+	Bool, TraceResults SightCheck(actor Obj, vector3 start, Sector sec, vector3 direction, double maxDist)
+	{
+		If(!SightLine) SightLine = New("SightLine");
+		SightLine.Obj = Obj;
+		SightLine.Trace(start,sec,direction,maxDist,TRACE_ReportPortals);
+		Return SightLine.Results.HitActor == Obj, SightLine.Results;
+	}
+	
+	Bool CheckInsideCone(Actor Who, Actor Obj, Vector3 FirePos, Vector3 Dir, Double Length = 500, Double Spread = 30)
+	{
+		Bool Hit;
+		Double ObjHei = Obj.Height*0.5;
+		Vector3 ObjPos = Obj.Pos.PlusZ(ObjHei);
+		Vector3 ObjOfs = ObjPos-FirePos;
+		Double ObjDist = ObjOfs.Length();
+		
+		Double Dist = ObjOfs Dot Dir;
+		Vector3 Push = ObjOfs - Dir*Dist;
+		//Bool inv = Push.z < 0;
+		Push.z = Max(0, Abs(Push.z) - ObjHei); //Turns Z upwards
+		//If(Inv) Push.z *= -1;
+		Vector2 HorzPush = Push.xy.Unit();
+		Push -= (0,0,0) + HorzPush*Clamp(HorzPush dot Push.xy,0,Obj.Radius);
+		Double PushLeng = Push.Length();
+		
+		If( Dist+Obj.Radius > 0 && Dist-Obj.Radius <= Length && PushLeng <= Dist*Tan(Spread) )
+		{
+			Vector3 Sir = ObjOfs;
+			If(ObjDist != 0) Sir /= ObjDist;
+			Hit = SightCheck(obj,FirePos,who.cursector,sir,Length);
+		}
+		Return Hit;
 	}
 
 	override void Tick()
@@ -95,9 +131,9 @@ class K7_LookTargetController : Thinker
 		}
 		if (!pp.player || pp.health <= 0)
 			return;
-		
+			
 		FLineTraceData lt;
-		pp.LineTrace(pp.angle, 2048, pp.pitch, offsetz: pp.height * 0.5 - pp.floorclip + pp.AttackZOffset*pp.player.crouchFactor, data:lt);
+		pp.LineTrace(pp.angle, 2048, pp.pitch, offsetz: pp.player.viewz - pp.pos.z, data:lt);
 		let ha = lt.HitActor;
 		if (lt.HitType == TRACE_HitActor && ha && ha.bISMONSTER && ha.bSHOOTABLE && ha.health > 0)
 		{
@@ -107,5 +143,51 @@ class K7_LookTargetController : Thinker
 		{
 			looktarget = null;
 		}
+		vector3 dir = (cos(pp.angle)*cos(pp.pitch), sin(pp.angle)*cos(pp.pitch), sin(-pp.pitch));
+		vector3 lookpos = (pp.pos.x,pp.pos.y,pp.player.viewz);
+		double ang = 7*tan(pp.player.fov*0.5);
+		BlockThingsIterator it = BlockThingsIterator.Create(pp, 2048);
+		Actor obj;
+		while (it.Next())
+		{
+			obj = it.thing;
+			If (Obj is "CK7_HS_CritSpot")
+			{
+				Bool insight = CheckInsideCone(pp,obj,lookpos,dir,2048,ang);
+				If(Insight) Obj.Alpha = 1;
+			}
+		}
+		
 	}
+}
+
+class SightLine : CK7_Hitscan
+{
+	Actor Obj;
+	
+    override ETraceStatus TraceCallback()
+    {
+		if (results.HitType == TRACE_HitActor)
+        {
+			If( results.HitActor == Obj) 
+			{
+				return TRACE_Stop;
+			}
+            return TRACE_Skip;
+        }
+		
+		If (results.HitType == Trace_HitFloor || results.HitType == Trace_HitCeiling || results.HitType == TRACE_HasHitSky)
+		{	
+			Return TRACE_Stop;
+		}
+		
+		If (results.HitLine)
+		{
+			If (results.Tier != TIER_Middle || results.HitLine.Sidedef[Line.Back] == Null || BlockingLineInTheWay(results.HitLine,BLITW_HitscansOnly) )
+			{
+				Return TRACE_Stop;
+			}
+		}
+		Return TRACE_Skip;
+    }
 }

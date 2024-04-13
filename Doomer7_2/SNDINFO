@@ -14,6 +14,7 @@ persona_powera sound/shared/special1.ogg
 persona_powerb sound/shared/special2.ogg
 persona_usefail sound/shared/usefail.ogg
 persona_heal sound/shared/heal.ogg
+persona_healfull sound/shared/heal_full.ogg
 pickup_blood sound/pickup/pickup_blood.ogg
 
 // Garcian

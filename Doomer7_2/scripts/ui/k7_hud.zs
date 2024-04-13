@@ -31,6 +31,10 @@ Class CK7_Hud : BaseStatusBar
 	double prevMSTime;
 	double deltaTime;
 	double fracTic;
+	double oldhealth;
+	double blink;
+	int reloadtime, reloadlerp;
+	bool reloading;
 	
 	override void Init()
 	{
@@ -44,25 +48,30 @@ Class CK7_Hud : BaseStatusBar
 		backgroundTexSize = TexMan.GetScaledSize(backgroundTex);
 	}
 	
+	override void Tick()
+	{
+		super.Tick();
+		reloadlerp = reloadtime;
+		If(ReloadTime) Reloadtime--;
+	}
+	
 	override void Draw( int state, double TicFrac )
 	{
 		Super.Draw( state, TicFrac );
 		UpdateDeltaTime();
-		if (state == HUD_None)
-		{
-			return;
-		}
+		if (state == HUD_None) return;
 		BeginHUD( 1, true, HUDRESX, HUDRESY);
-		
-		DrawSidePanel();
-		UpdateSideSlideTimer();
-		DrawKeys();
-		DrawCharge();
-		DrawThinBlood();
-		DrawHealth();
-		if (!autoMapActive)
+		fracTic = TicFrac;
+		DrawReload();
+		if (reloadtime<1) //not draw while reloading
 		{
-			DrawK7Crosshair();
+			DrawSidePanel();
+			UpdateSideSlideTimer();
+			DrawKeys();
+			DrawCharge();
+			DrawThinBlood();
+			DrawHealth();
+			if (!autoMapActive) DrawK7Crosshair();
 		}
 	}
 
@@ -94,6 +103,14 @@ Class CK7_Hud : BaseStatusBar
 	void DrawHealth()
 	{
 		double hudHealth = GetHealthFraction();
+		If(hudhealth > oldhealth) blink = oldhealth;
+		oldhealth = hudHealth;
+		
+		If(Blink > -hudHealth) 
+		{
+			blink -= deltatime*0.15;
+			hudhealth = abs(blink);
+		}
 		String img;
 		if (hudHealth >= .75){
 			img = "KEYESA0";
@@ -109,7 +126,63 @@ Class CK7_Hud : BaseStatusBar
 		DrawString( k7HudFont, ""..CPlayer.health, (backgroundTexSize.x*0.5 - 64, 32), DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_CENTER, scale:sc );
 		DrawString( k7HudFont, ""..GetArmorAmount(), (backgroundTexSize.x*0.5 + 64, 32), DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_CENTER, scale:sc );
 	}
-
+	static const string ReloadText[] = {"Reload1", "Reload2", "Reload3", "Reload4", "Reload5", "Reload6", "Reload7", "Reload8", "Reload9", "Reload10", "Reload11" };
+	static const int ReloadSpace[] = {42, 37, 22, 37, 37, 37, 42, 42, 32, 42, 22 }; //pixel width
+	
+	void DrawReload(double alpha = 1, double scale = 2.5)
+	{
+		let weap = CK7_Smith_Weapon(CPlayer.readyweapon);
+		if (!weap || !weap.m_fReloadTime) return; 
+		psprite psp = CPlayer.FindPSprite(2); //it was easier to read the down animation since the actual reload is a bit longer
+		bool reload;
+		if(psp) reload = psp.curstate.InStateSequence(weap.FindState("Anim_Reload_Down"));
+		
+		if (Reload && !Reloading)
+		{
+			ReloadTime = weap.m_fReloadTime;
+			reloadlerp = ReloadTime;
+		}
+		Reloading = Reload;
+		
+		If(ReloadTime > 0)
+		{
+			int ScreenX = Screen.GetWidth(); //real screen resolution
+			int ScreenY = Screen.GetHeight();
+			int inout = Min(12,weap.m_fReloadTime*0.5); //tics it takes for text to move in position
+			int txtofs = 140; //ofset from the edge
+			
+			Double Move = reloadlerp + (reloadtime - reloadlerp)*fractic;
+			Double Txtm1 = Min(1,(weap.m_fReloadTime-move)/inout);
+			Double Txtm2 = Min(1,move/inout);
+			Double Txtm3 = Txtm1 * Txtm2;
+			Double Barmove = Min(1,(weap.m_fReloadTime-move)/8 ) * Min(1,move/8 );
+			Double BarHeight = 180*BarMove;
+			//Coundnt decide which style to use so i made it optional
+			If(CVar.GetCVar('k7_reloadblink', CPlayer).GetBool() ) BarHeight += (ScreenY-180)*(0.5-abs(0.5-BarMove) );
+			color bars = color(int(255*alpha),0,0,0);
+			Fill(bars,0,0,ScreenX,BarHeight);
+			Fill(bars,0,-BarHeight,ScreenX,BarHeight);
+			int textpos;
+			ScreenX -= txtofs;
+			For(int r; r<6; r++)
+			{
+				double txtx = (txtofs + textpos*Txtm3 + ScreenX*(1-Txtm1) ) * Txtm2 -txtofs*(1-Txtm2);
+				DrawImage(ReloadText[r], (txtx,90), 
+				DI_SCREEN_LEFT_TOP|DI_ITEM_LEFT|DI_ITEM_CENTER, alpha* Txtm2, scale: (scale,scale) );//, style:Style_Add
+				textpos += ReloadSpace[r]*scale;
+			}
+			textpos = 0;
+			For(int r = 10; r>5; r--)
+			{
+				double txtx = (txtofs + textpos*Txtm3 + ScreenX*(1-Txtm1) ) * Txtm2 -txtofs*(1-Txtm2);
+				DrawImage(ReloadText[r], (-txtx,-90), 
+				DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT|DI_ITEM_CENTER, alpha* Txtm2, scale: (scale,scale) );//, style:Style_Add
+				textpos += ReloadSpace[r]*scale;
+			}
+		}
+	}
+	
+	
 	void UpdateSideSlideTimer()
 	{
 		if (sideSlideTimer >= CHARGETIME)

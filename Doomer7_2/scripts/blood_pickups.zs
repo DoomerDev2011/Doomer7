@@ -85,7 +85,8 @@ Class CK7_ThinBlood : K7_AmmoBase
 		{
 			if (owner && owner.GiveBody(10))
 			{
-				owner.A_StartSound("persona_heal", CHAN_AUTO);
+				If(Owner.Health >= Owner.GetMaxHealth() ) owner.A_StartSound("persona_healfull", CHAN_AUTO);
+				else owner.A_StartSound("persona_heal", CHAN_AUTO);
 				return true;
 			}
 			return false;

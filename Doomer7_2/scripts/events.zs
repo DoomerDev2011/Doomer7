@@ -154,10 +154,13 @@ Class CK7_HS_CritSpot : Actor
 	//This actor uses SpriteAngle for the relative angle its at, 
 	//Speed for how far away it is and Reactiontime for its height
 	//you could make other variables with better names, i just didnt wanna
+	Vector3 Newpos;
 	Default
 	{
+		alpha 0;
 		Radius 5;
-		Height 8;
+		Height 10;
+		+NOGRAVITY;
 	}
 	states
 	{
@@ -166,19 +169,22 @@ Class CK7_HS_CritSpot : Actor
 				if(!Master) Destroy();
 				else if(master.bSHOOTABLE) 
 				{
-					Vector3 NewPos = Master.pos + (0,0,reactiontime) + AngleToVector(Spriteangle+master.angle,Speed);
-					Vector3 Pvel = Vel + (NewPos - Pos)*0.3;// this is to try to smooth out its position
-					Float rad = radius - 2;
+					NewPos = Master.pos + (0,0,reactiontime) + AngleToVector(Spriteangle+master.angle,Speed);
 					SetOrigin( NewPos, true);
 					Vel = Master.Vel;
-					For(int p; p < 12; p++)
+					//Vector3 Pvel = Vel + (NewPos - Pos);// this is to try to smooth out its position
+					Vector3 ppos;
+					Float rad = radius - 1;
+					For(int p; p < 11 && alpha; p++)
 					{
-						A_SpawnParticle("FFDD00",SPF_FULLBRIGHT,3,4,0,Frandom(-rad,rad),Frandom(-rad,rad),Frandom(2,height-2),
-							pvel.x,pvel.y,pvel.z,
-							Frandom(-1,1),Frandom(-1,1),Frandom(-1,1),1,0.1);
+						ppos = (Frandom(-rad,rad),Frandom(-rad,rad),Frandom(-height+2,height-2)*0.5) ;
+						A_SpawnParticle("FFDD00",SPF_FULLBRIGHT,3,4,0,ppos.x,ppos.y,ppos.z+5,
+							vel.x,vel.y,vel.z,
+							-ppos.x*0.5,-ppos.y*0.5,-ppos.z*0.5,1,0.1);
+							//Frandom(-1,1),Frandom(-1,1),Frandom(-1,1),1,0.1);
 					}
+					Alpha = 0;
 				}
-				//it stays existing while its enemy is dead so it still appears if it gets revived
 			}
 			Loop;
 	}

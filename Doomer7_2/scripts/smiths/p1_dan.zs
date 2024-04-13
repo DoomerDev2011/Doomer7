@@ -173,6 +173,41 @@ Class K7_Dan_CollateralShot : Actor
 		A_FaceMovementDirection();
 	}
 	
+	//return -1 is normal collision, 0 is collide with no damage, 1 is pass through
+	override int SpecialMissileHit(Actor victim)
+	{
+		If(victim == target) return 1;
+		If(victim.bSHOOTABLE)
+		{
+			BlockThingsIterator itr = BlockThingsIterator.Create(self, radius+victim.radius*2);
+			Actor Obj;
+			while (itr.next())
+			{
+				If(itr.thing is "CK7_HS_CritSpot" && itr.thing.master == victim)
+				{
+					Obj = itr.thing; Break;
+				}
+			}
+			If(Obj) 
+			{
+				//function to detect if its in a cylinder
+				Vector3 Dir = Vel.Unit();
+				Vector3 ObjPos = Obj.Pos.PlusZ(Obj.Height*0.5);
+				Vector3 ObjOfs = ObjPos - Pos.PlusZ(Height*0.5);
+				Double Dist = ObjOfs Dot Dir;
+				Vector3 Push = ObjOfs - Dir*Dist; 
+				If(Push.Length() < 19) //check if its not too far away from the cylinder's axis
+				{
+					victim.damagemobj(self,target,1300,'COLLATERALSHOT',0,angle);
+					Return 0;
+				}
+				//&& Dist+Obj.Radius > 0 && Dist-Obj.Radius <= Length ) // to detect if its in length limits
+			}
+			return -1;
+		}
+		return -1;
+	}
+	
 	States {
 	Spawn:
 		DANC A 1 

@@ -58,6 +58,7 @@ Class CK7_Smith : DoomPlayer
 		m_fHeight = 52;
 		
 		m_iStaticStartTime = 0;
+		
 		hitscan = new("CK7_Hitscan"); //create the class
 		/*int sk = G_SkillPropertyInt( SKILLP_ACSReturn );
 		if ( sk >= 4 )
