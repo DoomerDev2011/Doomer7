@@ -21,6 +21,7 @@ pickup_blood sound/pickup/pickup_blood.ogg
 gar_aim sound/gar/aim.ogg
 gar_shoot sound/gar/shoot.ogg
 gar_reload sound/gar/reload.ogg
+gar_crit sound/gar/crit_vo.ogg
 
 gar_die sound/gar/die.ogg
 gar_hurt1 sound/gar/hurt1.ogg
@@ -57,6 +58,7 @@ $playersounddup k7_gar male *pain50 *pain75
 $playersounddup k7_gar male *pain25 *pain50
 $playeralias k7_gar male *death gar_die
 $playeralias k7_gar male *xdeath gar_die
+$playeralias k7_gar male *taunt gar_crit
 
 // Dan
 dan_aim sound/dan/aim.ogg
@@ -104,6 +106,7 @@ $playersounddup k7_dan male *pain50 *pain75
 $playersounddup k7_dan male *pain25 *pain50
 $playeralias k7_dan male *death dan_die
 $playeralias k7_dan male *xdeath dan_die
+$playeralias k7_dan male *taunt dan_crit
 
 // KAEDE
 ked_aim sound/ked/aim.ogg
@@ -111,6 +114,7 @@ ked_shoot sound/ked/shoot.ogg
 ked_reload sound/ked/reload.ogg
 ked_zoomin sound/ked/zoom_in.ogg
 ked_zoomout sound/ked/zoom_out.ogg
+ked_crit sound/ked/crit_vo.ogg
 
 ked_die sound/ked/die.ogg
 ked_hurt1 sound/ked/hurt1.ogg
@@ -147,11 +151,13 @@ $playersounddup k7_ked male *pain50 *pain75
 $playersounddup k7_ked male *pain25 *pain50
 $playeralias k7_ked male *death ked_die
 $playeralias k7_ked male *xdeath ked_die
+$playeralias k7_ked male *taunt ked_crit
 
 // Kevin
 kvn_aim sound/ksn/aim.ogg
 kvn_shoot sound/kvn/shoot.ogg
 kvn_special_shot sound/kvn/specialshot.ogg
+kvn_crit sound/kvn/crit_vo.ogg
 
 kvn_die sound/kvn/die.ogg
 kvn_hurt1 sound/kvn/hurt1.ogg
@@ -188,6 +194,7 @@ $playersounddup k7_kvn male *pain50 *pain75
 $playersounddup k7_kvn male *pain25 *pain50
 $playeralias k7_kvn male *death kvn_die
 $playeralias k7_kvn male *xdeath kvn_die
+//$playeralias k7_kvn male *taunt kvn_crit
 
 // Coyote
 cyo_aim sound/cyo/aim.ogg
@@ -227,6 +234,7 @@ $playersounddup k7_cyo male *pain50 *pain75
 $playersounddup k7_cyo male *pain25 *pain50
 $playeralias k7_cyo male *death cyo_die
 $playeralias k7_cyo male *xdeath cyo_die
+$playeralias k7_cyo male *taunt weapon/getrev
 
 
 // Con
@@ -252,6 +260,7 @@ $playersounddup k7_con male *pain50 *pain75
 $playersounddup k7_con male *pain25 *pain50
 $playeralias k7_con male *death con_die
 $playeralias k7_con male *xdeath con_die
+$playeralias k7_con male *taunt weapon/getglk
 
 
 // MASK
