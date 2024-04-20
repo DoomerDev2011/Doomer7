@@ -241,7 +241,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 		toucher.A_StartSound(PickupSound, CHAN_AUTO, flags, 1, ATTN_NORM);
 	}
 	
-	Action Void K7_FireBullet(int damage, double spread)
+	Action Void K7_FireBullet(int damage, double spread, double crit = 8)
 	{
 		//access the LineTracer class from the player, if there isnt one make it
 		If(!CK7_Smith(self).hitscan) CK7_Smith(self).hitscan = new("CK7_Hitscan");
@@ -272,7 +272,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 		//↓ this start is the default attack height
 		//vector3 Start = Pos + (0,0,height * 0.5 + player.mo.AttackZOffset*player.crouchFactor ); 
 		//↓ this one makes it fire exactly where your view is, true to the crosshair
-		vector3 Start = (pos.x,pos.y,player.viewz+1); 
+		vector3 Start = (pos.x,pos.y,player.viewz); 
 		
 		Hitscan.Trace(Start, CurSector, Dir, 9000, TRACE_HitSky);
 		
@@ -285,7 +285,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 			Int damg = damage*Frandom(2,3);
 			if(hitscan.crit) 
 			{
-				damg = damage*8;
+				damg = damage*crit;
 				if(hitscan.victim.default.health <= 150) damg = Max(damg,hitscan.victim.default.health*3);
 				puff.bNOEXTREMEDEATH = false;
 				For(int p; p < 60; p++)
@@ -297,8 +297,8 @@ Class CK7_Smith_Weapon : Weapon abstract
 					pvel.x,pvel.y,pvel.z,
 					-0.15*pvel.x,-0.15*pvel.y,-0.15*pvel.z,1,0);
 				}
-				If(hitscan.victim.health - damg <= 0 && random(0,3)>2)
-					CK7_CritVoiceLine(New("CK7_CritVoiceLine")).Player = Self;
+				If(hitscan.victim.health - damg <= 0) A_StartSound("*taunt",2,CHANF_NOSTOP);
+				//CK7_CritVoiceLine(New("CK7_CritVoiceLine")).Player = Self;
 				hitscan.victim.A_StartSound("hs_death",12,CHANF_OVERLAP,1,0);
 			}
 			Int Ouch = Hitscan.victim.DamageMobj(puff,self,damg,"Hitscan",DMG_INFLICTOR_IS_PUFF|DMG_PLAYERATTACK,puff.angle);
@@ -313,7 +313,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 			{
 				Hitscan.crosshit[l].Activate(self, 0, SPAC_Impact);
 			}
-			puff.A_SprayDecal("BulletChip",30,(0,0,-1),hitscan.results.HitVector);
+			puff.A_SprayDecal("BulletChip",30,(0,0,-0.5),hitscan.results.HitVector);
 		}
 	}
 
