@@ -471,6 +471,9 @@ music/title music/title.ogg
 $musicvolume music/title 0.75
 
 meme title
+menu/start			sound/ui/title_start.ogg
+menu/finish			sound/ui/title_logo.ogg
+menu/cards			sound/ui/title_cards.ogg
 level1 					raveon
 menu/activate            MENUACT    // Activate a new menu
 menu/backup            MENUACT    // Backup to previous menu

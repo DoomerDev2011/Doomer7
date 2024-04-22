@@ -4,6 +4,7 @@ gameinfo
 	titlemusic = "music/Title.ogg"
 	StatusBarClass = "CK7_Hud"
 	AddEventHandlers = "CK7_GameplayHandler"
+	intro {Function = "K7intro.DoIntroCutscene"}
 	PrecacheTextures =
 		"KVNFA0",
 		"KVNBA0",

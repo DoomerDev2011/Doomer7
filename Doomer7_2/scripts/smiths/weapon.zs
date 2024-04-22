@@ -105,7 +105,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 
 		CK7_Smith_Weapon.Persona "none";
 		CK7_Smith_Weapon.PersonaDamage 40;
-		CK7_Smith_Weapon.PersonaDamage 8;
+		CK7_Smith_Weapon.PersonaCritical 8;
 		CK7_Smith_Weapon.PersonaSpeed 1.0;
 		CK7_Smith_Weapon.PersonaSpread 0.2;
 		CK7_Smith_Weapon.PersonaRecoil 2.5;
