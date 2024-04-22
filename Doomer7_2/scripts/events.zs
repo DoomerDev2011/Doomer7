@@ -29,6 +29,36 @@ class CK7_GameplayHandler : EventHandler
 			{
 				e.thing.A_DropItem('CK7_ThinBlood', 1);
 			}
+			
+			if(!e.thing.bNOBLOOD)
+			{
+				If(e.inflictor is "CK7_BulletPuff" && !e.inflictor.bNOEXTREMEDEATH)
+				{
+					For(int p; p < 100; p++)
+					{
+						Double pang = Random(0,360);
+						Double ppic = Random(-90,90);
+						Vector3 pvel = (cos(pang)*cos(ppic), sin(pang)*cos(ppic), sin(ppic))*Random(1,24);
+						e.thing.A_SpawnParticle("FF0000",SPF_FULLBRIGHT,10,8,0,0,0,e.thing.height*0.5,
+						pvel.x,pvel.y,pvel.z,
+						-0.12*pvel.x,-0.12*pvel.y,-0.12*pvel.z,1,0);
+					}
+				}
+				else {
+					int t = 0.05*(e.thing.height+e.thing.radius);
+					for(int b = t; b>0; b--)
+					{
+						Actor Blud = actor.Spawn("K7_BloodSpew",e.thing.pos);
+						Blud.master = e.thing;
+						Blud.Health = e.thing.default.Health*0.1 + Random(30,40);
+						Blud.Speed = e.thing.radius - FRandom(0,e.thing.radius*0.2);
+						Blud.SpriteAngle = Frandom(-180,180);
+						Blud.FloatSpeed  = FRandom(0.3,0.9);
+						Blud.Pitch = Random(-50,0);
+					}
+				}
+			}
+			
 		}
 	}
 	
@@ -41,9 +71,9 @@ class CK7_GameplayHandler : EventHandler
 			//{
 				Actor Crit = actor.Spawn("CK7_HS_CritSpot",e.thing.pos);
 				Crit.master = e.thing;
-				Crit.Speed = e.thing.radius - FRandom(2,30);
-				Crit.SpriteAngle = Frandom(0,360);
-				Crit.ReactionTime = Random(0,e.thing.height);
+				Crit.Speed = FRandom(0,e.thing.radius-6);
+				Crit.SpriteAngle = Frandom(-90,90);
+				Crit.ReactionTime = Random(0,e.thing.height-Crit.Height);
 			//}
 		}
 	}
@@ -187,6 +217,154 @@ Class CK7_HS_CritSpot : Actor
 				}
 			}
 			Loop;
+	}
+}
+
+class K7_BloodSpew : Actor
+{
+	Vector2 SpAng;
+	Default 
+	{
+		Health 30;
+		Height 4;
+		radius 4;
+	}
+	States
+	{
+		Spawn:
+		TNT1 A 1 Nodelay {
+			If(Master && Health) 
+			{
+					Angle = Spriteangle+master.angle;
+					SetOrigin(  Master.pos + (0,0,Master.height*FloatSpeed) + AngleToVector(angle,Speed), true);
+					Vel = Master.vel;
+					
+					Spang *= 0.94;
+					Spang += (FRandom(-3,3) , FRandom(-3,3) );
+					Vector3 Bel = 13*(cos(angle+Spang.x)*cos(pitch+Spang.y), sin(angle+Spang.x)*cos(pitch+Spang.y), -sin(pitch+Spang.y));
+					Actor Blud = Spawn("K7_BloodTrail",pos );
+					Blud.Vel = Vel + Bel;
+					Blud.Translation = master.bloodtranslation;
+					Blud.CopyBloodColor(Master);
+					If(tracer) {
+						Blud.tracer = tracer;
+						Vector3 Difr = Tracer.Pos - Blud.Pos;
+						Blud.Scale.y = Difr.Length();
+						Blud.Angle = VectorAngle(Difr.x,Difr.y);
+						Blud.Pitch = VectorAngle(Difr.xy.Length(),-Difr.z);
+					}
+					Tracer = Blud;
+					
+					Health--;
+			}
+			else Destroy();
+		}
+		Loop;
+	}
+}
+
+class K7_BloodTrail : Actor
+{
+	Vector3 Norm;
+	Default 
+	{
+		Reactiontime 300;
+		RenderStyle "Translucent";
+		Alpha 20;
+		Height 4;
+		radius 4;
+		YScale 0;
+		Speed 13;
+		+INTERPOLATEANGLES
+		+BRIGHT
+		+NOINTERACTION
+		+NOTELEPORT
+		+FLATSPRITE
+		+THRUACTORS
+	}
+	States
+	{
+		Spawn:
+		BLTR R 1
+		{
+			Vel.z -= GetGravity();
+			If(tracer) 
+			{
+				Vector2 VelAng = ( VectorAngle(Vel.x,Vel.y) , VectorAngle(Vel.xy.Length(),-Vel.z) );
+				If(pos.z <= floorz) VelAng.y - 90;
+				FLineTraceData TB;
+				bool Hit = LineTrace(VelAng.X, Vel.Length(), VelAng.Y, TRF_THRUACTORS|TRF_ABSOFFSET,-vel.z,-vel.x,-vel.y,TB);//
+				If(Hit)
+				{
+					bNOGRAVITY = true;
+					Vel = (0,0,0);
+					SetOrigin(TB.HitLocation,true);
+					If (TB.HitType == TRACE_Hitwall && TB.HitLine) 
+					{
+						TB.HitLine.Activate(Master, 0, SPAC_Impact);
+						Norm = (0,0,0)+RotateVector(TB.HitLine.Delta,-90).Unit();
+						//A_SprayDecal("BloodSplat",30,(0,0,-1),TB.HitDir,1);
+					}
+					else if (TB.HitType == TRACE_HitFloor || TB.HitType == TRACE_HitCeiling) 
+					{
+						If(TB.Hit3DFloor) {
+							Norm = TB.Hit3DFloor.Bottom.Normal;
+							if (TB.HitType == TRACE_HitCeiling ) Norm *= -1;
+							
+						}
+						else {
+							if(TB.HitType == TRACE_HitFloor ) Norm = TB.HitSector.FloorPlane.Normal;
+							else if (TB.HitType == TRACE_HitCeiling ) Norm = TB.HitSector.CeilingPlane.Normal;
+						}
+					}
+					SetStateLabel("Death");
+				}
+				else {
+					Vector3 Difr = Tracer.Pos - Pos;
+					Scale.y = Difr.Length();
+					//if(!tracer.health && Scale.y > 100) tracer = null;
+					Angle = VectorAngle(Difr.x,Difr.y);
+					Pitch = VectorAngle(Difr.xy.Length(),-Difr.z);
+				}
+				Reactiontime--;
+				if(!Reactiontime) Destroy();
+			}
+		}
+		Loop;
+		
+		Death:
+		BLTR R 0 
+		{
+			If(tracer) 
+			{
+				FLineTraceData TB;
+				Vector3 Difr = Tracer.Pos - Pos;
+				Difr -= Norm* (Norm dot Difr);
+				
+				Angle = 180+VectorAngle(Norm.x,Norm.y);
+				Pitch = VectorAngle(Norm.xy.Length(),Norm.z)-90;
+				Vector3 Rely = (cos(angle)*cos(pitch), sin(angle)*cos(pitch), sin(-Pitch));
+				Vector3 Relx = Rely cross Norm;
+				Vector2 Spread = ( Relx dot Difr , Rely dot Difr );
+				Roll = VectorAngle( Spread.x , Spread.y ) - 90;
+				Scale.y = Spread.Length();
+				
+				Spread = ( VectorAngle(Difr.x,Difr.y) , VectorAngle(Difr.xy.Length(),-Difr.z) );
+				Bool hit = LineTrace(180+Spread.X, Scale.y, -Spread.Y, TRF_THRUACTORS|TRF_ABSOFFSET,Difr.z-Norm.z,Difr.x-Norm.x,Difr.y-Norm.y,TB);
+				If(hit) Scale.y -= TB.Distance;
+				hit = LineTrace(Spread.X, Scale.y, Spread.Y, TRF_THRUACTORS|TRF_ABSOFFSET,0,0,0,TB);
+				Scale.y = TB.Distance;
+			}
+			Health = 0;
+			bMOVEWITHSECTOR = true;
+			bBRIGHT = 0;
+		}
+		Fade:
+		BLTR R 1 {
+			Alpha -= 0.05;
+			If(Alpha <= 0) Destroy();
+		}
+		Loop;
 	}
 }
 

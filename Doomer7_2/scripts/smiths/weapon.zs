@@ -288,15 +288,6 @@ Class CK7_Smith_Weapon : Weapon abstract
 				damg = damage*crit;
 				if(hitscan.victim.default.health <= 150) damg = Max(damg,hitscan.victim.default.health*3);
 				puff.bNOEXTREMEDEATH = false;
-				For(int p; p < 60; p++)
-				{
-					Double pang = Random(0,360);
-					Double ppic = Random(-90,90);
-					Vector3 pvel = (cos(pang)*cos(ppic), sin(pang)*cos(ppic), sin(ppic))*Random(5,14);
-					puff.A_SpawnParticle("FF0000",SPF_FULLBRIGHT,8,6,0,0,0,0,
-					pvel.x,pvel.y,pvel.z,
-					-0.15*pvel.x,-0.15*pvel.y,-0.15*pvel.z,1,0);
-				}
 				If(hitscan.victim.health - damg <= 0) A_StartSound("*taunt",2,CHANF_NOSTOP);
 				//CK7_CritVoiceLine(New("CK7_CritVoiceLine")).Player = Self;
 				hitscan.victim.A_StartSound("hs_death",12,CHANF_OVERLAP,1,0);
