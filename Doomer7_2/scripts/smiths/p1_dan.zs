@@ -13,6 +13,7 @@ Class CK7_Smith_Dan_Wep : CK7_Smith_Weapon
 		CK7_Smith_Weapon.PersonaSoundClass 'k7_dan';
  		CK7_Smith_Weapon.Persona "dan";
  		CK7_Smith_Weapon.PersonaDamage 33;
+		CK7_Smith_Weapon.PersonaCritical 9.1;
  		CK7_Smith_Weapon.PersonaRecoil 3;
  		CK7_Smith_Weapon.PersonaClipSize 6;
  		CK7_Smith_Weapon.PersonaRefireTime 18;

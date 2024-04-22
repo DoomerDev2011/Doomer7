@@ -13,6 +13,7 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 		CK7_Smith_Weapon.UltrawideOffset 0;
  		CK7_Smith_Weapon.Persona "kvn";
  		CK7_Smith_Weapon.PersonaDamage 15;
+		CK7_Smith_Weapon.PersonaCritical 20;
  		CK7_Smith_Weapon.PersonaSpread 0;
  		CK7_Smith_Weapon.PersonaRecoil 2;
  		CK7_Smith_Weapon.PersonaClipSize -1;
@@ -36,17 +37,24 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			KVNF A 1 bright;
 			Stop;
 			
+		Shoot:
+			#### # 0
+			{
+				if ( invoker.m_iAmmo > 0 )
+					invoker.m_iAmmo--;
+				A_SetTics( ceil( invoker.m_fFireDelay ) );
+			}
+			#### # 1 
+			{
+				K7_FireBullet(invoker.m_fDamage,0,20,1);
+				A_Overlay( LAYER_RECOIL, "Recoil" );
+			}
+			Stop;
+			
 		Fire_Special_Bullet:
 			#### # 0
 			{
-				A_FireBullets(
-					invoker.m_fSpread,
-					invoker.m_fSpread,
-					-1,
-					invoker.m_fDamage * 3,
-					"CK7_BulletPuff",
-					BULLET_FLAGS
-				);
+				K7_FireBullet(invoker.m_fDamage*3,0,20,1);
 			}
 			Stop;
 			
@@ -108,7 +116,7 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			TNT1 A 0 A_OverlayFlags(LAYER_ANIM, PSPF_ADDBOB, false);
 			#### # 0 K7_WeaponOffset( 0, 32, WOF_INTERPOLATE );
 			KVNA ABC 1 bright;
-			TNT1 A 17;
+			TNT1 A 16;
 			KVNA D 1 {
 				A_StartSound( invoker.m_sPersona .. "_special_shot", CHAN_WEAPON, CHANF_OVERLAP );
 				A_SetBlend( "E6F63F", 0.25, 10 );

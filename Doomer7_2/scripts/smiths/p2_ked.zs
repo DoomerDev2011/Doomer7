@@ -13,6 +13,7 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 		CK7_Smith_Weapon.PersonaSoundClass 'k7_ked';
  		CK7_Smith_Weapon.Persona "ked";
  		CK7_Smith_Weapon.PersonaDamage 37;
+		CK7_Smith_Weapon.PersonaCritical 10;
  		CK7_Smith_Weapon.PersonaRecoil 3;
  		CK7_Smith_Weapon.PersonaClipSize 10;
  		CK7_Smith_Weapon.PersonaRefireTime 15;

@@ -28,6 +28,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 	string 	m_sPersona;
 	float	m_fSpeed;
 	int 	m_fDamage;
+	float	m_fCritical;
 	float 	m_fSpread;
 	float 	m_fRecoil;
 	int 	m_iClipSize;
@@ -53,6 +54,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 	property Persona 					: m_sPersona;
 	property PersonaSpeed 				: m_fSpeed;
 	property PersonaDamage				: m_fDamage;
+	property PersonaCritical			: m_fCritical;
 	property PersonaSpread 				: m_fSpread;
 	property PersonaFireDelay 			: m_fFireDelay;
 	property PersonaRecoil 				: m_fRecoil;
@@ -103,6 +105,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 
 		CK7_Smith_Weapon.Persona "none";
 		CK7_Smith_Weapon.PersonaDamage 40;
+		CK7_Smith_Weapon.PersonaDamage 8;
 		CK7_Smith_Weapon.PersonaSpeed 1.0;
 		CK7_Smith_Weapon.PersonaSpread 0.2;
 		CK7_Smith_Weapon.PersonaRecoil 2.5;
@@ -241,7 +244,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 		toucher.A_StartSound(PickupSound, CHAN_AUTO, flags, 1, ATTN_NORM);
 	}
 	
-	Action Void K7_FireBullet(int damage, double spread, double crit = 8)
+	Action Void K7_FireBullet(int damage, double spread, double crit = 8, bool bleed = false)
 	{
 		//access the LineTracer class from the player, if there isnt one make it
 		If(!CK7_Smith(self).hitscan) CK7_Smith(self).hitscan = new("CK7_Hitscan");
@@ -292,9 +295,23 @@ Class CK7_Smith_Weapon : Weapon abstract
 				//CK7_CritVoiceLine(New("CK7_CritVoiceLine")).Player = Self;
 				hitscan.victim.A_StartSound("hs_death",12,CHANF_OVERLAP,1,0);
 			}
-			Int Ouch = Hitscan.victim.DamageMobj(puff,self,damg,"Hitscan",DMG_INFLICTOR_IS_PUFF|DMG_PLAYERATTACK,puff.angle);
-			If(Ouch && Hitscan.victim && !Hitscan.victim.bNOBLOOD) Hitscan.victim.SpawnBlood(Hitscan.Landpos,puff.angle,Ouch);
 			puff.SetOrigin(Hitscan.landpos,false);
+			float vicheight = hitscan.victim.height;
+			Int Ouch = Hitscan.victim.DamageMobj(puff,self,damg,"Hitscan",DMG_INFLICTOR_IS_PUFF|DMG_PLAYERATTACK,puff.angle);
+			If(Ouch && Hitscan.victim && !Hitscan.victim.bNOBLOOD) 
+			{
+				Hitscan.victim.SpawnBlood(Hitscan.Landpos,puff.angle,Ouch);
+				If(bleed){
+					Actor Blud = actor.Spawn("K7_BloodSpew",Hitscan.Landpos);
+					Vector3 dist = Blud.Pos - hitscan.victim.pos ;
+					Blud.master = hitscan.victim;
+					Blud.Health = Min(ouch,120);
+					Blud.Speed = dist.xy.length();
+					Blud.SpriteAngle = VectorAngle( dist.x, dist.y ) - hitscan.victim.angle;
+					Blud.FloatSpeed  = dist.z/vicheight;
+					Blud.Pitch = -puff.pitch;
+				}
+			}
 			puff.setstatelabel("null");
 		}
 		else 
@@ -666,7 +683,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 			{	
 				//if(Invoker.CanCrit)
 				//{
-					K7_FireBullet(invoker.m_fDamage,invoker.m_fSpread);
+					K7_FireBullet(invoker.m_fDamage,invoker.m_fSpread,invoker.m_fCritical);
 				/*}
 				else
 				{

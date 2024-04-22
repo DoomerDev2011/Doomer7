@@ -70,15 +70,8 @@ Class CK7_Smith_Cyo_Wep : CK7_Smith_Weapon
 		Fire_Special_Bullet:
 			#### # 0
 			{
-				A_FireBullets
-				(
-					invoker.m_fSpread,
-					invoker.m_fSpread,
-					-1,
-					invoker.m_fDamage * 3,
-					"CK7_BulletPuff",
-					BULLET_FLAGS
-				);
+				
+				K7_FireBullet(invoker.m_fDamage*3,0,6,1);
 			}
 			Stop;		
 			

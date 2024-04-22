@@ -13,6 +13,7 @@ Class CK7_Smith_Hay_Wep : CK7_Smith_Weapon
 		CK7_Smith_Weapon.UltrawideOffset -75;
  		CK7_Smith_Weapon.Persona "hay";
  		CK7_Smith_Weapon.PersonaDamage 19;
+		CK7_Smith_Weapon.PersonaCritical 5.27;
  		CK7_Smith_Weapon.PersonaRecoil 2.5;
  		CK7_Smith_Weapon.PersonaSpread 1.66;
  		CK7_Smith_Weapon.PersonaClipSize 50;
