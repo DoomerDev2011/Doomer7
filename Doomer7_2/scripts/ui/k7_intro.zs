@@ -42,8 +42,56 @@ class K7_titlecards : ScreenJob
 
 class K7_MenuStart : ScreenJob
 {
-	TextureID pic;
-
+	bool soun;
+	array<K7TitleBar> Bar;
+	Vector2 ScreenSize;
+	Shape2DTransform interp;
+	
+	void NewBar(Vector2 pos, Double Size, Double Vel, Bool Vertical)
+	{
+		K7TitleBar Br = New("K7TitleBar");
+		Br.Pos = Pos*ScreenSize.y;
+		Br.Vertical = Vertical;
+		Br.Alpha = 0.5;
+		Br.rhomboid = New("Shape2D");
+		Br.transform = New("Shape2DTransform");
+		
+		If(Vertical) 
+		{
+			Br.rhomboid.PushVertex((-0.25,0.5)); Br.rhomboid.PushCoord((0,0));
+			Br.rhomboid.PushVertex((Size-0.25,0.5)); Br.rhomboid.PushCoord((0,0));
+			Br.rhomboid.PushVertex((0,-0.5)); Br.rhomboid.PushCoord((0,0));
+			Br.rhomboid.PushVertex((Size,-0.5)); Br.rhomboid.PushCoord((0,0));
+			Br.transform.Scale((ScreenSize.y, ScreenSize.y));
+			Br.Vel = Vel*ScreenSize.y*( -0.25, 1 );
+		}
+		else 
+		{
+			Br.rhomboid.PushVertex((-1,Size)); Br.rhomboid.PushCoord((0,0));
+			Br.rhomboid.PushVertex((0,Size)); Br.rhomboid.PushCoord((0,0));
+			Br.rhomboid.PushVertex((-1,-Size)); Br.rhomboid.PushCoord((0,0));
+			Br.rhomboid.PushVertex((0,-Size)); Br.rhomboid.PushCoord((0,0));
+			Br.transform.Scale((ScreenSize.x,ScreenSize.x));
+			Br.Vel.x = Vel*ScreenSize.x;
+		}
+		Br.rhomboid.PushTriangle(0,1,2);
+		Br.rhomboid.PushTriangle(1,2,3);
+		Br.transform.Translate(Br.Pos);
+		Br.rhomboid.SetTransform(Br.transform);
+		//Br.transform.Clear();
+		
+		Bar.Push(Br);
+	}
+	
+	ScreenJob Init()
+	{
+		ScreenSize = (Screen.GetWidth(), Screen.GetHeight() );
+		Interp = New("Shape2DTransform");
+		NewBar( (1.5,-0.4) ,0.05,0.005,1);
+		NewBar( (1.1,-0.5) ,0.02,0.01,1);
+		NewBar( (0,0.5) ,0.05,0.005,0);
+		Return Self;
+	}
 	override bool OnEvent(InputEvent evt)
 	{
 		if (evt.type == InputEvent.Type_KeyDown)  // Any key will skip, not sure why mouse buttons don't count though...
@@ -56,13 +104,40 @@ class K7_MenuStart : ScreenJob
 
 	override void OnTick() 
 	{
-		if (ticks > TICRATE * 4) jobstate = finished;
+		if (!soun) {System.StopAllSounds(); S_StartSound("menu/start",1); soun = true;}
+		if (ticks > TICRATE * 20) jobstate = finished;
+		ForEach(B : Bar)
+		{ 
+			If(B.Vel.x || B.Vel.y)
+			{
+				B.Pos += B.Vel;
+				If(B.Vertical && B.Pos.y > ScreenSize.y*0.5) {B.Pos.y = ScreenSize.y*0.5; B.Vel = (0,0);}
+				If(!B.Vertical && B.Pos.x > ScreenSize.x) {B.Pos.x = ScreenSize.x; B.Vel = (0,0);}
+				B.transform.Translate(B.Vel);
+				B.rhomboid.SetTransform(B.transform); 
+			}
+		}
 	}
 
 	override void Draw(double smoothratio) 
 	{
-		
+		ForEach(B : Bar)
+		{
+			Screen.DrawShapeFill("00FF00",B.Alpha,B.rhomboid);
+		}
 	}
+	
+}
+
+class K7TitleBar ui
+{
+	Vector2 Pos;
+	Vector2 Vel;
+	Double Interp;
+	Double Alpha;
+	Bool Vertical;
+	Shape2D rhomboid;
+	Shape2DTransform transform;
 }
 
 class K7intro ui
@@ -70,6 +145,6 @@ class K7intro ui
 	static void DoIntroCutscene(ScreenJobRunner runner)
 	{
 		runner.Append(new("K7_titlecards").Init() );
-		//runner.Append(new("K7_MenuStart") );
+		runner.Append(new("K7_MenuStart").Init() );
 	}
 }
