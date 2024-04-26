@@ -358,9 +358,10 @@ class K7_LetterDrop : Object ui//ListMenuItem
 	
 	void ticker()
 	{
-		if(alpha<0) 
+		if(alpha<=0) 
 		{
 			timer--;
+			alpha = 0;
 		}
 		
 		If(fall)
