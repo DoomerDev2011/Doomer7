@@ -46,6 +46,8 @@ class K7_MenuStart : ScreenJob
 	array<K7TitleBar> Bar;
 	Vector2 ScreenSize;
 	Shape2DTransform interp;
+	TextureId Title;
+	Double BarsAlpha, LogoAlpha;
 	
 	void NewBar(Vector2 pos, Double Size, Double Vel, Bool Vertical)
 	{
@@ -85,6 +87,7 @@ class K7_MenuStart : ScreenJob
 	
 	ScreenJob Init()
 	{
+		Title = TexMan.CheckForTexture("graphics/Doomer7Logo.png");
 		ScreenSize = (Screen.GetWidth(), Screen.GetHeight() );
 		Interp = New("Shape2DTransform");
 		NewBar( (1.5,-0.4) ,0.05,0.005,1);
@@ -96,7 +99,10 @@ class K7_MenuStart : ScreenJob
 	{
 		if (evt.type == InputEvent.Type_KeyDown)  // Any key will skip, not sure why mouse buttons don't count though...
 		{
+			System.StopAllSounds(); 
 			jobstate = finished;
+			menu.SetMenu("MainMenu");
+			S_StartSound("menu/select",1);
 			return true;
 		}
 		return false;
@@ -105,7 +111,6 @@ class K7_MenuStart : ScreenJob
 	override void OnTick() 
 	{
 		if (!soun) {System.StopAllSounds(); S_StartSound("menu/start",1); soun = true;}
-		if (ticks > TICRATE * 20) jobstate = finished;
 		ForEach(B : Bar)
 		{ 
 			If(B.Vel.x || B.Vel.y)
@@ -121,9 +126,11 @@ class K7_MenuStart : ScreenJob
 
 	override void Draw(double smoothratio) 
 	{
+		screen.DrawTexture(Title, true, 46, 41, DTA_VirtualWidth, 600, DTA_VirtualHeight, 450, DTA_FullscreenScale, FSMode_ScaleToFit43,
+		DTA_ScaleX, 0.17, DTA_ScaleY , 0.155, DTA_Alpha, 1 );
 		ForEach(B : Bar)
 		{
-			Screen.DrawShapeFill("00FF00",B.Alpha,B.rhomboid);
+			Screen.DrawShapeFill("0000FF",B.Alpha,B.rhomboid);
 		}
 	}
 	

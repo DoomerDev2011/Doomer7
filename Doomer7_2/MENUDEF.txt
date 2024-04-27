@@ -14,13 +14,27 @@ OptionMenu "K7_Options"
 	Slider "Crosshair opacity", "k7_crosshairOpacity", 0.0, 1.0, 0.05, 2, "k7_crosshairEnabled"
 }
 
+DefaultListMenu
+{
+	class "k7_BaseMenu"
+	Font "CROSSBREED", "Untranslated"
+	LineSpacing 28
+	Animated
+}
+
 ListMenu "MainMenu"
 {
 	class "k7_MainMenu"
 	Size 600, 450
-	Font "K7Font", "Untranslated"
-	Position 52, 284
-	LineSpacing 28
+	Position 55, 285
 	Selector "null", -32, -5
-	//StaticPatchCentered 160, -50, "M_TITLENO"
+	Animated
+}
+
+ListMenu "SkillMenu"
+{
+	StaticText 74, 16, "$MNU_CHOOSESKILL"
+	Position 160, 44
+	animatedtransition
+	Animated
 }

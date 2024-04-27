@@ -1,70 +1,8 @@
-
-class k7_MainMenu : ListMenu
+class k7_BaseMenu : ListMenu
 {
 	TextureID pic, Title, Glow;
 	Double Allpha;
 	Double Glang;
-
-	override void Init(Menu parent, ListMenuDescriptor baseDesc)
-	{
-		Allpha = 1;
-		pic = TexMan.CheckForTexture("graphics/d7menu.png");
-		Title = TexMan.CheckForTexture("graphics/Doomer7Logo.png");
-		Glow = TexMan.CheckForTexture("graphics/Doomer7Glow.png");
-		// clone the descriptor; baseDesc is exactly what's
-		// in menudef, so we don't want to mutate it
-		let desc = CloneListDescriptor(baseDesc);
-		Super.Init(parent, desc);
-
-		// construct the main menu, filtering out a
-		// few things based on the ingame status
-		bool ingame = gamestate == GS_LEVEL;
-		AddTextItem(desc, "$MNU_NEWGAME", "n", "PlayerclassMenu");
-		AddTextItem(desc, "$MNU_LOADGAME", "l", "LoadGameMenu");
-		AddTextItem(desc, "$MNU_SAVEGAME", "s", "SaveGameMenu", ingame);
-		AddTextItem(desc, "$MNU_OPTIONS", "o", "OptionsMenu");
-		//AddTextItem(desc, "" , "c", "ReadThisMenu", !ingame);
-		//AddTextItem(desc, ""  , "r", "EndGameMenu", ingame);
-		AddTextItem(desc, "$MNU_QUITGAME", "e", "QuitMenu");
-	}
-	
-	override void Drawer ()
-	{
-		Screen.Dim( color(255,0,0,0),1,0,0,Screen.GetWidth(),Screen.GetHeight() );
-		//Screen.DrawTexture(pic, true, 0, 0, DTA_FullscreenEx, FSMode_ScaleToFit);
-		int w = mDesc ? mDesc.DisplayWidth() : ListMenuDescriptor.CleanScale;
-		int h = mDesc ? mDesc.DisplayHeight() : -1;
-		screen.DrawTexture(Glow, true, 46, 41, DTA_VirtualWidth, w, DTA_VirtualHeight, h, DTA_FullscreenScale, FSMode_ScaleToFit43,
-		DTA_ScaleX, 0.17, DTA_ScaleY , 0.155, DTA_Alpha, Sin(Glang)*Allpha );
-		screen.DrawTexture(Title, true, 46, 41, DTA_VirtualWidth, w, DTA_VirtualHeight, h, DTA_FullscreenScale, FSMode_ScaleToFit43,
-		DTA_ScaleX, 0.17, DTA_ScaleY , 0.155, DTA_Alpha, Allpha );
-		Super.Drawer();
-	}
-	
-	override void Ticker() 
-	{
-		Glang += Glang>90 ? 1.2 : 2;
-		If(Glang > 180) Glang = 0;
-		If(Allpha < 1 && Allpha > 0) Allpha -= 0.1;
-		super.ticker();
-	}
-	
-	void LaughSelect()
-	{
-		Allpha = 0.9;
-		for(int i=0;i<mDesc.mItems.Size(); i++)
-		{
-			if (mDesc.mItems[i] is "K7_MenuItem") K7_MenuItem(mDesc.mItems[i]).Off = true;
-		}
-	}
-	void LaughBack()
-	{
-		Allpha = 1;
-		for(int i=0;i<mDesc.mItems.Size(); i++)
-		{
-			if (mDesc.mItems[i] is "K7_MenuItem") K7_MenuItem(mDesc.mItems[i]).Off = false;
-		}
-	}
 	
 	//just to select with hovering and entering with click
 	override bool OnUIEvent(UIEvent ev)
@@ -131,6 +69,46 @@ class k7_MainMenu : ListMenu
 		}*/
 		return false; 
 	}
+	
+	override bool MenuEvent (int mkey, bool fromcontroller)
+	{
+		int oldSelect = mDesc.mSelectedItem;
+		int startedAt = max(0, mDesc.mSelectedItem);
+
+		switch (mkey)
+		{
+		case MKEY_Up:
+			do
+			{
+				if (--mDesc.mSelectedItem < 0) mDesc.mSelectedItem = mDesc.mItems.Size()-1;
+			}
+			while (!mDesc.mItems[mDesc.mSelectedItem].Selectable() && mDesc.mSelectedItem != startedAt);
+			if (mDesc.mSelectedItem == startedAt) mDesc.mSelectedItem = oldSelect;
+			MenuSound("menu/cursor");
+			return true;
+
+		case MKEY_Down:
+			do
+			{
+				if (++mDesc.mSelectedItem >= mDesc.mItems.Size()) mDesc.mSelectedItem = 0;
+			}
+			while (!mDesc.mItems[mDesc.mSelectedItem].Selectable() && mDesc.mSelectedItem != startedAt);
+			if (mDesc.mSelectedItem == startedAt) mDesc.mSelectedItem = oldSelect;
+			MenuSound("menu/cursor");
+			return true;
+
+		case MKEY_Enter:
+			if (mDesc.mSelectedItem >= 0 && mDesc.mItems[mDesc.mSelectedItem].Activate())
+			{
+				MenuSound("menu/advance");
+			}
+			return true;
+
+		default:
+			return Listmenu.MenuEvent(mkey, fromcontroller);
+		}
+	}
+	
 	override bool MouseEvent(int type, int x, int y)
 	{
 		int sel = -1;
@@ -217,6 +195,37 @@ class k7_MainMenu : ListMenu
 		}
 		return newDesc;
 	}
+	
+}
+
+
+
+
+
+class k7_MainMenu : k7_BaseMenu
+{
+	override void Init(Menu parent, ListMenuDescriptor baseDesc)
+	{
+		Allpha = 1;
+		pic = TexMan.CheckForTexture("graphics/d7menu.png");
+		Title = TexMan.CheckForTexture("graphics/Doomer7Logo.png");
+		Glow = TexMan.CheckForTexture("graphics/Doomer7Glow.png");
+		// clone the descriptor; baseDesc is exactly what's
+		// in menudef, so we don't want to mutate it
+		let desc = CloneListDescriptor(baseDesc);
+		Super.Init(parent, desc);
+
+		// construct the main menu, filtering out a
+		// few things based on the ingame status
+		bool ingame = gamestate == GS_LEVEL;
+		AddTextItem(desc, "$MNU_NEWGAME", "n", "PlayerclassMenu");
+		AddTextItem(desc, "$MNU_LOADGAME", "l", "LoadGameMenu");
+		AddTextItem(desc, "$MNU_SAVEGAME", "s", "SaveGameMenu", ingame);
+		AddTextItem(desc, "$MNU_OPTIONS", "o", "OptionsMenu");
+		//AddTextItem(desc, "" , "c", "ReadThisMenu", !ingame);
+		//AddTextItem(desc, ""  , "r", "EndGameMenu", ingame);
+		AddTextItem(desc, "$MNU_QUITGAME", "e", "QuitMenu");
+	}
 
 	void AddTextItem(ListMenuDescriptor desc, String text, String hotkey, Name child, bool condition = true) 
 	{
@@ -226,6 +235,7 @@ class k7_MainMenu : ListMenu
 			item.Init(desc, text, hotkey, child);
 			int leng = Stringtable.Localize(text).Length();
 			item.Kmenu = self;
+			item.space = 10; item.ispce = 10;
 			desc.mItems.Push(item);
 			For(int i; i<leng; i++)
 			{
@@ -236,6 +246,83 @@ class k7_MainMenu : ListMenu
 			if (desc.mSelectedItem == -1) {
 				desc.mSelectedItem = desc.mItems.Size() - 1;
 			}
+		}
+	}
+	
+	override bool MenuEvent (int mkey, bool fromcontroller)
+	{
+		int oldSelect = mDesc.mSelectedItem;
+		int startedAt = max(0, mDesc.mSelectedItem);
+
+		switch (mkey)
+		{
+		case MKEY_Up:
+			do
+			{
+				if (--mDesc.mSelectedItem < 0) mDesc.mSelectedItem = mDesc.mItems.Size()-1;
+			}
+			while (!mDesc.mItems[mDesc.mSelectedItem].Selectable() && mDesc.mSelectedItem != startedAt);
+			if (mDesc.mSelectedItem == startedAt) mDesc.mSelectedItem = oldSelect;
+			MenuSound("menu/cursor");
+			return true;
+
+		case MKEY_Down:
+			do
+			{
+				if (++mDesc.mSelectedItem >= mDesc.mItems.Size()) mDesc.mSelectedItem = 0;
+			}
+			while (!mDesc.mItems[mDesc.mSelectedItem].Selectable() && mDesc.mSelectedItem != startedAt);
+			if (mDesc.mSelectedItem == startedAt) mDesc.mSelectedItem = oldSelect;
+			MenuSound("menu/cursor");
+			return true;
+
+		case MKEY_Enter:
+			if (mDesc.mSelectedItem >= 0 && mDesc.mItems[mDesc.mSelectedItem].Activate())
+			{
+				//MenuSound("menu/advance");
+			}
+			return true;
+
+		default:
+			return ListMenu.MenuEvent(mkey, fromcontroller);
+		}
+	}
+	
+	override void Drawer ()
+	{
+		Screen.Dim( color(255,0,0,0),1,0,0,Screen.GetWidth(),Screen.GetHeight() );
+		//Screen.DrawTexture(pic, true, 0, 0, DTA_FullscreenEx, FSMode_ScaleToFit);
+		int w = mDesc ? mDesc.DisplayWidth() : ListMenuDescriptor.CleanScale;
+		int h = mDesc ? mDesc.DisplayHeight() : -1;
+		screen.DrawTexture(Glow, true, 46, 41, DTA_VirtualWidth, w, DTA_VirtualHeight, h, DTA_FullscreenScale, FSMode_ScaleToFit43,
+		DTA_ScaleX, 0.17, DTA_ScaleY , 0.155, DTA_Alpha, Sin(Glang)*Allpha );
+		screen.DrawTexture(Title, true, 46, 41, DTA_VirtualWidth, w, DTA_VirtualHeight, h, DTA_FullscreenScale, FSMode_ScaleToFit43,
+		DTA_ScaleX, 0.17, DTA_ScaleY , 0.155, DTA_Alpha, Allpha );
+		Super.Drawer();
+	}
+	
+	override void Ticker() 
+	{
+		Glang += Glang>90 ? 1.2 : 2;
+		If(Glang > 180) Glang = 0;
+		If(Allpha < 1 && Allpha > 0) Allpha -= 0.1;
+		super.ticker();
+	}
+	
+	void LaughSelect()
+	{
+		Allpha = 0.9;
+		for(int i=0;i<mDesc.mItems.Size(); i++)
+		{
+			if (mDesc.mItems[i] is "K7_MenuItem") K7_MenuItem(mDesc.mItems[i]).Off = true;
+		}
+	}
+	void LaughBack()
+	{
+		Allpha = 1;
+		for(int i=0;i<mDesc.mItems.Size(); i++)
+		{
+			if (mDesc.mItems[i] is "K7_MenuItem") K7_MenuItem(mDesc.mItems[i]).Off = false;
 		}
 	}
 	
@@ -250,11 +337,17 @@ class K7_MenuItem: ListMenuItemTextItem
 	array<K7_LetterDrop> drop;
 	Bool Select;
 	Bool Off;
-	int space;
+	int space, ispce;
+	
+	double Lerp (double v0, double v1)
+    {
+		return v0 + System.GetTimeFrac() * (v1 - v0);
+    }
 	
 	override void Draw(bool selected, ListMenuDescriptor desc)
 	{
 		Select = selected;
+		double fscale = 0.94;
 		int color = selected||count ? 0xFFFF0000 : 0xFFEEEEFF;//selected ? mColorSelected : mColor;
 		let fnt = menuDelegate.PickFont(mFont);
 		int w = desc ? desc.DisplayWidth() : ListMenuDescriptor.CleanScale;
@@ -265,22 +358,26 @@ class K7_MenuItem: ListMenuItemTextItem
 		
 		ForEach(D:Drop)
 		{
-			screen.DrawChar(fnt, font.CR_UNTRANSLATED, D.x, D.y, D.chr, DTA_VirtualWidth, w, DTA_VirtualHeight, h, 
+			screen.DrawChar(fnt, font.CR_UNTRANSLATED, D.x, lerp(D.y2,D.y), D.chr, DTA_VirtualWidth, w, DTA_VirtualHeight, h, 
 			DTA_FullscreenScale, FSMode_ScaleToFit43, DTA_Color, D.color,
-			DTA_ScaleX, 0.8, DTA_ScaleY, 0.8*D.height, DTA_Alpha, D.alpha*KMenu.Allpha);
+			DTA_ScaleX, fscale, DTA_ScaleY, fscale*lerp(D.oldhei,D.height), DTA_Alpha, D.alpha*KMenu.Allpha);
 		}
 		
 		For(int i; i < leng; i++)
 		{
-			double x = charx+mXpos; double y = mYpos;
-			If(count) {x +=Random(-8,8); y += Random(-8,8);}
-			else if (drop[i].timer<1) dropchar(i,itext.ByteAt(i),x,y);
-			
-			screen.DrawChar(fnt, font.CR_UNTRANSLATED, x, y, itext.ByteAt(i), DTA_VirtualWidth, w, DTA_VirtualHeight, h, 
-			DTA_FullscreenScale, FSMode_ScaleToFit43, DTA_Color, color,
-			DTA_ScaleX, 0.8, DTA_ScaleY, 0.8, DTA_Alpha, KMenu.Allpha + Alfa);
-			
-			charx += 12 + space;//fnt.GetCharWidth(mText.ByteAt(i) ) + space;
+			int chr = itext.ByteAt(i);
+			If(chr != 32)//space
+			{
+				double x = charx+mXpos; double y = mYpos;
+				If(count) {x +=Random(-10,10); y += Random(-10,10);}
+				else if (drop[i].timer<1 && chr) dropchar(i,chr,x,y);
+				
+				screen.DrawChar(fnt, font.CR_UNTRANSLATED, x, y, chr, DTA_VirtualWidth, w, DTA_VirtualHeight, h, 
+				DTA_FullscreenScale, FSMode_ScaleToFit43, DTA_Color, color,
+				DTA_ScaleX, fscale, DTA_ScaleY, fscale, DTA_Alpha, KMenu.Allpha + Alfa);
+				charx += fnt.GetCharWidth(chr) *0.8 + lerp(ispce,space);
+			}
+			else { charx += lerp(ispce,space); }
 		}
 	}
 	
@@ -288,9 +385,9 @@ class K7_MenuItem: ListMenuItemTextItem
 	{
 		K7_LetterDrop Dr = drop[i];
 		Dr.x = x;
-		Dr.y = y+random(-10,4);
+		Dr.y = y+random(-6,8);
 		Dr.chr = chr;
-		Dr.color = 0xFF880000;
+		Dr.color = 0xFF660000;
 		Dr.Alpha = 0;
 		Dr.Fall = 0;
 		Dr.height = 1;
@@ -328,10 +425,10 @@ class K7_MenuItem: ListMenuItemTextItem
 			Count--;
 		}
 		
-		If(Select || Count) {
-			If(space < 46) space += 6; }
-		else {
-			If(space > 0) space -= 3; }
+		ispce = space;
+		int gospace ;
+		If(Select || Count) gospace = 47;
+		space += Clamp(gospace-space,-3,6);
 			
 		If(Alfa>0) Alfa -= 0.1;
 		
@@ -351,23 +448,25 @@ class K7_LetterDrop : Object ui//ListMenuItem
 	double alpha;
 	double fallthre;
 	double vel;
-	double height;
-	int x,y;
+	double height, oldhei;
+	int x,y,y2;
 	vector2 pos;
-	
 	
 	void ticker()
 	{
-		if(alpha<0) 
+		y2 = y;
+		oldhei = height;
+		if(alpha<=0) 
 		{
 			timer--;
+			alpha = 0;
 		}
 		
 		If(fall)
 		{
 			height -= vel;
 			y += 2;
-			alpha -= 0.05;
+			alpha -= 0.03;
 		}
 		else
 		{
