@@ -198,9 +198,84 @@ class k7_BaseMenu : ListMenu
 	
 }
 
+class k7_Difficulty: k7_BaseMenu
+{
+	int hardMus,hardMus1;
+	
+	override void Init(Menu parent, ListMenuDescriptor baseDesc)
+	{
+		hardMus = 1;
+		Super.Init(parent, baseDesc);
+	}
+	
+	override void Drawer ()
+	{
+		Screen.Dim( color(255,0,0,0),1,0,0,Screen.GetWidth(),Screen.GetHeight() );
+		
+		//screen.DrawText(menuDelegate.PickFont(mFont), font.CR_UNTRANSLATED, 20, 20, txt, DTA_VirtualWidth, 340, DTA_VirtualHeight, 200, 
+				//DTA_FullscreenScale, FSMode_ScaleToFit43);
+		Super.Drawer();
+	}
+	
+	override void Ticker() 
+	{
+		Glang += Frandom(0.9,1);
+		hardMus = mDesc.mSelectedItem > mDesc.mItems.Size()*0.5 ? 2 : 1;
+		
+		If(hardMus == 1 && hardMus != hardMus1) {System.StopAllSounds(); menuDelegate.S_StartSound("music/skillA",1,CHANF_LOOP ); }
+		If(hardMus == 2 && hardMus != hardMus1) {System.StopAllSounds(); menuDelegate.S_StartSound("music/skillB",1,CHANF_LOOP ); }
+		hardMus1 = hardMus;
+		super.ticker();
+	}
+	
+	override bool MenuEvent (int mkey, bool fromcontroller)
+	{
+		int oldSelect = mDesc.mSelectedItem;
+		int startedAt = max(0, mDesc.mSelectedItem);
 
+		switch (mkey)
+		{
+		case MKEY_Up:
+			do
+			{
+				if (--mDesc.mSelectedItem < 0) mDesc.mSelectedItem = mDesc.mItems.Size()-1;
+			}
+			while (!mDesc.mItems[mDesc.mSelectedItem].Selectable() && mDesc.mSelectedItem != startedAt);
+			if (mDesc.mSelectedItem == startedAt) mDesc.mSelectedItem = oldSelect;
+			MenuSound("menu/cursor");
+			return true;
 
+		case MKEY_Down:
+			do
+			{
+				if (++mDesc.mSelectedItem >= mDesc.mItems.Size()) mDesc.mSelectedItem = 0;
+			}
+			while (!mDesc.mItems[mDesc.mSelectedItem].Selectable() && mDesc.mSelectedItem != startedAt);
+			if (mDesc.mSelectedItem == startedAt) mDesc.mSelectedItem = oldSelect;
+			MenuSound("menu/cursor");
+			return true;
 
+		case MKEY_Enter:
+			if (mDesc.mSelectedItem >= 0 && mDesc.mItems[mDesc.mSelectedItem].Activate())
+			{
+				MenuSound("menu/advance");
+			}
+			return true;
+			
+		case MKEY_Back:
+			Close();
+			let m = GetCurrentMenu();
+			System.StopAllSounds();
+			MenuSound(m != null ? "menu/backup" : "menu/clear");
+			if (!m) menuDelegate.MenuDismissed();
+			return true;
+
+		default:
+			return false;
+		}
+	}
+	
+}
 
 class k7_MainMenu : k7_BaseMenu
 {
@@ -369,7 +444,7 @@ class K7_MenuItem: ListMenuItemTextItem
 			If(chr != 32)//space
 			{
 				double x = charx+mXpos; double y = mYpos;
-				If(count) {x +=Random(-10,10); y += Random(-10,10);}
+				If(count) {x +=Random(-12,12); y += Random(-12,12);}
 				else if (drop[i].timer<1 && chr) dropchar(i,chr,x,y);
 				
 				screen.DrawChar(fnt, font.CR_UNTRANSLATED, x, y, chr, DTA_VirtualWidth, w, DTA_VirtualHeight, h, 

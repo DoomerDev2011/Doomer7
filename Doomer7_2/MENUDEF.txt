@@ -33,7 +33,8 @@ ListMenu "MainMenu"
 
 ListMenu "SkillMenu"
 {
-	StaticText 74, 16, "$MNU_CHOOSESKILL"
+	class "k7_Difficulty"
+	StaticText 0, 16, "$MNU_CHOOSESKILL"
 	Position 160, 44
 	animatedtransition
 	Animated
