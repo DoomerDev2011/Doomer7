@@ -284,7 +284,6 @@ class k7_MainMenu : k7_BaseMenu
 		Allpha = 1;
 		pic = TexMan.CheckForTexture("graphics/d7menu.png");
 		Title = TexMan.CheckForTexture("graphics/Doomer7Logo.png");
-		Glow = TexMan.CheckForTexture("graphics/Doomer7Glow.png");
 		// clone the descriptor; baseDesc is exactly what's
 		// in menudef, so we don't want to mutate it
 		let desc = CloneListDescriptor(baseDesc);
@@ -300,6 +299,7 @@ class k7_MainMenu : k7_BaseMenu
 		//AddTextItem(desc, "" , "c", "ReadThisMenu", !ingame);
 		//AddTextItem(desc, ""  , "r", "EndGameMenu", ingame);
 		AddTextItem(desc, "$MNU_QUITGAME", "e", "QuitMenu");
+		Glow = TexMan.CheckForTexture("graphics/Doomer7Glow.png");
 	}
 
 	void AddTextItem(ListMenuDescriptor desc, String text, String hotkey, Name child, bool condition = true) 
@@ -365,7 +365,7 @@ class k7_MainMenu : k7_BaseMenu
 	
 	override void Drawer ()
 	{
-		Screen.Dim( color(255,0,0,0),1,0,0,Screen.GetWidth(),Screen.GetHeight() );
+		If( gamestate != GS_LEVEL) Screen.Dim( color(255,0,0,0),1,0,0,Screen.GetWidth(),Screen.GetHeight() );
 		//Screen.DrawTexture(pic, true, 0, 0, DTA_FullscreenEx, FSMode_ScaleToFit);
 		int w = mDesc ? mDesc.DisplayWidth() : ListMenuDescriptor.CleanScale;
 		int h = mDesc ? mDesc.DisplayHeight() : -1;
@@ -375,10 +375,11 @@ class k7_MainMenu : k7_BaseMenu
 		DTA_ScaleX, 0.17, DTA_ScaleY , 0.155, DTA_Alpha, Allpha );
 		Super.Drawer();
 	}
-	
+	int wai;
 	override void Ticker() 
 	{
-		Glang += Glang>90 ? 1.2 : 2;
+		If(wai>4) Glang += Glang>90 ? 1.2 : 2;
+		else wai++;
 		If(Glang > 180) Glang = 0;
 		If(Allpha < 1 && Allpha > 0) Allpha -= 0.1;
 		super.ticker();
