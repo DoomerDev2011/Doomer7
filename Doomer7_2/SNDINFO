@@ -469,9 +469,12 @@ weapon/MaskExplosion MGRS
 // Music
 music/title music/title.ogg
 $musicvolume music/title 0.75
+music/skillA music/skilla.ogg
+music/skillB music/skillb.ogg
 
 meme title
 menu/start			sound/ui/title_start.ogg
+menu/select			sound/ui/title_select.ogg
 menu/finish			sound/ui/title_logo.ogg
 menu/cards			sound/ui/title_cards.ogg
 level1 					raveon

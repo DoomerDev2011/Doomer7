@@ -1,7 +1,7 @@
 gameinfo
 {
 	playerclasses = "CK7_Smith"
-	titlemusic = "music/Title.ogg"
+	titlemusic = ""//"music/Title.ogg"
 	StatusBarClass = "CK7_Hud"
 	AddEventHandlers = "CK7_GameplayHandler"
 	intro {Function = "K7intro.DoIntroCutscene"}
