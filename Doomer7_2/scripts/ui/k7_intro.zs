@@ -92,12 +92,12 @@ class K7_MenuStart : ScreenJob
 		}
 		else ForEach(B : Bar)
 		{ 
-			If(B.Vel.x || B.Vel.y)
+			If(!B.Halt)
 			{
-				B.Pos += B.Vel;
 				B.Alpha += Min(B.Alpha2-B.Alpha,B.Alpha1);
-				If(B.Vertical && B.Pos.y > ScreenSize.y*0.5) {B.Pos.y = ScreenSize.y*0.5; B.Vel = (0,0);}
-				If(!B.Vertical && B.Pos.x > ScreenSize.x) {B.Pos.x = ScreenSize.x; B.Vel = (0,0);}
+				If(B.Vertical && B.Pos.y+B.Vel.y > ScreenSize.y*0.5) { B.Vel *= (ScreenSize.y*0.5-B.Pos.y)/B.Vel.Y; B.Halt = true; }
+				If(!B.Vertical && B.Pos.x+B.Vel.x > ScreenSize.x) {B.Vel *= (ScreenSize.x-B.Pos.x)/B.Vel.x; B.Halt = true; }
+				B.Pos += B.Vel;
 				B.transform.Translate(B.Vel);
 				B.rhomboid.SetTransform(B.transform); 
 			}
@@ -376,6 +376,7 @@ class K7TitleBar ui
 	Vector2 Vel;
 	Double Interp;
 	Double Alpha, Alpha1, Alpha2;
+	Bool Halt;
 	Bool Vertical;
 	Shape2D rhomboid;
 	Shape2DTransform transform;
