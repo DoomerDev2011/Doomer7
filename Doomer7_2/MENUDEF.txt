@@ -12,6 +12,7 @@ OptionMenu "K7_Options"
 {
 	Option "Killer7 Crosshair", "k7_crosshairEnabled", "OnOff"
 	Slider "Crosshair opacity", "k7_crosshairOpacity", 0.0, 1.0, 0.05, 2, "k7_crosshairEnabled"
+	Option "Enemies spew blood on death", "k7_bloodtrails", "OnOff"
 }
 
 DefaultListMenu

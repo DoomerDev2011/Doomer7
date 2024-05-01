@@ -44,7 +44,7 @@ class CK7_GameplayHandler : EventHandler
 						-0.12*pvel.x,-0.12*pvel.y,-0.12*pvel.z,1,0);
 					}
 				}
-				else {
+				else if (k7_bloodtrails) {
 					int t = 0.05*(e.thing.height+e.thing.radius);
 					for(int b = t; b>0; b--)
 					{
