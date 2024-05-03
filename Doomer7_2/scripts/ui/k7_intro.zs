@@ -17,7 +17,9 @@ class K7_titlecards : ScreenJob
 	{
 		if (evt.type == InputEvent.Type_KeyDown)  // Any key will skip, not sure why mouse buttons don't count though...
 		{
+			System.StopAllSounds(); 
 			jobstate = finished;
+			menu.SetMenu("TitleIntro");
 			return true;
 		}
 		return false;
@@ -43,51 +45,41 @@ class K7_titlecards : ScreenJob
 
 
 
-class K7_MenuStart : ScreenJob
+class k7_TitleIntro : k7_MainMenu
 {
 	const tilt = 0.24;
 	bool soun;
 	array<K7TitleBar> Bar;
-	array<K7TitleBar> Part;
 	Vector2 ScreenSize;
 	Shape2DTransform interp;
-	TextureId Title, Tglow;
-	TextureID pic0, pic1, pic2, pic3;
 	Double BarsAlpha, LogoAlpha;
-	//lettertilt = -0.225 , 1
-	//7 tilt = -0,57, 1
 	
-	override bool OnEvent(InputEvent evt)
+	override bool OnUIEvent(UIEvent ev)
 	{
-		if (evt.type == InputEvent.Type_KeyDown && !LogoAlpha)  // Any key will skip, not sure why mouse buttons don't count though...
+		if (ev.Type == UIEvent.Type_KeyDown || ev.type == UIEvent.Type_LButtonDown) 
 		{
-			System.StopAllSounds(); 
-			jobstate = finished;
+			System.StopAllSounds();
 			menu.SetMenu("MainMenu");
 			S_StartSound("menu/select",1);
 			return true;
 		}
-		return false;
+		return Super.OnUIEvent(ev); 
 	}
 
-	override void OnTick() 
+	int ticks;
+	override void Ticker() 
 	{
 		if (!soun) {System.StopAllSounds(); S_StartSound("menu/start",1); soun = true;}
-		if (ticks > TICRATE * 17.63)
+		if (ticks > TICRATE * 17)
 		{
-			//System.StopAllSounds(); 
-			jobstate = finished;
 			menu.SetMenu("MainMenu");
-			//S_StartSound("menu/select",1);
 		}
-		if (ticks > TICRATE * 17) LogoAlpha = 1;
 		if (ticks > TICRATE*14.2) 
 		{
 			If(BarsAlpha>0) BarsAlpha -= 0.01;
 			ForEach(B : Part)
 			{ 
-				If(LogoAlpha == 1) B.Alpha -= 0.032;
-				else If(B.Alpha<B.Alpha2) B.Alpha += Min(B.Alpha2-B.Alpha,B.Alpha1);
+				If(B.Alpha<B.Alpha2) B.Alpha += Min(B.Alpha2-B.Alpha,B.Alpha1);
 			}
 		}
 		else ForEach(B : Bar)
@@ -102,15 +94,17 @@ class K7_MenuStart : ScreenJob
 				B.rhomboid.SetTransform(B.transform); 
 			}
 		}
+		ticks++;
+		//super.ticker();
 		
 	}
 
-	override void Draw(double smoothratio) 
+	override void Drawer ()
 	{
-		screen.DrawTexture(Title, true, 46, 41, DTA_VirtualWidth, 600, DTA_VirtualHeight, 450, DTA_FullscreenScale, FSMode_ScaleToFit43,
-		DTA_ScaleX, 0.17, DTA_ScaleY , 0.155, DTA_Alpha, LogoAlpha );
+		Screen.Dim( color(255,0,0,0),1,0,0,Screen.GetWidth(),Screen.GetHeight() );
 		ForEach(B : Bar) Screen.DrawShapeFill("0000FF",B.Alpha*BarsAlpha,B.rhomboid);
 		ForEach(B : Part) Screen.DrawShapeFill("0000FF",B.Alpha,B.rhomboid);
+		//Super.Drawer();
 	}
 	
 	void NewBar(Double pos, Double ofs, Double Size, Double Vel, Double Alpha, Bool Vertical)
@@ -188,7 +182,7 @@ class K7_MenuStart : ScreenJob
 	}
 	
 	
-	ScreenJob Init()
+	override void Init(Menu parent, ListMenuDescriptor baseDesc)
 	{
 		BarsAlpha = 1;
 		Title = TexMan.CheckForTexture("graphics/Doomer7Logo.png");
@@ -365,7 +359,7 @@ class K7_MenuStart : ScreenJob
 		NewCharPart(527,348,119,32,Frandom(-1,0),1 );
 		NewCharPart(527,380,119,94,Frandom(-1,0),1 );
 		
-		Return Self;
+		K7_BaseMenu.Init(parent, basedesc);
 	}
 	
 }
@@ -387,6 +381,5 @@ class K7intro ui
 	static void DoIntroCutscene(ScreenJobRunner runner)
 	{
 		runner.Append(new("K7_titlecards").Init() );
-		runner.Append(new("K7_MenuStart").Init() );
 	}
 }

@@ -23,6 +23,12 @@ DefaultListMenu
 	Animated
 }
 
+ListMenu "TitleIntro"
+{
+	class "k7_TitleIntro"
+	Size 600, 450
+}
+
 ListMenu "MainMenu"
 {
 	class "k7_MainMenu"

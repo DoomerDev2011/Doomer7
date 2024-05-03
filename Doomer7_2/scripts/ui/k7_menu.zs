@@ -18,7 +18,7 @@ class k7_BaseMenu : ListMenu
 				if (mDesc.mitems[i].Selectable() && mDesc.mItems[i].CheckHotkey(ch))
 				{
 					mDesc.mSelectedItem = i;
-					//MenuSound("menu/cursor");
+					MenuSound("menu/cursor");
 					return true;
 				}
 			}
@@ -27,7 +27,7 @@ class k7_BaseMenu : ListMenu
 				if (mDesc.mitems[i].Selectable() && mDesc.mItems[i].CheckHotkey(ch))
 				{
 					mDesc.mSelectedItem = i;
-					//MenuSound("menu/cursor");
+					MenuSound("menu/cursor");
 					return true;
 				}
 			}
@@ -200,14 +200,18 @@ class k7_BaseMenu : ListMenu
 
 class k7_MainMenu : k7_BaseMenu
 {
+	array<K7TitleBar> Part;
+	
 	override void Init(Menu parent, ListMenuDescriptor baseDesc)
 	{
 		Allpha = 1;
 		Title = TexMan.CheckForTexture("graphics/Doomer7Logo.png");
+		if(parent is "K7_TitleIntro") Part.Move(K7_TitleIntro(parent).Part);
+		ForEach(B : Part) B.Alpha = B.Alpha2;
 		// clone the descriptor; baseDesc is exactly what's
 		// in menudef, so we don't want to mutate it
 		let desc = CloneListDescriptor(baseDesc);
-		Super.Init(parent, desc);
+		Super.Init(null, desc);
 
 		// construct the main menu, filtering out a
 		// few things based on the ingame status
@@ -293,13 +297,18 @@ class k7_MainMenu : k7_BaseMenu
 		DTA_ScaleX, 0.17, DTA_ScaleY , 0.155, DTA_Alpha, Sin(Glang)*Allpha );
 		screen.DrawTexture(Title, true, 46, 41, DTA_VirtualWidth, w, DTA_VirtualHeight, h, DTA_FullscreenScale, FSMode_ScaleToFit43,
 		DTA_ScaleX, 0.17, DTA_ScaleY , 0.155, DTA_Alpha, Allpha );
+		ForEach(B : Part) Screen.DrawShapeFill("0000FF",B.Alpha,B.rhomboid);
 		Super.Drawer();
 	}
-	int wai;
+	
 	override void Ticker() 
 	{
-		If(wai>4) Glang += Glang>90 ? 1.2 : 2;
-		else wai++;
+		ForEach(B : Part)
+		{ 
+			B.Alpha -= 0.03;
+			If(B.Alpha <= 0) {Part.Clear(); Break;}
+		}
+		If(Part.Size() == 0) Glang += Glang>90 ? 1.2 : 2;
 		If(Glang > 180) Glang = 0;
 		If(Allpha < 1 && Allpha > 0) Allpha -= 0.1;
 		super.ticker();
