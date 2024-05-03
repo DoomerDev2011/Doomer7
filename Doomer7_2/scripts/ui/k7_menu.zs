@@ -533,9 +533,14 @@ class k7_Difficulty: k7_BaseMenu
 	{
 		If(Allpha<1 && Glang) Allpha += 0.0625;
 		else If(Allpha>0) Allpha -= 0.0625;
-		If(!Glang) hardMus = mDesc.mSelectedItem > mDesc.mItems.Size()*0.5 ? 2 : 1;
+		If(!Glang) {
+			If(mDesc.mSelectedItem > mDesc.mItems.Size()*0.66) hardMus = 3;
+			else If(mDesc.mSelectedItem > mDesc.mItems.Size()*0.33) hardMus = 2;
+			else hardMus = 1;
+		}
 		If(hardMus == 1 && hardMus != hardMus1) {System.StopAllSounds(); menuDelegate.S_StartSound("music/skillA",1,CHANF_LOOP ); }
-		If(hardMus == 2 && hardMus != hardMus1) {System.StopAllSounds(); menuDelegate.S_StartSound("music/skillB",1,CHANF_LOOP ); }
+		If(hardMus == 2 && hardMus != hardMus1) {System.StopAllSounds(); menuDelegate.S_StartSound("music/skillA",1,CHANF_LOOP,1,0,1.2 ); }
+		If(hardMus == 3 && hardMus != hardMus1) {System.StopAllSounds(); menuDelegate.S_StartSound("music/skillB",1,CHANF_LOOP ); }
 		hardMus1 = hardMus;
 		k7_BaseMenu.ticker();
 	}
@@ -617,7 +622,7 @@ class k7_Episodes: k7_Difficulty
 	{
 		If(Allpha<1 && Glang) Allpha += 0.0625;
 		else If(Allpha>0) Allpha -= 0.0625;
-		If(hardMus != hardMus1) {System.StopAllSounds(); menuDelegate.S_StartSound("music/skillA",1,CHANF_LOOP ); }
+		If(hardMus != hardMus1) {System.StopAllSounds(); menuDelegate.S_StartSound("music/skillB",1,CHANF_LOOP,1,0,0.8); }
 		hardMus1 = hardMus;
 		k7_BaseMenu.ticker();
 	}
