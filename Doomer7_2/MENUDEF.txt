@@ -13,19 +13,20 @@ OptionMenu "K7_Options"
 	Option "Killer7 Crosshair", "k7_crosshairEnabled", "OnOff"
 	Slider "Crosshair opacity", "k7_crosshairOpacity", 0.0, 1.0, 0.05, 2, "k7_crosshairEnabled"
 	Option "Enemies spew blood on death", "k7_bloodtrails", "OnOff"
+	
 }
 
 DefaultListMenu
 {
 	class "k7_BaseMenu"
 	Font "CROSSBREED", "Untranslated"
-	LineSpacing 28
 	Animated
 }
 
 ListMenu "MainMenu"
 {
 	class "k7_MainMenu"
+	LineSpacing 28
 	Size 600, 450
 	Position 55, 285
 	Selector "null", -32, -5
@@ -35,8 +36,16 @@ ListMenu "MainMenu"
 ListMenu "SkillMenu"
 {
 	class "k7_Difficulty"
-	StaticText 0, 16, "$MNU_CHOOSESKILL"
-	Position 160, 44
-	animatedtransition
+	LineSpacing 18
+	Size 320, 240
+	ForceList
+	Animated
+}
+ListMenu "EpisodeMenu"
+{
+	class "k7_Episodes"
+	LineSpacing 18
+	Size 320, 240
+	ForceList
 	Animated
 }

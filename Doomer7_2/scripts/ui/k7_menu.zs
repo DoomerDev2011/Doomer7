@@ -198,91 +198,11 @@ class k7_BaseMenu : ListMenu
 	
 }
 
-class k7_Difficulty: k7_BaseMenu
-{
-	int hardMus,hardMus1;
-	
-	override void Init(Menu parent, ListMenuDescriptor baseDesc)
-	{
-		hardMus = 1;
-		Super.Init(parent, baseDesc);
-	}
-	
-	override void Drawer ()
-	{
-		Screen.Dim( color(255,0,0,0),1,0,0,Screen.GetWidth(),Screen.GetHeight() );
-		
-		//screen.DrawText(menuDelegate.PickFont(mFont), font.CR_UNTRANSLATED, 20, 20, txt, DTA_VirtualWidth, 340, DTA_VirtualHeight, 200, 
-				//DTA_FullscreenScale, FSMode_ScaleToFit43);
-		Super.Drawer();
-	}
-	
-	override void Ticker() 
-	{
-		Glang += Frandom(0.9,1);
-		hardMus = mDesc.mSelectedItem > mDesc.mItems.Size()*0.5 ? 2 : 1;
-		
-		If(hardMus == 1 && hardMus != hardMus1) {System.StopAllSounds(); menuDelegate.S_StartSound("music/skillA",1,CHANF_LOOP ); }
-		If(hardMus == 2 && hardMus != hardMus1) {System.StopAllSounds(); menuDelegate.S_StartSound("music/skillB",1,CHANF_LOOP ); }
-		hardMus1 = hardMus;
-		super.ticker();
-	}
-	
-	override bool MenuEvent (int mkey, bool fromcontroller)
-	{
-		int oldSelect = mDesc.mSelectedItem;
-		int startedAt = max(0, mDesc.mSelectedItem);
-
-		switch (mkey)
-		{
-		case MKEY_Up:
-			do
-			{
-				if (--mDesc.mSelectedItem < 0) mDesc.mSelectedItem = mDesc.mItems.Size()-1;
-			}
-			while (!mDesc.mItems[mDesc.mSelectedItem].Selectable() && mDesc.mSelectedItem != startedAt);
-			if (mDesc.mSelectedItem == startedAt) mDesc.mSelectedItem = oldSelect;
-			MenuSound("menu/cursor");
-			return true;
-
-		case MKEY_Down:
-			do
-			{
-				if (++mDesc.mSelectedItem >= mDesc.mItems.Size()) mDesc.mSelectedItem = 0;
-			}
-			while (!mDesc.mItems[mDesc.mSelectedItem].Selectable() && mDesc.mSelectedItem != startedAt);
-			if (mDesc.mSelectedItem == startedAt) mDesc.mSelectedItem = oldSelect;
-			MenuSound("menu/cursor");
-			return true;
-
-		case MKEY_Enter:
-			if (mDesc.mSelectedItem >= 0 && mDesc.mItems[mDesc.mSelectedItem].Activate())
-			{
-				MenuSound("menu/advance");
-			}
-			return true;
-			
-		case MKEY_Back:
-			Close();
-			let m = GetCurrentMenu();
-			System.StopAllSounds();
-			MenuSound(m != null ? "menu/backup" : "menu/clear");
-			if (!m) menuDelegate.MenuDismissed();
-			return true;
-
-		default:
-			return false;
-		}
-	}
-	
-}
-
 class k7_MainMenu : k7_BaseMenu
 {
 	override void Init(Menu parent, ListMenuDescriptor baseDesc)
 	{
 		Allpha = 1;
-		pic = TexMan.CheckForTexture("graphics/d7menu.png");
 		Title = TexMan.CheckForTexture("graphics/Doomer7Logo.png");
 		// clone the descriptor; baseDesc is exactly what's
 		// in menudef, so we don't want to mutate it
@@ -404,7 +324,6 @@ class k7_MainMenu : k7_BaseMenu
 	
 }
 
-
 class K7_MenuItem: ListMenuItemTextItem
 {
 	k7_MainMenu KMenu;
@@ -497,7 +416,7 @@ class K7_MenuItem: ListMenuItemTextItem
 	Override void Ticker() 
 	{
 		If(Count) {
-			If(Count == 1) {Menu.SetMenu(mAction, mParam); KMenu.LaughBack();}
+			If(Count == 1) {KMenu.LaughBack(); Menu.SetMenu(mAction, mParam);}
 			Count--;
 		}
 		
@@ -553,5 +472,241 @@ class K7_LetterDrop : Object ui//ListMenuItem
 		}
 		
 		return;
+	}
+}
+
+class k7_Difficulty: k7_BaseMenu
+{
+	int hardMus,hardMus1;
+	
+	virtual void setpic() {pic = TexMan.CheckForTexture("graphics/Difficulty.png");}
+	
+	override void Init(Menu parent, ListMenuDescriptor baseDesc)
+	{
+		Allpha = 1;
+		setpic();
+		hardMus = 1;
+		double ItemArea = Min( baseDesc.mItems.Size()* baseDesc.mLinespacing, baseDesc.DisplayHeight()*0.75 );
+		double spacing = ItemArea / baseDesc.mItems.Size();
+		baseDesc.mYpos = baseDesc.DisplayHeight()*0.5 - ItemArea*0.5;
+		baseDesc.mXpos += 20;
+		
+		for(int i; i<baseDesc.mItems.Size(); i++)
+		{
+			If(!(baseDesc.mItems[i] is "ListMenuItemSelectable") ) Continue;
+			ListMenuItemSelectable mItem = ListMenuItemSelectable(baseDesc.mItems[i]);
+			If(mItem is "ListMenuItemPatchItem")
+			{
+				K7_Patch K7I = new("K7_Patch");
+				K7I.Init(baseDesc, ListMenuItemPatchItem(mItem).mTexture, "u", mItem.GetAction(), mItem.mParam);
+				K7I.Kmenu = Self;
+				K7I.mHotkey = mItem.mHotkey;
+				baseDesc.mYpos += spacing;
+				baseDesc.mItems[i] = K7I;
+			}
+			else If(mItem is "ListMenuItemTextItem") 
+			{
+				K7_Text K7I = new("K7_Text");
+				K7I.Init(baseDesc, ListMenuItemTextItem(mItem).mText, "u", mItem.GetAction(), mItem.mParam);
+				K7I.Kmenu = Self;
+				K7I.mHotkey = mItem.mHotkey;
+				baseDesc.mYpos += spacing;
+				baseDesc.mItems[i] = K7I;
+			}
+			mItem.destroy();
+		}
+		ListMenu.Init(parent, baseDesc);
+	}
+	
+	override void Drawer ()
+	{
+		int w = mDesc ? mDesc.DisplayWidth() : ListMenuDescriptor.CleanScale;
+		int h = mDesc ? mDesc.DisplayHeight() : -1;
+		Screen.Dim( color(255,0,0,0),1,0,0,Screen.GetWidth(),Screen.GetHeight() );
+		screen.DrawTexture(pic, true, 192, 12, DTA_VirtualWidth, w, DTA_VirtualHeight, h, DTA_FullscreenScale, FSMode_ScaleToFit43,
+		DTA_ScaleX, 0.5, DTA_ScaleY , 0.5, DTA_Color , 0xFF880000 );
+		Super.Drawer();
+		Screen.Dim( color(255,0,0,0),Allpha,0,0,Screen.GetWidth(),Screen.GetHeight() );
+	}
+	
+	override void Ticker() 
+	{
+		If(Allpha<1 && Glang) Allpha += 0.0625;
+		else If(Allpha>0) Allpha -= 0.0625;
+		If(!Glang) hardMus = mDesc.mSelectedItem > mDesc.mItems.Size()*0.5 ? 2 : 1;
+		If(hardMus == 1 && hardMus != hardMus1) {System.StopAllSounds(); menuDelegate.S_StartSound("music/skillA",1,CHANF_LOOP ); }
+		If(hardMus == 2 && hardMus != hardMus1) {System.StopAllSounds(); menuDelegate.S_StartSound("music/skillB",1,CHANF_LOOP ); }
+		hardMus1 = hardMus;
+		k7_BaseMenu.ticker();
+	}
+	
+	void LaughSelect()
+	{
+		Glang = 1;
+		for(int i=0;i<mDesc.mItems.Size(); i++)
+		{
+			if (mDesc.mItems[i] is "K7_Text") K7_Text(mDesc.mItems[i]).Off = true;
+			if (mDesc.mItems[i] is "K7_Patch") K7_Patch(mDesc.mItems[i]).Off = true;
+		}
+	}
+	void LaughBack()
+	{
+		Glang = 0;
+		Allpha = 1;
+		for(int i=0;i<mDesc.mItems.Size(); i++)
+		{
+			If(!mDesc.mItems[i]) Continue;
+			if (mDesc.mItems[i] is "K7_Text") K7_Text(mDesc.mItems[i]).Off = False;
+			if (mDesc.mItems[i] is "K7_Patch") K7_Patch(mDesc.mItems[i]).Off = False;
+		}
+	}
+	
+	override bool MenuEvent (int mkey, bool fromcontroller)
+	{
+		int oldSelect = mDesc.mSelectedItem;
+		int startedAt = max(0, mDesc.mSelectedItem);
+
+		switch (mkey)
+		{
+		case MKEY_Up:
+			do
+			{
+				if (--mDesc.mSelectedItem < 0) mDesc.mSelectedItem = mDesc.mItems.Size()-1;
+			}
+			while (!mDesc.mItems[mDesc.mSelectedItem].Selectable() && mDesc.mSelectedItem != startedAt);
+			if (mDesc.mSelectedItem == startedAt) mDesc.mSelectedItem = oldSelect;
+			MenuSound("menu/cursor");
+			return true;
+
+		case MKEY_Down:
+			do
+			{
+				if (++mDesc.mSelectedItem >= mDesc.mItems.Size()) mDesc.mSelectedItem = 0;
+			}
+			while (!mDesc.mItems[mDesc.mSelectedItem].Selectable() && mDesc.mSelectedItem != startedAt);
+			if (mDesc.mSelectedItem == startedAt) mDesc.mSelectedItem = oldSelect;
+			MenuSound("menu/cursor");
+			return true;
+
+		case MKEY_Enter:
+			if (mDesc.mSelectedItem >= 0 && mDesc.mItems[mDesc.mSelectedItem].Activate())
+			{
+				MenuSound("menu/advance");
+			}
+			return true;
+			
+		case MKEY_Back:
+			Close();
+			let m = GetCurrentMenu();
+			If(!(mParentMenu is "k7_Difficulty")) System.StopAllSounds();
+			MenuSound(m != null ? "menu/backup" : "menu/clear");
+			if (!m) menuDelegate.MenuDismissed();
+			return true;
+
+		default:
+			return false;
+		}
+	}
+	
+}
+
+class k7_Episodes: k7_Difficulty
+{
+	override void setpic() {pic = TexMan.CheckForTexture("graphics/Episodes.png");}
+	override void Ticker() 
+	{
+		If(Allpha<1 && Glang) Allpha += 0.0625;
+		else If(Allpha>0) Allpha -= 0.0625;
+		If(hardMus != hardMus1) {System.StopAllSounds(); menuDelegate.S_StartSound("music/skillA",1,CHANF_LOOP ); }
+		hardMus1 = hardMus;
+		k7_BaseMenu.ticker();
+	}
+}
+
+class K7_text: ListMenuItemTextItem
+{
+	K7_Difficulty Kmenu;
+	int count;
+	Bool Off;
+	override void Draw(bool selected, ListMenuDescriptor desc)
+	{
+		double alpha = 0.5;
+		if(selected) alpha = frandom(0.80,1);
+		let fnt = menuDelegate.PickFont(mFont);
+		int color = selected ? mColorSelected : mColor;
+		
+		int w = desc ? desc.DisplayWidth() : ListMenuDescriptor.CleanScale;
+		int h = desc ? desc.DisplayHeight() : -1;
+		if (w == ListMenuDescriptor.CleanScale)
+		{
+			screen.DrawText(fnt, color, mXpos, mYpos, mText, DTA_Clean, true, DTA_Alpha, alpha );
+		}
+		else
+		{
+			screen.DrawText(fnt, color, mXpos, mYpos, mText, DTA_VirtualWidth, w, DTA_VirtualHeight, h, DTA_FullscreenScale, FSMode_ScaleToFit43, DTA_Alpha, alpha );
+		}
+	}
+	Override void DrawSelector(double xofs, double yofs, TextureID tex, ListMenuDescriptor desc)
+	{
+		Return;
+	}
+	override bool Activate()
+	{
+		Count = 16;
+		KMenu.LaughSelect();
+		return true;
+	}
+	Override void Ticker() 
+	{
+		If(Count) {
+			If(Count == 1) {Menu.SetMenu(mAction, mParam); KMenu.LaughBack();}
+			Count--;
+		}
+	}
+	override bool Selectable()
+	{
+		return mEnabled > 0 && !Off;
+	}
+}
+class K7_Patch: ListMenuItemPatchItem
+{
+	K7_Difficulty Kmenu;
+	int count;
+	Bool Off;
+	override void Draw(bool selected, ListMenuDescriptor desc)
+	{
+		double alpha = 0.5;
+		if(selected) alpha = frandom(0.80,1);
+		int w = desc ? desc.DisplayWidth() : ListMenuDescriptor.CleanScale;
+		int h = desc ? desc.DisplayHeight() : -1;
+		if (w == ListMenuDescriptor.CleanScale)
+		{
+			screen.DrawTexture(mTexture, true, mXpos, mYpos, DTA_Clean, true, DTA_Alpha, alpha );
+		}
+		else
+		{
+			screen.DrawTexture(mTexture, true, mXpos, mYpos, DTA_VirtualWidth, w, DTA_VirtualHeight, h, DTA_FullscreenScale, FSMode_ScaleToFit43, DTA_Alpha, alpha );
+		}
+	}
+	Override void DrawSelector(double xofs, double yofs, TextureID tex, ListMenuDescriptor desc)
+	{
+		Return;
+	}
+	override bool Activate()
+	{
+		Count = 16;
+		KMenu.LaughSelect();
+		return true;
+	}
+	Override void Ticker() 
+	{
+		If(Count) {
+			If(Count == 1) {KMenu.LaughBack(); Menu.SetMenu(mAction, mParam); }
+			Count--;
+		}
+	}
+	override bool Selectable()
+	{
+		return mEnabled > 0 && !Off;
 	}
 }
