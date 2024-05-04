@@ -8,6 +8,7 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 	
 	Default
 	{
+		Tag "KAEDE";
 		Inventory.PickupMessage "You got the AMT Hardballer!";
 		Inventory.PickupSound "weapon/gethar";
 		CK7_Smith_Weapon.PersonaSoundClass 'k7_ked';

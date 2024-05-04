@@ -2,9 +2,9 @@ class CK7_GameplayHandler : EventHandler
 {
 	K7_LookTargetController lookControllers[MAXPLAYERS];
 
-	override void WorldThingDied(worldEvent e)
+	override void WorldThingDamaged(worldEvent e)
 	{
-		if (e.thing && e.thing.bISMONSTER)
+		if (e.thing && e.thing.health<=0 && e.thing.bISMONSTER)
 		{
 			// Initial value: 1-10 mapped to monster's health (between 20 and 1000):
 			double dropcount = CK7_Utils.LinearMap(e.thing.GetMaxHealth(), 20, 1000, 1, 10, true);
@@ -34,7 +34,7 @@ class CK7_GameplayHandler : EventHandler
 			
 			if(!e.thing.bNOBLOOD)
 			{
-				If(e.inflictor is "CK7_BulletPuff" && !e.inflictor.bNOEXTREMEDEATH)
+				If(e.DamageType == "Critical" ||(e.inflictor is "CK7_BulletPuff" && !e.inflictor.bNOEXTREMEDEATH) )
 				{
 					For(int p; p < 100; p++)
 					{
@@ -46,7 +46,7 @@ class CK7_GameplayHandler : EventHandler
 						-0.12*pvel.x,-0.12*pvel.y,-0.12*pvel.z,1,0);
 					}
 				}
-				else if (k7_bloodtrails) {
+				else if (k7_bloodtrails && !(e.DamageFlags & DMG_EXPLOSION) ) {
 					int t = 0.05*(e.thing.height+e.thing.radius);
 					for(int b = t; b>0; b--)
 					{
@@ -303,7 +303,6 @@ class K7_BloodTrail : Actor
 					SetOrigin(TB.HitLocation,true);
 					If (TB.HitType == TRACE_Hitwall && TB.HitLine) 
 					{
-						TB.HitLine.Activate(Master, 0, SPAC_Impact);
 						Norm = (0,0,0)+RotateVector(TB.HitLine.Delta,-90).Unit();
 						//A_SprayDecal("BloodSplat",30,(0,0,-1),TB.HitDir,1);
 					}

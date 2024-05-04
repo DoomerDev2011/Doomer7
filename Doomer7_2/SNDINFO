@@ -276,6 +276,7 @@ msk_hurt4 sound/msk/hurt4.ogg
 msk_hurt5 sound/msk/hurt5.ogg
 msk_hurt6 sound/msk/hurt6.ogg
 msk_hurt7 sound/msk/hurt7.ogg
+msk_fire sound/msk/FireBurn.ogg
 
 $random msk_hurt { msk_hurt1 msk_hurt2 msk_hurt3 msk_hurt4 msk_hurt5 msk_hurt6 msk_hurt7 }
 
@@ -333,6 +334,7 @@ $playersounddup k7_hay male *pain50 *pain75
 $playersounddup k7_hay male *pain25 *pain50
 $playeralias k7_hay male *death hay_die
 $playeralias k7_hay male *xdeath hay_die
+$playeralias k7_hay male *taunt weapon/gettmg
 
 // HeavenSmile
 hs_step1 sound/hs/step1.ogg

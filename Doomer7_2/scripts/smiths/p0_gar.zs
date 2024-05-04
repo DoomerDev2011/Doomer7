@@ -7,6 +7,7 @@ Class CK7_Smith_Gar_Wep : CK7_Smith_Weapon
 {	
 	Default
 	{
+		Tag "Garcian";
 		Inventory.PickupMessage "You got the Supressed P230!";
 		Inventory.PickupSound "weapon/getppk";
 		CK7_Smith_Weapon.PersonaSoundClass "k7_gar";
