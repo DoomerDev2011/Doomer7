@@ -23,6 +23,8 @@ class CK7_GameplayHandler : EventHandler
 				// to x0.0 (20 vials):
 				double invfactor = CK7_Utils.LinearMap(killer.CountInv('CK7_ThinBlood'), 10, 20, 1.0, 0.0, true);
 				dropcount *= invfactor;
+				//half amount if on Hurt me plenty or Ultraviolence
+				If(skill == 2 || skill == 3) dropcount *= 0.5;
 			}
 			int count = round(dropcount);
 			for (count; count > 0; count--)

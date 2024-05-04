@@ -98,9 +98,9 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 				{
 					invoker.m_iAmmo--;
 				}
-				A_SetTics( ceil( invoker.m_fFireDelay ) );
 				A_FireProjectile("K7_Mask_M79_Grenade",0,1,-15,-5);
 				A_FireProjectile("K7_Mask_M79_Grenade",0,1,15,-5);
+				A_SetTics( ceil( invoker.m_fFireDelay ) );
 				A_Overlay( LAYER_RECOIL, "Recoil" );
 			}
 			Stop;
@@ -112,12 +112,12 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 				{
 					invoker.m_iAmmo--;
 				}
+				A_FireProjectile("K7_Mask_M79_Charge_Grenade",0,1,-15,-5);
+				A_FireProjectile("K7_Mask_M79_Charge_Grenade",0,1,15,-5);
 				A_SetTics( ceil( invoker.m_fFireDelay ) );
 				invoker.m_iSpecialCharges = 0;
 				invoker.A_TakeInventory( "CK7_ThinBlood", 2 );
 				A_Overlay( LAYER_RECOIL, "Recoil" );
-				A_FireProjectile("K7_Mask_M79_Charge_Grenade",0,1,-15,-5);
-				A_FireProjectile("K7_Mask_M79_Charge_Grenade",0,1,15,-5);
 			}
 			Stop;
 			

@@ -15,13 +15,13 @@ highp float rand(vec2 co)
 
 void kaede_static()
 {
-	float in_ratio = clamp( static_timer / 30, 0, 1 );
-	float scale = mix( 3.0, 0.5, in_ratio );
+	float in_ratio = clamp( (static_timer-10) / 15, 0, 1 );
+	float scale = mix( 2.0, 0.4, in_ratio );
     vec2 coords = TexCoord;
     coords.x = ( round( coords.x * ( resX / scale ) ) / ( resX / scale ) );
     coords.y = ( round( coords.y * ( resY / scale ) ) / ( resY / scale ) );
     float noise = rand( coords.xy * static_timer );
-	float alpha = mix( 0.66, 0.15, in_ratio );
+	float alpha = mix( 0.3, 0.15, in_ratio );
     vec4 stat = vec4( 1, 1, 1, 1 ) * mod( static_timer * noise.x + ( TexCoord.y ), 1 );
 	
 	stat[0] = mod( noise.x * 45, 1 );

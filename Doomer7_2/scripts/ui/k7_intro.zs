@@ -15,7 +15,7 @@ class K7_titlecards : ScreenJob
 
 	override bool OnEvent(InputEvent evt)
 	{
-		if (evt.type == InputEvent.Type_KeyDown)  // Any key will skip, not sure why mouse buttons don't count though...
+		if (evt.type == InputEvent.Type_KeyDown || evt.type == InputEvent.Type_Mouse)
 		{
 			System.StopAllSounds(); 
 			jobstate = finished;
@@ -56,7 +56,8 @@ class k7_TitleIntro : k7_MainMenu
 	
 	override bool OnUIEvent(UIEvent ev)
 	{
-		if (ev.Type == UIEvent.Type_KeyDown || ev.type == UIEvent.Type_LButtonDown) 
+		if (ev.Type == UIEvent.Type_KeyDown || ev.type == UIEvent.Type_LButtonDown
+		 || ev.type == UIEvent.Type_MButtonDown || ev.type == UIEvent.Type_RButtonDown) 
 		{
 			System.StopAllSounds();
 			menu.SetMenu("MainMenu");
