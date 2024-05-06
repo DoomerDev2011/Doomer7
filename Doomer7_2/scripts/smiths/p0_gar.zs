@@ -19,7 +19,7 @@ Class CK7_Smith_Gar_Wep : CK7_Smith_Weapon
 		Super.BeginPlay();
 		m_sPersona = "gar";
 		m_fDamage = 6;
-		m_fCritical = 30;
+		m_fCritical = 33.34;
 		m_fRecoil = 2;
 		m_iClipSize = 5;
 		m_fRefire = 10;
@@ -33,6 +33,14 @@ Class CK7_Smith_Gar_Wep : CK7_Smith_Weapon
 		Spawn:
 			M000 A -1 bright;
 			stop;
+		Shoot:
+			#### # 1 
+			{
+				K7_FireBullet(invoker.m_fDamage,invoker.m_fSpread,invoker.m_fCritical);
+				A_Overlay( LAYER_RECOIL, "Recoil" );
+				//A_AlertMonsters();
+			}
+			Stop;
 		Recoil:
 			TNT1 A 0;
 			#### A 1 A_SetPitch( pitch - invoker.m_fRecoil );
