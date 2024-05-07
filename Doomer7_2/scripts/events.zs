@@ -125,11 +125,11 @@ class CK7_GameplayHandler : EventHandler
 		fov = mo.player.fov*0.5;
 		bool nomt; int mtam;
 		double Sideofs = CK7_Hud(statusbar).GetSideOffset();
-		vector3 goal0 = ( (Sideofs+112)/1920 ,0.6,0.008);
-		vector3 goal1 = ( (Sideofs+100)/1920 ,0.61,0.008);
-		vector3 goal2 = ( (Sideofs+180)/1920 ,0.64,0.008);
-		vector3 goal3 = ( (Sideofs+135)/1920 ,0.58,0.008);
-		vector3 goal4 = ( (Sideofs+106)/1920 ,0.56,0.008);
+		vector3 goal0 = ( (Sideofs+112)/1920 ,0.6,0.005);
+		vector3 goal1 = ( (Sideofs+100)/1920 ,0.61,0.005);
+		vector3 goal2 = ( (Sideofs+180)/1920 ,0.64,0.005);
+		vector3 goal3 = ( (Sideofs+135)/1920 ,0.58,0.005);
+		vector3 goal4 = ( (Sideofs+106)/1920 ,0.56,0.005);
 		
 		ForEach(b:bloodi)
 		{
@@ -181,14 +181,13 @@ class CK7_GameplayHandler : EventHandler
 				}
 				
 				vector3 numtan = Level.Vec3Diff(e.ViewPos,b.Pos);
-				numtan.z *= 1.1;
 				Double Dist = Max(numtan Dot Dir,0.001);
 				Vector3 Perp = (numtan - Dir*Dist)/Dist;
 				
 				b.Pos.x = (XDir Dot Perp);
-				b.Pos.y = -(YDir Dot Perp);
-				b.Pos.z = 1/Max(numtan.length()*TanFov,0.001);
-				b.Pos.xy *= 0.5/TanFov;//screenSizeX*
+				b.Pos.y = -(YDir Dot Perp); 
+				b.Pos.z = (0.5/TanFov)/Max( numtan.Length(),0.1);
+				b.Pos.xy *= 0.5/TanFov;
 				b.Pos.x = Clamp(b.Pos.x,-1,1);
 				b.Pos.y = Clamp(b.Pos.y,-1,1);
 				b.Pos.xy = actor.rotateVector(b.Pos.xy,-e.ViewRoll);
@@ -199,9 +198,9 @@ class CK7_GameplayHandler : EventHandler
 				b.Roll -= e.ViewRoll;
 				b.vel = Frandom(-0.02,0);
 			}
-			double bscl = lerp(b.oPos.z,b.pos.z,e.fractic)*screenSizeY;
+			double bscl = lerp(b.oPos.z,b.pos.z,e.fractic)*screenSizeX;
 			Screen.DrawTexture(b.tex, true, lerp(b.oPos.x,b.pos.x,e.fractic)*screenSizeX, lerp(b.oPos.y,b.pos.y,e.fractic)*screenSizeX, 
-			DTA_TranslationIndex, b.col, DTA_Rotate, b.roll, DTA_ScaleX, bscl, DTA_ScaleY, bscl);
+			DTA_TranslationIndex, b.col, DTA_Rotate, b.roll, DTA_ScaleX, bscl, DTA_ScaleY, bscl* (1+0.2*Cos(e.Viewpitch) ) );
 		}
 	}
 
