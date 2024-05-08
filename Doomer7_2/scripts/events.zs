@@ -163,6 +163,8 @@ class CK7_GameplayHandler : EventHandler
 		if (bloodi.Size() == 0 || !mo) return;
 		
 		bool gotdir;
+		vector2 ADir;
+		double Apitch;
 		Vector3 Dir;
 		Vector3 YDir;
 		Vector3 XDir;
@@ -174,13 +176,18 @@ class CK7_GameplayHandler : EventHandler
 			If(b.set)
 			{
 				b.set = false;
-				if(!gotdir) {	gotdir = true;
-					Dir = (cos(e.Viewangle)*cos(e.Viewpitch), sin(e.Viewangle)*cos(e.Viewpitch), sin(-e.ViewPitch));
-					YDir = (cos(e.Viewangle)*cos(e.Viewpitch-90), sin(e.Viewangle)*cos(e.Viewpitch-90), sin(-e.ViewPitch+90));
+				if(!gotdir) {	
+					gotdir = true;
+					//thanks Gutawer for the pixel stretch ajustment
+					ADir = (cos(e.Viewpitch), sin(e.ViewPitch)*level.pixelstretch);
+					Apitch = asin(Adir.y / ADir.Length() );
+					Dir = (cos(e.Viewangle)*cos(Apitch), sin(e.Viewangle)*cos(Apitch), sin(-Apitch));
+					YDir = (cos(e.Viewangle)*cos(Apitch-90), sin(e.Viewangle)*cos(Apitch-90), sin(-Apitch+90));
 					XDir = Dir cross YDir;
 				}
 				
 				vector3 numtan = Level.Vec3Diff(e.ViewPos,b.Pos);
+				numtan.z *= level.pixelstretch;
 				Double Dist = Max(numtan Dot Dir,0.001);
 				Vector3 Perp = (numtan - Dir*Dist)/Dist;
 				
@@ -200,7 +207,7 @@ class CK7_GameplayHandler : EventHandler
 			}
 			double bscl = lerp(b.oPos.z,b.pos.z,e.fractic)*screenSizeX;
 			Screen.DrawTexture(b.tex, true, lerp(b.oPos.x,b.pos.x,e.fractic)*screenSizeX, lerp(b.oPos.y,b.pos.y,e.fractic)*screenSizeX, 
-			DTA_TranslationIndex, b.col, DTA_Rotate, b.roll, DTA_ScaleX, bscl, DTA_ScaleY, bscl* (1+0.2*Cos(e.Viewpitch) ) );
+			DTA_TranslationIndex, b.col, DTA_Rotate, b.roll, DTA_ScaleX, bscl, DTA_ScaleY, bscl* (1+0.2*Cos(Apitch) ) );
 		}
 	}
 
