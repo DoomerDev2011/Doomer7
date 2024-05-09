@@ -190,6 +190,7 @@ class CK7_GameplayHandler : EventHandler
 				numtan.z *= level.pixelstretch;
 				Double Dist = Max(numtan Dot Dir,0.001);
 				Vector3 Perp = (numtan - Dir*Dist)/Dist;
+				numtan.z /= level.pixelstretch;
 				
 				b.Pos.x = (XDir Dot Perp);
 				b.Pos.y = -(YDir Dot Perp); 
@@ -486,8 +487,9 @@ class k7_bloodparticle : actor
 			BLUD # 2 {Vel = Bvel;}
 			BLUD ## 1 {Vel*=0.3;}
 			BLUD # 20;
-			BLUD # 1
+			TNT1 # 1
 			{
+				Vel = (0,0,0);
 				If(Target && Even)
 				{
 					Even.bloodprt = self;

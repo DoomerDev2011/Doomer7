@@ -1,7 +1,7 @@
 Class CK7_Hud : BaseStatusBar 
 {
-	const HUDRESX = 1920;
-	const HUDRESY = 1080;
+	int HUDRESX;
+	int HUDRESY;
 	const C_FRAMERATE = 60.0;
 	const CHARGETIME = C_FRAMERATE * 4.0;
 	const CHARGETIME_HOLD = C_FRAMERATE * 1.5;
@@ -26,6 +26,7 @@ Class CK7_Hud : BaseStatusBar
 	TextureID backgroundTex;
 	Vector2 backgroundTexSize;
 
+	double itemScale;
 	double sideSlideTimer;
 	double sideSlideDir;
 	double prevMSTime;
@@ -39,6 +40,8 @@ Class CK7_Hud : BaseStatusBar
 	override void Init()
 	{
 		Super.Init();
+		HUDRESY = Screen.GetHeight();
+		HUDRESX = Screen.GetWidth();
 		SetSize( 0, HUDRESX, HUDRESY );
 		Font fnt = "K7Font";
 		k7HudFont = HUDFont.Create( fnt, fnt.GetCharWidth("0"), Mono_CellLeft, -8, -6 );
@@ -60,11 +63,14 @@ Class CK7_Hud : BaseStatusBar
 		Super.Draw( state, TicFrac );
 		UpdateDeltaTime();
 		if (state == HUD_None) return;
+		HUDRESY = Screen.GetHeight();
+		HUDRESX = Screen.GetWidth();
+		ItemScale = Float(HUDRESY)/1080.0;
 		BeginHUD( 1, true, HUDRESX, HUDRESY);
 		fracTic = TicFrac;
 		DrawReload();
-		if (reloadtime<1) //not draw while reloading
-		{
+		//if (reloadtime<1) //not draw while reloading
+		//{
 			DrawSidePanel();
 			UpdateSideSlideTimer();
 			DrawKeys();
@@ -72,7 +78,7 @@ Class CK7_Hud : BaseStatusBar
 			DrawThinBlood();
 			DrawHealth();
 			if (!autoMapActive) DrawK7Crosshair();
-		}
+		//}
 	}
 
 	double SinePulse(double frequency = TICRATE, double startVal = 0.0, double endVal = 1.0)
@@ -96,8 +102,7 @@ Class CK7_Hud : BaseStatusBar
 
 	double GetHealthFraction()
 	{
-		double frac = double(CPlayer.mo.health) / CPlayer.mo.GetMaxHealth(true);
-		return frac;
+		return double(CPlayer.mo.health) / CPlayer.mo.GetMaxHealth(true);
 	}
 
 	void DrawHealth()
@@ -111,24 +116,19 @@ Class CK7_Hud : BaseStatusBar
 			blink -= deltatime*0.15;
 			hudhealth = abs(blink);
 		}
-		String img;
-		if (hudHealth >= .75){
-			img = "KEYESA0";
-		}else if( hudHealth >= 0.5){
-			img = "KEYESB0";
-		}else if( hudHealth >= 0.25){
-			img = "KEYESC0";
-		}else {
-			img = "KEYESD0";
-		}
-		DrawImage( img, (57,90), DI_ITEM_OFFSETS, 1.0, (-1,-1), (.115,.115));
+		String img = "KEYES"; 
+		double eye = Clamp(4-hudhealth*4,0,3); eye += CPlayer.mo.CountInv('CK7_ThinBlood')? 0:4;
+		img.AppendCharacter(65+eye); img.AppendCharacter(48);
+		DrawImage( img, (54,92)*ItemScale, DI_ITEM_OFFSETS, 1.0, (-1,-1), (.115,.115)*ItemScale );
+		
 		Vector2 sc = (0.75,0.75);
 		DrawString( k7HudFont, ""..CPlayer.health, (backgroundTexSize.x*0.5 - 64, 32), DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_CENTER, scale:sc );
 		DrawString( k7HudFont, ""..GetArmorAmount(), (backgroundTexSize.x*0.5 + 64, 32), DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_CENTER, scale:sc );
 	}
+	
+	
 	static const string ReloadText[] = {"Reload1", "Reload2", "Reload3", "Reload4", "Reload5", "Reload6", "Reload7", "Reload8", "Reload9", "Reload10", "Reload11" };
 	static const int ReloadSpace[] = {42, 37, 22, 37, 37, 37, 42, 42, 32, 42, 22 }; //pixel width
-	
 	void DrawReload(double alpha = 1, double scale = 2.5)
 	{
 		let weap = CK7_Smith_Weapon(CPlayer.readyweapon);
@@ -146,36 +146,34 @@ Class CK7_Hud : BaseStatusBar
 		
 		If(ReloadTime > 0)
 		{
-			int ScreenX = Screen.GetWidth(); //real screen resolution
-			int ScreenY = Screen.GetHeight();
+			scale *= ItemScale;
 			int inout = Min(12,weap.m_fReloadTime*0.5); //tics it takes for text to move in position
-			int txtofs = 140; //ofset from the edge
+			int txtofs = HUDRESY*0.13; //ofset from the edge
 			
 			Double Move = reloadlerp + (reloadtime - reloadlerp)*fractic;
 			Double Txtm1 = Min(1,(weap.m_fReloadTime-move)/inout);
 			Double Txtm2 = Min(1,move/inout);
 			Double Txtm3 = Txtm1 * Txtm2;
 			Double Barmove = Min(1,(weap.m_fReloadTime-move)/8 ) * Min(1,move/8 );
-			Double BarHeight = 180*BarMove;
+			Double BarHeight = HUDRESY*0.167*BarMove;
 			//Coundnt decide which style to use so i made it optional
-			If(CVar.GetCVar('k7_reloadblink', CPlayer).GetBool() ) BarHeight += (ScreenY-180)*(0.5-abs(0.5-BarMove) );
+			If(CVar.GetCVar('k7_reloadblink', CPlayer).GetBool() ) BarHeight += (HUDRESY*0.833)*(0.5-abs(0.5-BarMove) );
 			color bars = color(int(255*alpha),0,0,0);
-			Fill(bars,0,0,ScreenX,BarHeight);
-			Fill(bars,0,-BarHeight,ScreenX,BarHeight);
+			Fill(bars,0,0,HUDRESX,BarHeight);
+			Fill(bars,0,-BarHeight,HUDRESX,BarHeight);
 			int textpos;
-			ScreenX -= txtofs;
 			For(int r; r<6; r++)
 			{
-				double txtx = (txtofs + textpos*Txtm3 + ScreenX*(1-Txtm1) ) * Txtm2 -txtofs*(1-Txtm2);
-				DrawImage(ReloadText[r], (txtx,90), 
+				double txtx = (txtofs + textpos*Txtm3 + HUDRESX*(1-Txtm1) ) * Txtm2 -txtofs*(1-Txtm2);
+				DrawImage(ReloadText[r], (txtx,HUDRESY*0.0834), 
 				DI_SCREEN_LEFT_TOP|DI_ITEM_LEFT|DI_ITEM_CENTER, alpha* Txtm2, scale: (scale,scale) );//, style:Style_Add
 				textpos += ReloadSpace[r]*scale;
 			}
 			textpos = 0;
 			For(int r = 10; r>5; r--)
 			{
-				double txtx = (txtofs + textpos*Txtm3 + ScreenX*(1-Txtm1) ) * Txtm2 -txtofs*(1-Txtm2);
-				DrawImage(ReloadText[r], (-txtx,-90), 
+				double txtx = (txtofs + textpos*Txtm3 + HUDRESX*(1-Txtm1) ) * Txtm2 -txtofs*(1-Txtm2);
+				DrawImage(ReloadText[r], (-txtx,-HUDRESY*0.0834), 
 				DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT|DI_ITEM_CENTER, alpha* Txtm2, scale: (scale,scale) );//, style:Style_Add
 				textpos += ReloadSpace[r]*scale;
 			}
@@ -203,9 +201,9 @@ Class CK7_Hud : BaseStatusBar
 	void DrawSidePanel()
 	{
 		Vector2 pos = ( GetSideOffset(), 0 );
-		DrawTexture( backgroundTex, pos, DI_SCREEN_LEFT_CENTER|DI_ITEM_LEFT|DI_ITEM_CENTER);
-		Vector2 cPos = pos + (backgroundTexSize.x*0.5, 156);
-		Vector2 sc = (0.85, 0.85);
+		DrawTexture( backgroundTex, pos*ItemScale, DI_SCREEN_LEFT_CENTER|DI_ITEM_LEFT|DI_ITEM_CENTER, scale:(ItemScale,ItemScale) );
+		Vector2 cPos = (pos + (backgroundTexSize.x*0.5, 156) )*ItemScale;
+		Vector2 sc = (0.85, 0.85)*ItemScale;
 		DrawImage("k7comp_0", cPos, DI_SCREEN_LEFT_TOP|DI_ITEM_CENTER, scale:sc);
 		DrawImageRotated("k7comp_1", cPos, DI_SCREEN_LEFT_TOP|DI_ITEM_CENTER, CPlayer.mo.angle - 90, scale:(1. / sc.x, 1. / sc.y), style: STYLE_Add);
 		DrawImage("k7comp_2", cPos, DI_SCREEN_LEFT_TOP|DI_ITEM_CENTER, scale:sc);
@@ -237,9 +235,9 @@ Class CK7_Hud : BaseStatusBar
 		}
 		Vector2 pos = (118, 290);
 		pos.x += GetSideOffset();
-		DrawString( k7italicFont, "Charge", pos, DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_CENTER);
+		DrawString( k7italicFont, "Charge", pos*ItemScale, DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_CENTER, scale:(ItemScale,ItemScale) );
 		pos.y += 50;
-		DrawString( k7italicFont, String.Format("Lv. %d", charges), pos, DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_CENTER);
+		DrawString( k7italicFont, String.Format("Lv. %d", charges), pos*ItemScale, DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_CENTER, scale:(ItemScale,ItemScale));
 	}
 
 	// Draw the thin blood icon and counter:
@@ -265,9 +263,9 @@ Class CK7_Hud : BaseStatusBar
 		// Side offset from the panel:
 		pos.x += GetSideOffset();
 		// Position for the platform:
-		Vector2 plPos = pos + (0, 20);
+		Vector2 plPos = (pos + (0, 20) )*ItemScale;
 		// Platform:
-		DrawImage("tbldpl0", plPos, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM);
+		DrawImage("tbldpl0", plPos, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM, scale:(ItemScale,ItemScale));
 
 		Color col;
 		int pulseFreq, charges;
@@ -285,17 +283,17 @@ Class CK7_Hud : BaseStatusBar
 		// Central vial (always drawn if has any):
 		vtex = charges > 0 ? thinBloodTex : thinBloodTexEmpty;
 		vp = vp_c  - ((vp_c - vp_r) / MAXVIALTIMER) * vialTimer;
-		DrawTexture(vtex, vp, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM);
+		DrawTexture(vtex, vp*ItemScale, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM, scale:(ItemScale,ItemScale));
 
 		// Left vial (lv. 2):
 		vtex = charges > 1 ? thinBloodTex : thinBloodTexEmpty;
 		vp = vp_l - ((vp_l - vp_c) / MAXVIALTIMER) * vialTimer;
-		DrawTexture(vtex, vp, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM);
+		DrawTexture(vtex, vp*ItemScale, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM, scale:(ItemScale,ItemScale));
 
 		// Right vial (lv. 3):
 		vtex = charges > 2 ? thinBloodTex : thinBloodTexEmpty;
 		vp = vp_r - ((vp_r - vp_l) / MAXVIALTIMER) * vialTimer;
-		DrawTexture(vtex, vp, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM);
+		DrawTexture(vtex, vp*ItemScale, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM, scale:(ItemScale,ItemScale));
 
 		// Find platform texture:
 		String pltex;
@@ -314,14 +312,14 @@ Class CK7_Hud : BaseStatusBar
 				break;
 			}
 			// Highlights:
-			DrawImage(pltex, plPos, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM, SinePulse(pulsefreq, 0.8, 1), style: STYLE_Add, col: col);
+			DrawImage(pltex, plPos, DI_SCREEN_LEFT_CENTER|DI_ITEM_BOTTOM, SinePulse(pulsefreq, 0.8, 1), scale:(ItemScale,ItemScale), style: STYLE_Add, col: col);
 		}
 
 		// Draw amount string, deducting current charge:
 		int chargecount;
 		[chargecount, charges] = GetWeaponCharge();
 		int amt = thinblood.amount - (chargecount? charges : 0);
-		DrawString (k7italicFont, "x"..amt, plPos - (0, 16), DI_SCREEN_LEFT_CENTER|DI_TEXT_ALIGN_LEFT);
+		DrawString (k7italicFont, "x"..amt, plPos - (0, 16*ItemScale), DI_SCREEN_LEFT_CENTER|DI_TEXT_ALIGN_LEFT, scale:(ItemScale,ItemScale));
 	}
 
 	int, int GetWeaponCharge()
@@ -336,7 +334,7 @@ Class CK7_Hud : BaseStatusBar
 
 	Color, int, int GetChargeVisuals()
 	{
-		Color col = 0xffc47933;
+		Color col = 0xffde8533;//c47933;
 		int pulsefreq;
 		int chargecount, charges;
 		[chargecount, charges] = GetWeaponCharge();
@@ -385,10 +383,11 @@ Class CK7_Hud : BaseStatusBar
 		{
 			//style = Style_Add;
 			alpha = SinePulse(pulsefreq, alpha*0.8, alpha);
-			DrawImage("K7RETCB2", (0,0), DI_SCREEN_CENTER|DI_ITEM_CENTER, alpha: alpha*0.5, style:style);
+			DrawImage("K7RETCB2", (0,0), DI_SCREEN_CENTER|DI_ITEM_CENTER, alpha: alpha*0.5, scale:(ItemScale,ItemScale), style:style);
 		}
 
-		DrawImage("K7RETCB1", (0,0), DI_SCREEN_CENTER|DI_ITEM_CENTER, alpha: alpha, style:style, col:col);
+		DrawImage("K7RETCB1", (0,0), DI_SCREEN_CENTER|DI_ITEM_CENTER, alpha: alpha, scale:(ItemScale,ItemScale), style:style, col:col);
+		
 		if (!lookController)
 		{
 			let handler = CK7_GameplayHandler(EventHandler.Find('CK7_GameplayHandler'));
@@ -407,13 +406,18 @@ Class CK7_Hud : BaseStatusBar
 			{
 				targetTimer = Clamp(targetTimer - 3*deltatime, 0, CROSSHAIRTIME);
 			}
-			double ang = CK7_Utils.LinearMap(targetTimer, 0, CROSSHAIRTIME*0.8, 0, -60, true);
-			double sc = CK7_Utils.LinearMap(targetTimer, 0, CROSSHAIRTIME*0.8, 1.0, 1.48, true);
+			double ang = CK7_Utils.LinearMap(targetTimer, 0, CROSSHAIRTIME*0.8, 0, 1, true);
+			double sc = CK7_Utils.LinearMap(targetTimer, 0, CROSSHAIRTIME*0.8, 1, 1.51, true)/ItemScale;
+			double sc2 = CK7_Utils.LinearMap(targetTimer, 0, CROSSHAIRTIME*0.8, 0.7, 3.2, true)/ItemScale;
 			if (charges)
 			{
-				DrawImageRotated("K7RETCR2", (0,0), DI_SCREEN_CENTER, ang, alpha*0.5, (sc, sc), style:style);
+				DrawImageRotated("K7RETCR2", (0,0), DI_SCREEN_CENTER, -180*ang, alpha*0.25+ang*0.25, (sc, sc), style:style);
+				DrawImageRotated("K7RETCR2", (0,0), DI_SCREEN_CENTER, 180, alpha*ang*0.5, (sc2, sc2), style:style);
 			}
-			DrawImageRotated("K7RETCR1", (0,0), DI_SCREEN_CENTER, ang, alpha, (sc, sc), style:style, col:col);
+			DrawImageRotated("K7RETCR1", (0,0), DI_SCREEN_CENTER, -180*ang, alpha*0.5, (sc, sc), style:style, col:col);
+			DrawImageRotated("K7RETCR1", (0,0), DI_SCREEN_CENTER, -180*ang, alpha*ang, (sc, sc), style:style, col:col);
+			DrawImageRotated("K7RETCR1", (0,0), DI_SCREEN_CENTER, 180, alpha*ang*0.5, (sc2, sc2), style:style, col:col);
+			DrawImageRotated("K7RETCR1", (0,0), DI_SCREEN_CENTER, 180, alpha*ang, (sc2, sc2), style:style, col:col);
 		}
 	}
 
