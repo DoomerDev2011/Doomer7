@@ -6,24 +6,26 @@ class CK7_GameplayHandler : EventHandler
 	{
 		if (e.thing && e.thing.health<=0 && e.thing.bISMONSTER)
 		{
-			let killer = e.Damagesource;
+			actor killer = e.Damagesource;
 			Bool crit;
 			if(!e.thing.bNOBLOOD)
 			{
-				If(e.DamageType == "Critical" ||(e.inflictor is "CK7_BulletPuff" && !e.inflictor.bNOEXTREMEDEATH) )
+				If(e.Damagesource is "PlayerPawn" && e.DamageType == "Critical" )// || (e.inflictor is "CK7_BulletPuff" && !e.inflictor.bNOEXTREMEDEATH)
 				{
 					crit = true;
 					For(int p; p < 100; p++)
 					{
 						Double pang = Random(0,360);
-						Double ppic = Random(-20,90);
+						Double ppic = Random(-20,70);
 						k7_bloodparticle blp = k7_bloodparticle( Actor.Spawn("k7_bloodparticle",e.thing.pos.PlusZ(Random(0,e.thing.height) ) +(frandom(-0.7,0.7),frandom(-0.7,0.7) )*e.thing.radius )   );
-						blp.Bvel = (cos(pang)*cos(ppic), sin(pang)*cos(ppic), sin(ppic))*Random(1,80);
+						blp.Bvel = (cos(pang)*cos(ppic), sin(pang)*cos(ppic), sin(ppic))*Random(10,100);
 						blp.even = self;
 						blp.Roll = Random(0,360);
 						blp.target = killer;
 						blp.Translation = e.thing.bloodtranslation;
 					}
+					EventHandler.SendInterfaceEvent(killer.PlayerNumber(), "K7ShowHudPanel");
+					EventHandler.SendInterfaceEvent(killer.PlayerNumber(), "K7BloodSpots");
 				}
 				else if (k7_bloodtrails && !(e.DamageFlags & DMG_EXPLOSION) ) {
 					int t = 0.05*(e.thing.height+e.thing.radius);
@@ -77,6 +79,7 @@ class CK7_GameplayHandler : EventHandler
 			Crit.Speed = FRandom(0,e.thing.radius-6);
 			Crit.SpriteAngle = Frandom(-90,90);
 			Crit.ReactionTime = Random(0,e.thing.height-Crit.Height);
+			CK7_HS_CritSpot(Crit).part = TexMan.CheckForTexture("glstuff/glpart.png");
 		}
 	}
 	
@@ -95,10 +98,12 @@ class CK7_GameplayHandler : EventHandler
 				hud.ShowSidePanel();
 			}
 		}
+		if (e.name ~== "K7bloodspots") blodmag = 140;
 		if (e.name == "K7NewBloodParticle")
 		{
 			k7_bloodUI bld = New("k7_bloodUI");
 			bld.set = true;
+			bld.vel = bloodprt.vel;
 			bld.pos = bloodprt.pos;
 			bld.roll = bloodprt.roll;
 			string sprt = "BLUD";
@@ -111,30 +116,35 @@ class CK7_GameplayHandler : EventHandler
 	
 	ui actor mo;
 	ui double fov, oldfov;
-	ui int ScreenSizeX, ScreenSizeY, ScreenSizeOfs;
+	ui int screenOfsX, screenOfsY, screenSizeX, screenSizeY, trueSizeY;
+	ui int blodmag;
+	ui vector3 goal0, goal1, goal2, goal3, goal4;
 	k7_bloodparticle bloodprt;
 	ui array <k7_bloodUI> bloodi;
 	 
 	override void UiTick ()
 	{
 		mo = players[consoleplayer].mo;
-		ScreenSizeY = Screen.GetHeight();
-		ScreenSizeX = ScreenSizeY/0.75;//Screen.GetWidth();
-		ScreenSizeOfs = (Screen.GetWidth()-ScreenSizeX)*0.5;
+		[screenOfsX,screenOfsY,screenSizeX,screenSizeY] = screen.GetViewWindow();
+		trueSizeY = Screen.GetHeight();
+		
 		oldfov = fov;
 		fov = mo.player.fov*0.5;
 		bool nomt; int mtam;
+		double bloz = 0.003* float(trueSizeY)/1080;
 		double Sideofs = CK7_Hud(statusbar).GetSideOffset();
-		vector3 goal0 = ( (Sideofs+112)/1920 ,0.6,0.005);
-		vector3 goal1 = ( (Sideofs+100)/1920 ,0.61,0.005);
-		vector3 goal2 = ( (Sideofs+180)/1920 ,0.64,0.005);
-		vector3 goal3 = ( (Sideofs+135)/1920 ,0.58,0.005);
-		vector3 goal4 = ( (Sideofs+106)/1920 ,0.56,0.005);
+		goal0 = ( (Sideofs+89)/1080 ,0.6954,bloz);
+		goal1 = ( (Sideofs+153)/1080 ,0.7612,bloz);
+		goal2 = ( (Sideofs+83)/1080 ,0.8398,bloz);
+		goal3 = ( (Sideofs+168)/1080 ,0.8537,bloz);
+		goal4 = ( (Sideofs+88)/1080 ,0.925,bloz);
+		if(blodmag) blodmag --;
 		
 		ForEach(b:bloodi)
 		{
 			if(b) 
 			{
+				blodmag = 60;
 				CK7_Hud(statusbar).ShowSidePanel();
 				nomt = true;
 				b.opos = b.pos;
@@ -147,10 +157,15 @@ class CK7_GameplayHandler : EventHandler
 					default: goalb = goal4; break;
 				}
 				vector3 move = (goalb - b.pos);
-				b.pos += move.unit() * Min(b.vel,move.length());
-				b.vel+= 0.004;
+				double dist = move.length();
+				if(dist < 0.2) b.fric = 1;
+				b.vel *= 1-b.fric;
+				b.vel += move.unit()*Min(0.2,dist)*b.fric;
+				if(b.fric<1) {b.fric*= 1.3;}
+				else b.fric = 1;
 				if(b.die>2) {b.Destroy(); continue;}
-				if(b.pos ~== goalb || b.die) b.die++;
+				if( dist < 0.01 || b.die)  {b.die++; b.vel = (0,0,0); b.pos = goalb;}
+				b.pos += b.vel;
 			}
 			else if(!nomt) mtam++;
 		}
@@ -160,6 +175,22 @@ class CK7_GameplayHandler : EventHandler
 	
 	override void RenderOverlay(renderEvent e)
 	{
+		if(blodmag)
+		{
+			double bmscl = goal0.z*96;
+			color bmcol = color(int(200*Min(1,blodmag*0.05)),255,80,80);
+			Screen.DrawTexture(TexMan.CheckForTexture("glstuff/gllight.png"), true, goal0.x*trueSizeY, goal0.y*trueSizeY, DTA_CenterOffset, true,
+			DTA_Color, bmcol, DTA_LegacyRenderStyle, STYLE_ADD, DTA_ScaleX, bmscl, DTA_ScaleY, bmscl );
+			Screen.DrawTexture(TexMan.CheckForTexture("glstuff/gllight.png"), true, goal1.x*trueSizeY, goal1.y*trueSizeY, DTA_CenterOffset, true,
+			DTA_Color, bmcol, DTA_LegacyRenderStyle, STYLE_ADD, DTA_ScaleX, bmscl, DTA_ScaleY, bmscl );
+			Screen.DrawTexture(TexMan.CheckForTexture("glstuff/gllight.png"), true, goal2.x*trueSizeY, goal2.y*trueSizeY, DTA_CenterOffset, true,
+			DTA_Color, bmcol, DTA_LegacyRenderStyle, STYLE_ADD, DTA_ScaleX, bmscl, DTA_ScaleY, bmscl );
+			Screen.DrawTexture(TexMan.CheckForTexture("glstuff/gllight.png"), true, goal3.x*trueSizeY, goal3.y*trueSizeY, DTA_CenterOffset, true,
+			DTA_Color, bmcol, DTA_LegacyRenderStyle, STYLE_ADD, DTA_ScaleX, bmscl, DTA_ScaleY, bmscl );
+			Screen.DrawTexture(TexMan.CheckForTexture("glstuff/gllight.png"), true, goal4.x*trueSizeY, goal4.y*trueSizeY, DTA_CenterOffset, true,
+			DTA_Color, bmcol, DTA_LegacyRenderStyle, STYLE_ADD, DTA_ScaleX, bmscl, DTA_ScaleY, bmscl );
+		}
+	
 		if (bloodi.Size() == 0 || !mo) return;
 		
 		bool gotdir;
@@ -168,7 +199,7 @@ class CK7_GameplayHandler : EventHandler
 		Vector3 Dir;
 		Vector3 YDir;
 		Vector3 XDir;
-		Double Tanfov = Tan( lerp(oldfov,fov,e.fractic) );
+		Double Tanfov = Tan( lerp(oldfov,fov,e.fractic) ) * max(4.0 / 3, Screen.GetAspectRatio()) / (4.0 / 3);
 		
 		forEach(b : bloodi)
 		{
@@ -186,28 +217,47 @@ class CK7_GameplayHandler : EventHandler
 					XDir = Dir cross YDir;
 				}
 				
-				vector3 numtan = Level.Vec3Diff(e.ViewPos,b.Pos);
+				vector3 numtan = Level.Vec3Diff(e.ViewPos,b.Pos-b.vel);
 				numtan.z *= level.pixelstretch;
 				Double Dist = Max(numtan Dot Dir,0.001);
 				Vector3 Perp = (numtan - Dir*Dist)/Dist;
 				numtan.z /= level.pixelstretch;
 				
+				b.oPos.x = (XDir Dot Perp);
+				b.oPos.y = -(YDir Dot Perp); 
+				b.oPos.z = (0.5/TanFov)/Max( numtan.Length(),0.4);
+				b.oPos.xy *= 0.5/TanFov;
+				b.oPos.x = Clamp(b.oPos.x,-1,1);
+				b.oPos.y = Clamp(b.oPos.y,-1,1);
+				b.oPos.xy = actor.rotateVector(b.oPos.xy,-e.ViewRoll);
+				b.oPos.xy *= screenSizeX;
+				b.oPos.xy += (screenOfsX + screenSizeX*0.5, screenOfsY+ screenSizeY*0.5);
+				b.oPos.xy /= trueSizeY;
+				
+				numtan = Level.Vec3Diff(e.ViewPos,b.Pos);
+				numtan.z *= level.pixelstretch;
+				Dist = Max(numtan Dot Dir,0.001);
+				Perp = (numtan - Dir*Dist)/Dist;
+				numtan.z /= level.pixelstretch;
+				
 				b.Pos.x = (XDir Dot Perp);
 				b.Pos.y = -(YDir Dot Perp); 
-				b.Pos.z = (0.5/TanFov)/Max( numtan.Length(),0.1);
+				b.Pos.z = (0.5/TanFov)/Max( numtan.Length(),0.4);
 				b.Pos.xy *= 0.5/TanFov;
 				b.Pos.x = Clamp(b.Pos.x,-1,1);
 				b.Pos.y = Clamp(b.Pos.y,-1,1);
 				b.Pos.xy = actor.rotateVector(b.Pos.xy,-e.ViewRoll);
-				b.Pos.xy += ( 0.5*Screen.GetWidth(), 0.5*ScreenSizeY ) / screenSizeX;//(screenSizeX*0.5,screenSizeX*0.5);
-				b.opos = b.Pos;
+				b.Pos.xy *= screenSizeX;
+				b.Pos.xy += (screenOfsX + screenSizeX*0.5, screenOfsY+ screenSizeY*0.5);
+				b.Pos.xy /= trueSizeY;
 				
+				b.fric = 0.001;
+				b.vel = b.Pos - b.opos;
 				b.goal = random(0,4);
 				b.Roll -= e.ViewRoll;
-				b.vel = Frandom(-0.02,0);
 			}
 			double bscl = lerp(b.oPos.z,b.pos.z,e.fractic)*screenSizeX;
-			Screen.DrawTexture(b.tex, true, lerp(b.oPos.x,b.pos.x,e.fractic)*screenSizeX, lerp(b.oPos.y,b.pos.y,e.fractic)*screenSizeX, 
+			Screen.DrawTexture(b.tex, true, lerp(b.oPos.x,b.pos.x,e.fractic)*trueSizeY, lerp(b.oPos.y,b.pos.y,e.fractic)*trueSizeY,
 			DTA_TranslationIndex, b.col, DTA_Rotate, b.roll, DTA_ScaleX, bscl, DTA_ScaleY, bscl* (1+0.2*Cos(Apitch) ) );
 		}
 	}
@@ -284,6 +334,7 @@ Class CK7_HS_CritSpot : Actor
 	//This actor uses SpriteAngle for the relative angle its at, 
 	//Speed for how far away it is and Reactiontime for its height
 	//you could make other variables with better names, i just didnt wanna
+	TextureID part;
 	Vector3 Newpos;
 	Default
 	{
@@ -305,13 +356,12 @@ Class CK7_HS_CritSpot : Actor
 					//Vector3 Pvel = Vel + (NewPos - Pos);// this is to try to smooth out its position
 					Vector3 ppos;
 					Float rad = radius - 1;
-					For(int p; p < 11 && alpha; p++)
+					For(int p; p < 9 && alpha; p++)
 					{
 						ppos = (Frandom(-rad,rad),Frandom(-rad,rad),Frandom(-height+2,height-2)*0.5) ;
-						A_SpawnParticle("FFDD00",SPF_FULLBRIGHT,3,4,0,ppos.x,ppos.y,ppos.z+5,
-							vel.x,vel.y,vel.z,
+						A_SpawnParticleEx("FFDD00",part, STYLE_None, SPF_FULLBRIGHT,
+							3,4,0,ppos.x,ppos.y,ppos.z+5, vel.x,vel.y,vel.z,
 							-ppos.x*0.5,-ppos.y*0.5,-ppos.z*0.5,1,0.1);
-							//Frandom(-1,1),Frandom(-1,1),Frandom(-1,1),1,0.1);
 					}
 					Alpha = 0;
 				}
@@ -482,14 +532,14 @@ class k7_bloodparticle : actor
 	States
 	{
 		Spawn:
-			BLUD A 0 Nodelay { frame = Random(0,3); }
-			BLUD # 20 {If(Target) EventHandler.SendInterfaceEvent(Target.PlayerNumber(), "K7ShowHudPanel"); }
-			BLUD # 2 {Vel = Bvel;}
-			BLUD ## 1 {Vel*=0.3;}
+			BLUD A 0 Nodelay { frame = Random(0,2); }
 			BLUD # 20;
+			BLUD # 1 {Vel = Bvel;}
+			BLUD ### 1 {Vel*=0.3;}
+			BLUD # 10 {Bvel = (Frandom(-2,2),Frandom(-2,2),Frandom(0,0.2)); }
+			BLUD #### 1 {Vel += Bvel;}
 			TNT1 # 1
 			{
-				Vel = (0,0,0);
 				If(Target && Even)
 				{
 					Even.bloodprt = self;
@@ -506,7 +556,7 @@ class k7_bloodUI Ui
 	int die;
 	bool set;
 	int col;
-	Vector3 pos, opos;
-	Double roll, vel;
+	Vector3 pos, opos, vel;
+	Double roll, fric;
 	TextureID tex;
 }

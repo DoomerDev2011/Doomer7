@@ -407,17 +407,18 @@ Class CK7_Hud : BaseStatusBar
 				targetTimer = Clamp(targetTimer - 3*deltatime, 0, CROSSHAIRTIME);
 			}
 			double ang = CK7_Utils.LinearMap(targetTimer, 0, CROSSHAIRTIME*0.8, 0, 1, true);
+			double alf = CK7_Utils.LinearMap(targetTimer*2, 0, CROSSHAIRTIME*0.8, 0, 1, true);
 			double sc = CK7_Utils.LinearMap(targetTimer, 0, CROSSHAIRTIME*0.8, 1, 1.51, true)/ItemScale;
-			double sc2 = CK7_Utils.LinearMap(targetTimer, 0, CROSSHAIRTIME*0.8, 0.7, 3.2, true)/ItemScale;
+			double sc2 = CK7_Utils.LinearMap(targetTimer, 0, CROSSHAIRTIME*0.8, 1.4, 3.3, true)/ItemScale;
 			if (charges)
 			{
-				DrawImageRotated("K7RETCR2", (0,0), DI_SCREEN_CENTER, -180*ang, alpha*0.25+ang*0.25, (sc, sc), style:style);
-				DrawImageRotated("K7RETCR2", (0,0), DI_SCREEN_CENTER, 180, alpha*ang*0.5, (sc2, sc2), style:style);
+				DrawImageRotated("K7RETCR2", (0,0), DI_SCREEN_CENTER, -180*ang, alpha*0.25+alf*0.25, (sc, sc), style:style);
+				DrawImageRotated("K7RETCR2", (0,0), DI_SCREEN_CENTER, 180, alpha*alf*0.5, (sc2, sc2), style:style);
 			}
 			DrawImageRotated("K7RETCR1", (0,0), DI_SCREEN_CENTER, -180*ang, alpha*0.5, (sc, sc), style:style, col:col);
-			DrawImageRotated("K7RETCR1", (0,0), DI_SCREEN_CENTER, -180*ang, alpha*ang, (sc, sc), style:style, col:col);
-			DrawImageRotated("K7RETCR1", (0,0), DI_SCREEN_CENTER, 180, alpha*ang*0.5, (sc2, sc2), style:style, col:col);
-			DrawImageRotated("K7RETCR1", (0,0), DI_SCREEN_CENTER, 180, alpha*ang, (sc2, sc2), style:style, col:col);
+			DrawImageRotated("K7RETCR1", (0,0), DI_SCREEN_CENTER, -180*ang, alpha*alf, (sc, sc), style:style, col:col);
+			DrawImageRotated("K7RETCR1", (0,0), DI_SCREEN_CENTER, 180, alpha*alf*0.5, (sc2, sc2), style:style, col:col);
+			DrawImageRotated("K7RETCR1", (0,0), DI_SCREEN_CENTER, 180, alpha*alf, (sc2, sc2), style:style, col:col);
 		}
 	}
 

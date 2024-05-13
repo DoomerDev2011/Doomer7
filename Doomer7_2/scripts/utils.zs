@@ -131,9 +131,9 @@ class K7_LookTargetController : Thinker
 		}
 		if (!pp.player || pp.health <= 0)
 			return;
-			
+		
 		FLineTraceData lt;
-		pp.LineTrace(pp.angle, 2048, pp.pitch, offsetz: pp.player.viewz - pp.pos.z, data:lt);
+		pp.LineTrace(pp.angle, 9000, pp.pitch, offsetz: pp.player.viewz - pp.pos.z, data:lt);
 		let ha = lt.HitActor;
 		if (lt.HitType == TRACE_HitActor && ha && ha.bISMONSTER && ha.bSHOOTABLE && ha.health > 0)
 		{
