@@ -87,7 +87,7 @@ class K7_LookTargetController : Thinker
 		return ltc;
 	}
 	
-	//has the function of CheckSight() but with exact position and direction
+	//its the function of CheckSight() but with exact position and direction
 	Bool, TraceResults SightCheck(actor Obj, vector3 start, Sector sec, vector3 direction, double maxDist)
 	{
 		If(!SightLine) SightLine = New("SightLine");
@@ -145,15 +145,16 @@ class K7_LookTargetController : Thinker
 		}
 		vector3 dir = (cos(pp.angle)*cos(pp.pitch), sin(pp.angle)*cos(pp.pitch), sin(-pp.pitch));
 		vector3 lookpos = (pp.pos.x,pp.pos.y,pp.player.viewz);
+		vector3 blockpos = lookpos + dir*1500;
 		double ang = 7*tan(pp.player.fov*0.5);
-		BlockThingsIterator it = BlockThingsIterator.Create(pp, 2048);
+		BlockThingsIterator it = BlockThingsIterator.CreateFromPos(blockpos.x,blockpos.y,blockpos.z,50, 1500, 1);
 		Actor obj;
 		while (it.Next())
 		{
 			obj = it.thing;
 			If (Obj is "CK7_HS_CritSpot")
 			{
-				Bool insight = CheckInsideCone(pp,obj,lookpos,dir,2048,ang);
+				Bool insight = CheckInsideCone(pp,obj,lookpos,dir,3000,ang);
 				If(Insight) Obj.Alpha = 1;
 			}
 		}
