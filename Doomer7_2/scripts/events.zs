@@ -16,8 +16,8 @@ class CK7_GameplayHandler : EventHandler
 					int blamount = e.thing.height+e.thing.radius+e.thing.radius;
 					For(int p; p < blamount*blamount*0.01; p++)
 					{
-						Double pang = Random(0,360);
-						Double ppic = Random(-20,70);
+						int pang = Random(0,360);
+						int ppic = Random(-20,70);
 						k7_bloodparticle blp = k7_bloodparticle( Actor.Spawn("k7_bloodparticle",e.thing.pos.PlusZ(Random(0,e.thing.height) ) +(frandom(-0.7,0.7),frandom(-0.7,0.7) )*e.thing.radius )   );
 						blp.Bvel = (cos(pang)*cos(ppic), sin(pang)*cos(ppic), sin(ppic))*Random(10,blamount);
 						blp.even = self;
@@ -68,6 +68,17 @@ class CK7_GameplayHandler : EventHandler
 				e.thing.A_DropItem('CK7_ThinBlood', 1);
 			}
 		}
+		else If(e.Damagesource is "PlayerPawn" && e.DamageType == "Critical" )
+		{
+			For(int p; p < 30; p++)
+			{
+				int pang = e.inflictor.angle + Random(90,270);
+				int ppic = e.inflictor.pitch + Random(90,270);
+				Vector3 Bvel = (cos(pang)*cos(ppic), sin(pang)*cos(ppic), sin(ppic))*Random(8,10);
+				e.inflictor.A_SpawnParticle("FFFF00", SPF_FULLBRIGHT,8,6,0,
+					0,0,0, Bvel.x,Bvel.y,Bvel.z, -0.13*Bvel.x,-0.13*Bvel.y,-0.13*Bvel.z,1,0);
+			}
+		}
 		Return;
 	}
 	
@@ -77,8 +88,9 @@ class CK7_GameplayHandler : EventHandler
 		{
 			Actor Crit = actor.Spawn("CK7_HS_CritSpot",e.thing.pos);
 			Crit.master = e.thing;
+			Crit.BounceCount = Random(0,39);
 			Crit.Speed = FRandom(0,e.thing.radius-6);
-			Crit.SpriteAngle = Frandom(-90,90);
+			Crit.SpriteAngle = Frandom(0,360);
 			Crit.ReactionTime = Random(0,e.thing.height-Crit.Height);
 			CK7_HS_CritSpot(Crit).part = TexMan.CheckForTexture("glstuff/glpart.png");
 		}
@@ -129,6 +141,7 @@ class CK7_GameplayHandler : EventHandler
 	ui vector3 goal0, goal1, goal2, goal3, goal4;
 	k7_bloodparticle bloodprt;
 	ui array <k7_bloodUI> bloodi;
+	ui k7_CritPart[60] critpart;
 	ui TextureId gllight;
 	 
 	override void UiTick ()
@@ -182,6 +195,27 @@ class CK7_GameplayHandler : EventHandler
 		}
 		if(mtam) bloodi.Delete(0,mtam);
 		if(!nomt) bloodi.clear();
+		
+		For(int c; c<60; c++)
+		{
+			if(!critpart[c]) 
+			{
+				critpart[c] = New("K7_critpart");
+				double pang = Random(1,360); double ppic = Random(-90,90);
+				critpart[c].pos = (cos(pang)*cos(ppic), sin(pang)*cos(ppic), sin(ppic) );
+				pang = Random(1,360); ppic = Random(1,360);
+				critpart[c].vel = (cos(pang)*cos(ppic), sin(pang)*cos(ppic), sin(ppic) );
+				critpart[c].vel -= critpart[c].pos * (critpart[c].pos dot critpart[c].vel);
+				float vel = Frandom(3,5);
+				critpart[c].vel = critpart[c].vel.unit() * 0.1 * vel;
+				critpart[c].pos *= vel;
+				critpart[c].pos.z = critpart[c].pos.z*0.0005 + 0.008;
+				critpart[c].vel.z *= 0.0005;
+			}
+			critpart[c].opos = critpart[c].pos;
+			critpart[c].pos += critpart[c].vel;
+			critpart[c].vel -= 0.01*critpart[c].pos.PlusZ(-0.008);
+		}
 	}
 	
 	ui vector3 ProjectToScreen(Vector3 pos, Vector3 ViewPos, Double roll, Double TanFov, Vector3 Dir, Vector3 XDir, Vector3 YDir)
@@ -219,22 +253,29 @@ class CK7_GameplayHandler : EventHandler
 		{
 			If (it.thing is "CK7_HS_CritSpot" && it.thing.health)
 			{
-				
-				Vector3 CrPos = ProjectToScreen(it.thing.Pos.PlusZ(it.thing.Height*0.5), e.ViewPos, e.ViewRoll, TanFov, Dir, XDir, YDir);
-				If(CrPos.xy.LengthSquared() < 0.002)
+				Vector3 CrPos = CK7_HS_CritSpot(it.thing).oldpos + e.fractic*(it.thing.Pos+it.thing.Vel -CK7_HS_CritSpot(it.thing).oldpos);
+				CrPos = ProjectToScreen(CrPos.PlusZ(it.thing.Height*0.5) , e.ViewPos, e.ViewRoll, TanFov, Dir, XDir, YDir);
+				If(CrPos.xy.LengthSquared() < 0.0022)
 				{
 					If(!SightLine) SightLine = New("SightLine");
 					SightLine.Obj = it.thing;
 					SightLine.Trace(e.ViewPos, it.thing.cursector, Level.Vec3Diff(e.ViewPos,it.thing.Pos.PlusZ(it.thing.Height*0.5) ), 3000, TRACE_ReportPortals);
 					If(SightLine.Results.HitActor == it.thing)
 					{
+						color crcol = color(255,255,255,0);
+						double crscl = CrPos.z*screenSizeX;
 						CrPos.xy *= screenSizeX;
 						CrPos.xy += (screenOfsX + screenSizeX*0.5, screenOfsY+ screenSizeY*0.5);
+						int ct;
+						For(int c = it.thing.BounceCount; ct<20 && c<60; c++)
+						{
+							Vector3 Crp = crscl*(critpart[c].opos + e.fractic*(critpart[c].pos-critpart[c].opos) ) + CrPos.xy;
+							if(critpart[c]) Screen.DrawTexture(gllight, true, Crp.x, Crp.y, 
+							DTA_ScaleX, Crp.z, DTA_ScaleY, Crp.z* (1+0.2*Cos(Apitch) ),
+							DTA_Color, crcol, DTA_LegacyRenderStyle, STYLE_ADD, DTA_CenterOffset, true);
+							ct++;
+						}
 						
-						color crcol = color(255,255,255,0);
-						double crscl = 0.02*CrPos.z*screenSizeX;
-						Screen.DrawTexture(gllight, true, CrPos.x, CrPos.Y, DTA_ScaleX, crscl, DTA_ScaleY, crscl* (1+0.2*Cos(Apitch) ),
-						DTA_Color, crcol, DTA_LegacyRenderStyle, STYLE_ADD, DTA_CenterOffset, true);
 					}
 				}
 			}
@@ -356,13 +397,17 @@ class CK7_GameplayHandler : EventHandler
 	}
 }
 
+class k7_CritPart Ui
+{
+	Vector3 pos, opos, vel;
+}
 Class CK7_HS_CritSpot : Actor
 {
 	//This actor uses SpriteAngle for the relative angle its at, 
 	//Speed for how far away it is and Reactiontime for its height
 	//you could make other variables with better names, i just didnt wanna
 	TextureID part;
-	Vector3 Newpos;
+	Vector3 Newpos, oldpos;
 	Default
 	{
 		alpha 0;
@@ -377,21 +422,19 @@ Class CK7_HS_CritSpot : Actor
 				if(!Master) Destroy();
 				else if(master.bSHOOTABLE) 
 				{
-					health = 1;
+					health = 1; Alpha = 0;
+					oldpos = Pos;
 					NewPos = Master.pos + (0,0,reactiontime) + AngleToVector(Spriteangle+master.angle,Speed);
 					SetOrigin( NewPos, true);
 					Vel = Master.Vel;
-					//Vector3 Pvel = Vel + (NewPos - Pos);// this is to try to smooth out its position
-					Vector3 ppos;
-					Float rad = radius - 1;
-					For(int p; p < 9 && alpha; p++)
+					/*Vector3 ppos; Float rad = radius - 1;
+					For(int p; p < 4 && alpha; p++)
 					{
 						ppos = (Frandom(-rad,rad),Frandom(-rad,rad),Frandom(-height+2,height-2)*0.5) ;
 						A_SpawnParticleEx("FFDD00",part, STYLE_None, SPF_FULLBRIGHT,
 							3,4,0,ppos.x,ppos.y,ppos.z+5, vel.x,vel.y,vel.z,
-							-ppos.x*0.5,-ppos.y*0.5,-ppos.z*0.5,1,0.1);
-					}
-					Alpha = 0;
+							0,0,0,1,0.1);
+					}*/
 				}
 				else health = 0;
 			}
