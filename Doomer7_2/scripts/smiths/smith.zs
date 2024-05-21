@@ -104,8 +104,7 @@ Class CK7_Smith : DoomPlayer
 		player.ViewHeight = new_height;
 		ViewHeight = new_height;
 		
-		float mid = ( Height / 2 );
-		AttackZOffset = ViewHeight - mid;
+		AttackZOffset = Player.ViewZ - pos.z - Height*0.5;
 	}
 
 	void SetSpeed( float new_speed )

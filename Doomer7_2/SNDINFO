@@ -50,6 +50,8 @@ $random gar_hurt {
 	gar_hurt11
 	gar_hurt12
 }
+$playeralias player male *grunt none
+$playeralias player male *land hs_down
 
 $playeralias k7_gar male *usefail persona_usefail
 $playeralias k7_gar male *pain100 gar_hurt

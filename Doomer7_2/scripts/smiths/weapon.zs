@@ -244,7 +244,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 			If(m_fLevel > 3) Return true;
 			m_fLevel++;
 			//m_fFireDelay *= 0.88;
-			m_fRefire *= 0.9;
+			m_fRefire *= 0.88;
 			m_fDamage *=1.05;
 			m_fSpread *= 0.8;
 			m_fReloadTime *= 0.9;
