@@ -24,6 +24,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 		
 	*/
 	
+	int 	m_fLevel;
 	int 	m_iPersona;
 	string 	m_sPersona;
 	float	m_fSpeed;
@@ -102,6 +103,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 		+INVENTORY.UNDROPPABLE
 		+INVENTORY.UNTOSSABLE
 		+INVENTORY.RESTRICTABSOLUTELY
+		//+INVENTORY.ALWAYSPICKUP
 
 		CK7_Smith_Weapon.Persona "none";
 		CK7_Smith_Weapon.PersonaDamage 40;
@@ -122,6 +124,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 		Weapon.AmmoUse1 0;
 		Weapon.AmmoType2 "CK7_ThinBlood";
 		Weapon.AmmoUse2 0;*/
+		inventory.maxamount 5;
 		Weapon.KickBack 0;
 		Weapon.BobSpeed -2;
 		Weapon.BobRangeX 0.1;
@@ -232,6 +235,22 @@ Class CK7_Smith_Weapon : Weapon abstract
 			return false;
 		}
 		return Super.CanPickup(toucher);
+	}
+	
+	override bool HandlePickup (Inventory item)
+	{
+		If(item is self.getClassName() ) 
+		{
+			If(m_fLevel > 3) Return true;
+			m_fLevel++;
+			//m_fFireDelay *= 0.88;
+			m_fRefire *= 0.9;
+			m_fDamage *=1.05;
+			m_fSpread *= 0.8;
+			m_fReloadTime *= 0.9;
+			m_fReloadTimeStanding *= 0.9;
+		}
+		Return super.HandlePickup(item);
 	}
 
 	override void PlayPickupSound (Actor toucher)
