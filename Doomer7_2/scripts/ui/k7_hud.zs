@@ -33,6 +33,7 @@ Class CK7_Hud : BaseStatusBar
 	double deltaTime;
 	double fracTic;
 	double oldhealth;
+	double pangle, oldpangle;
 	double blink;
 	int reloadtime, reloadlerp;
 	bool reloading;
@@ -54,12 +55,15 @@ Class CK7_Hud : BaseStatusBar
 	override void Tick()
 	{
 		super.Tick();
+		oldpangle = pangle;
+		pangle = CPlayer.mo.angle;
 		reloadlerp = reloadtime;
 		If(ReloadTime) Reloadtime--;
 	}
 	
 	override void Draw( int state, double TicFrac )
 	{
+		fracTic = TicFrac;
 		Super.Draw( state, TicFrac );
 		UpdateDeltaTime();
 		if (state == HUD_None) return;
@@ -67,7 +71,6 @@ Class CK7_Hud : BaseStatusBar
 		HUDRESX = Screen.GetWidth();
 		ItemScale = Float(HUDRESY)/1080.0;
 		BeginHUD( 1, true, HUDRESX, HUDRESY);
-		fracTic = TicFrac;
 		DrawReload();
 		//if (reloadtime<1) //not draw while reloading
 		//{
@@ -205,7 +208,7 @@ Class CK7_Hud : BaseStatusBar
 		Vector2 cPos = (pos + (backgroundTexSize.x*0.5, 156) )*ItemScale;
 		Vector2 sc = (0.85, 0.85)*ItemScale;
 		DrawImage("k7comp_0", cPos, DI_SCREEN_LEFT_TOP|DI_ITEM_CENTER, scale:sc);
-		DrawImageRotated("k7comp_1", cPos, DI_SCREEN_LEFT_TOP|DI_ITEM_CENTER, CPlayer.mo.angle - 90, scale:(1. / sc.x, 1. / sc.y), style: STYLE_Add);
+		DrawImageRotated("k7comp_1", cPos, DI_SCREEN_LEFT_TOP|DI_ITEM_CENTER, 90 - oldpangle - fracTic*(pangle-oldpangle), scale:(1. / sc.x, 1. / sc.y), style: STYLE_Add);
 		DrawImage("k7comp_2", cPos, DI_SCREEN_LEFT_TOP|DI_ITEM_CENTER, scale:sc);
 	}
 
