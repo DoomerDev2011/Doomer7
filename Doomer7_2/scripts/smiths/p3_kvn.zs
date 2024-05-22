@@ -38,6 +38,29 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			KVNF A 1 bright;
 			Stop;
 			
+		Fire:
+			#### # 0
+			{
+				if ( invoker.m_iSpecialCharges > 0 ) 
+				{	
+					A_Overlay( LAYER_ANIM, "Anim_Altfire" );
+					A_Overlay( LAYER_SHOOT, "Shoot_Special1" );
+					A_SetTics(85);
+				}
+				else 
+				{
+					A_Overlay( LAYER_ANIM, "Anim_Fire" );
+					A_Overlay( LAYER_SHOOT, "Shoot" );
+					A_SetTics( ceil( invoker.m_fRefire ) - 1 );
+				}
+			}
+			#### # 0 A_JumpIf( !invoker.m_bAutoFire, "Aiming" );
+			#### # 0 A_Refire();
+			#### # 0
+			{
+				return ResolveState( "Aiming" );
+			}
+			
 		Shoot:
 			#### # 0
 			{
@@ -49,13 +72,8 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			{
 				K7_FireBullet(invoker.m_fDamage,0,20,1);
 				A_Overlay( LAYER_RECOIL, "Recoil" );
-			}
-			Stop;
-			
-		Fire_Special_Bullet:
-			#### # 0
-			{
-				K7_FireBullet(invoker.m_fDamage*3,0,20,1);
+				A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
+				A_Overlay( LAYER_FLASH, "FlashA" );
 			}
 			Stop;
 			
@@ -63,13 +81,10 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			#### # 0
 			{
 				invoker.m_iSpecialCharges = 0;
-				invoker.m_fRefire = 85;
+				//invoker.m_fRefire = 85;
 				invoker.A_TakeInventory( "CK7_ThinBlood", 1 );
 			}
-			TNT1 A 0 A_Overlay(LAYER_ANIM, "Anim_Altfire");
 			#### # 19;
-			#### # 1 A_Overlay( LAYER_FUNC, "Fire_Special_Bullet" );
-			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
 			stop;
 			
 		Anim_Aim_In:
@@ -97,13 +112,10 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			KVNB A 0
 			{
 				K7_WeaponOffset ( 0, 32 );
-				invoker.m_fRefire = invoker.default.m_fRefire;
 			}
 			#### BCS 1 bright;
 			TNT1 A 7;
-			KVNB # 0 A_StartSound( invoker.m_sPersona .. "_shoot", CHAN_WEAPON, CHANF_OVERLAP );
-			#### # 0 A_Overlay( LAYER_FLASH, "FlashA" );
-			#### E 4 bright;
+			KVNB E 4 bright;
 			#### FGHIJKL 1 bright;
 			TNT1 A 5;
 			KVNB MNOPQ 1 bright;
@@ -119,9 +131,11 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			KVNA ABC 1 bright;
 			TNT1 A 16;
 			KVNA D 1 {
+				K7_FireBullet(invoker.m_fDamage*3,0,20,1);
 				A_StartSound( invoker.m_sPersona .. "_special_shot", CHAN_WEAPON, CHANF_OVERLAP );
 				A_SetBlend( "E6F63F", 0.25, 10 );
 			}
+			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
 			KVNA EFGHIJKLMNOPQRSTUVWXYZ 1 bright;
 			KVNC ABDEFGHIJKLMNOPQRSTUVWXYZ 1 bright;
 			KVND ABCEFGHIJKLMNOPQRSTUVWXYZ 1 bright; 

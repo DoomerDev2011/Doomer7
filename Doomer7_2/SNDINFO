@@ -50,10 +50,10 @@ $random gar_hurt {
 	gar_hurt11
 	gar_hurt12
 }
+$playeralias player male *usefail persona_usefail
 $playeralias player male *grunt none
-$playeralias player male *land hs_down
+$playeralias player male *land cyo_land//hs_down
 
-$playeralias k7_gar male *usefail persona_usefail
 $playeralias k7_gar male *pain100 gar_hurt
 $playersounddup k7_gar male *pain75 *pain100
 $playersounddup k7_gar male *pain50 *pain75
@@ -101,7 +101,6 @@ $random dan_hurt {
 	dan_hurt12
 }
 
-$playeralias k7_dan male *usefail persona_usefail
 $playeralias k7_dan male *pain100 dan_hurt
 $playersounddup k7_dan male *pain75 *pain100
 $playersounddup k7_dan male *pain50 *pain75
@@ -146,7 +145,6 @@ $random ked_hurt {
 	ked_hurt12
 }
 
-$playeralias k7_ked male *usefail persona_usefail
 $playeralias k7_ked male *pain100 ked_hurt
 $playersounddup k7_ked male *pain75 *pain100
 $playersounddup k7_ked male *pain50 *pain75
@@ -189,7 +187,6 @@ $random kvn_hurt {
 	kvn_hurt12
 }
 
-$playeralias k7_kvn male *usefail persona_usefail
 $playeralias k7_kvn male *pain100 kvn_hurt
 $playersounddup k7_kvn male *pain75 *pain100
 $playersounddup k7_kvn male *pain50 *pain75
@@ -201,10 +198,11 @@ $playeralias k7_kvn male *xdeath kvn_die
 // Coyote
 cyo_aim sound/cyo/aim.ogg
 cyo_shoot sound/cyo/shoot.ogg
-cyo_reload RREV //sound/cyo/reload.ogg <- make ogg of rrev pls
+cyo_reload sound/cyo/reload.ogg
 cyo_reload_standing sound/cyo/reload_standing.ogg
 cyo_chargeok sound/cyo/chargeok.ogg
 cyo_special sound/cyo/special.ogg
+cyo_land sound/cyo/land.ogg
 cyo_reloading1 sound/cyo/reloading1.ogg
 cyo_reloading2 sound/cyo/reloading2.ogg
 cyo_reloading3 sound/cyo/reloading3.ogg
@@ -229,7 +227,6 @@ $random cyo_hurt {
 	cyo_hurt7
 }
 
-$playeralias k7_cyo male *usefail persona_usefail
 $playeralias k7_cyo male *pain100 cyo_hurt
 $playersounddup k7_cyo male *pain75 *pain100
 $playersounddup k7_cyo male *pain50 *pain75
@@ -255,7 +252,6 @@ con_hurt6 sound/cat/hurt6.ogg
 con_hurt7 sound/cat/hurt7.ogg
 $random con_hurt { con_hurt1 con_hurt2 con_hurt3 con_hurt4 con_hurt5 con_hurt6 con_hurt7 }
 
-$playeralias k7_con male *usefail persona_usefail
 $playeralias k7_con male *pain100 con_hurt
 $playersounddup k7_con male *pain75 *pain100
 $playersounddup k7_con male *pain50 *pain75
@@ -282,7 +278,6 @@ msk_fire sound/msk/FireBurn.ogg
 
 $random msk_hurt { msk_hurt1 msk_hurt2 msk_hurt3 msk_hurt4 msk_hurt5 msk_hurt6 msk_hurt7 }
 
-$playeralias k7_msk male *usefail persona_usefail
 $playeralias k7_msk male *pain100 msk_hurt
 $playersounddup k7_msk male *pain75 *pain100
 $playersounddup k7_msk male *pain50 *pain75
@@ -329,7 +324,6 @@ $random hay_hurt {
 	hay_hurt7
 }
 
-$playeralias k7_hay male *usefail persona_usefail
 $playeralias k7_hay male *pain100 hay_hurt
 $playersounddup k7_hay male *pain75 *pain100
 $playersounddup k7_hay male *pain50 *pain75
@@ -434,38 +428,19 @@ $volume hs_blood 0.7
 
 // Unsorted
 weapon/getglk GETGLK
-weapon/fireglk FIREGLK
-weapon/reglk RGLK
 
 weapon/gettmg GETTMG
-weapon/firetmg FIRETMG
-weapon/retmg RTMG
-
-weapon/getmag DANCRIT
 
 weapon/getppk GETPPK
 
 weapon/getrev GETREV
-weapon/firerev FIREREV
-weapon/rerev RREV
-weapon/firerevcharge RCHRGE
 
 weapon/gethar GETHARD
-weapon/firehard FIREHARD
-weapon/rehard RHARD
-weapon/zoomhard ZHARD
 weapon/statichard STATIC
 
 weapon/getm79 GETM79
-weapon/firem79 FIREM79
-weapon/rem79 RM79
 
 weapon/getknife GETKNIFE
-weapon/fireknife FIRKN
-
-grunt/newAttack NEWATK
-weapon/MaskExplosion MGRS
-
 
 
 // Pickups

@@ -28,7 +28,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 	int 	m_iPersona;
 	string 	m_sPersona;
 	float	m_fSpeed;
-	int 	m_fDamage;
+	float 	m_fDamage;
 	float	m_fCritical;
 	float 	m_fSpread;
 	float 	m_fRecoil;
@@ -169,19 +169,21 @@ Class CK7_Smith_Weapon : Weapon abstract
 		// bug that for some reason triggered this twice despite the
 		// oldbuttons check. Maybe K7_WeaponReady was being called again?
 		// in any case, this is a useful safeguard.
-		if ((player.cmd.buttons & BT_ALTATTACK) && !(player.oldbuttons & BT_ALTATTACK) && invoker.m_doChargeDelay <= 0)
+		int iCount = min( invoker.m_iSpecialChargeCount, CountInv('CK7_ThinBlood') );
+		if ( iCount > 0 )
 		{
-			int iCount = min( invoker.m_iSpecialChargeCount, CountInv('CK7_ThinBlood') );
-			if ( iCount > 0 )
+			if ((player.cmd.buttons & BT_ALTATTACK) && !(player.oldbuttons & BT_ALTATTACK) && invoker.m_doChargeDelay <= 0)
 			{
-				invoker.m_doChargeDelay = 3;
+				invoker.m_doChargeDelay = 2;
 				invoker.m_iSpecialCharges++;
 				if ( invoker.m_iSpecialCharges > iCount )
 				{
 					invoker.m_iSpecialCharges = 0;
+					A_StopSound( CHAN_5 );
 				}
 				EventHandler.SendInterfaceEvent(self.PlayerNumber(), "K7ShowHudPanel");
 				A_StartSound( "charge_tube" .. invoker.m_iSpecialCharges, CHAN_WEAPON, CHANF_OVERLAP );
+				if(invoker.m_iSpecialCharges == invoker.m_iSpecialChargeCount) A_StartSound( invoker.m_sPersona .. "_chargeok", CHAN_5, CHANF_LOOP );
 				return;
 			}
 		}
@@ -245,7 +247,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 			m_fLevel++;
 			//m_fFireDelay *= 0.88;
 			m_fRefire *= 0.88;
-			m_fDamage *=1.05;
+			m_fDamage *= 1.09;
 			m_fSpread *= 0.8;
 			m_fReloadTime *= 0.9;
 			m_fReloadTimeStanding *= 0.9;
@@ -431,6 +433,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 				CK7_Smith( invoker.owner ).m_bZoomedIn = false;
 				A_ClearOverlays(2, 1000);
 				A_ClearOverlays(-1000, -2);
+				A_StopSound( CHAN_5 );
 			}
 			#### # 0 A_Lower;
 			wait;

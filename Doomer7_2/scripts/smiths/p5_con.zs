@@ -76,7 +76,7 @@ Class CK7_Smith_Con_Wep : CK7_Smith_Weapon
 		Shoot:
 			#### # 1 A_Overlay( LAYER_FUNC, "Fire_Bullet" );
 			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
-			#### # 4
+			#### # 3
 			{
 				if ( invoker.m_iAmmo > 0 )
 				{
