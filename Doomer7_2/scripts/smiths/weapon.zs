@@ -124,7 +124,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 		Weapon.AmmoUse1 0;
 		Weapon.AmmoType2 "CK7_ThinBlood";
 		Weapon.AmmoUse2 0;*/
-		inventory.maxamount 5;
+		inventory.maxamount 6;
 		Weapon.KickBack 0;
 		Weapon.BobSpeed -2;
 		Weapon.BobRangeX 0.1;
@@ -243,10 +243,10 @@ Class CK7_Smith_Weapon : Weapon abstract
 	{
 		If(item is self.getClassName() ) 
 		{
-			If(m_fLevel > 3) Return true;
+			If(m_fLevel > 4) Return true;
 			m_fLevel++;
-			//m_fFireDelay *= 0.88;
-			m_fRefire *= 0.88;
+			m_fRefire -= self.default.m_fRefire*0.1;
+			a_logfloat(m_fRefire);
 			m_fDamage *= 1.09;
 			m_fSpread *= 0.8;
 			m_fReloadTime *= 0.9;
