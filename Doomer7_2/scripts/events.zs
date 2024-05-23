@@ -207,18 +207,19 @@ class CK7_GameplayHandler : EventHandler
 				critpart[c] = New("K7_critpart");
 				double pang = Random(1,360); double ppic = Random(-90,90);
 				critpart[c].pos = (cos(pang)*cos(ppic), sin(pang)*cos(ppic), sin(ppic) );
-				pang = Random(1,360); ppic = Random(1,360);
+				//pang = Random(1,360); ppic = Random(1,360);
+				pang += Random(-10,10); ppic += Random(-10,10);
 				critpart[c].vel = (cos(pang)*cos(ppic), sin(pang)*cos(ppic), sin(ppic) );
 				critpart[c].vel -= critpart[c].pos * (critpart[c].pos dot critpart[c].vel);
-				float vel = Frandom(3,5);
+				float vel = Frandom(2,5);
 				critpart[c].vel = critpart[c].vel.unit() * 0.1 * vel;
 				critpart[c].pos *= vel;
-				critpart[c].pos.z = critpart[c].pos.z*0.0005 + 0.008;
+				critpart[c].pos.z = critpart[c].pos.z*0.0005 + 0.009;
 				critpart[c].vel.z *= 0.0005;
 			}
 			critpart[c].opos = critpart[c].pos;
 			critpart[c].pos += critpart[c].vel;
-			critpart[c].vel -= 0.01*critpart[c].pos.PlusZ(-0.008);
+			critpart[c].vel -= 0.01*critpart[c].pos.PlusZ(-0.009);
 		}
 	}
 	
@@ -251,6 +252,8 @@ class CK7_GameplayHandler : EventHandler
 		XDir = Dir cross YDir;
 		Tanfov = Tan( lerp(oldfov, mo.player.fov*0.5, e.fractic) ) * max(4.0 / 3, Screen.GetAspectRatio()) / (4.0 / 3);
 		
+		if(CK7_Hud(statusbar).autoMapActiveOld) return;
+		
 		Vector3 BlockPos = e.ViewPos + Dir*1500;
 		BlockThingsIterator it = BlockThingsIterator.CreateFromPos(BlockPos.x,BlockPos.y,BlockPos.z, 50, 1500, 1);
 		while (it.Next())
@@ -276,7 +279,7 @@ class CK7_GameplayHandler : EventHandler
 							Vector3 Crp = crscl*(critpart[c].opos + e.fractic*(critpart[c].pos-critpart[c].opos) ) + CrPos.xy;
 							if(critpart[c]) Screen.DrawTexture(gllight, true, Crp.x, Crp.y, 
 							DTA_ScaleX, Crp.z, DTA_ScaleY, Crp.z* (1+0.2*Cos(Apitch) ),
-							DTA_Color, crcol, DTA_LegacyRenderStyle, STYLE_ADD, DTA_CenterOffset, true);
+							DTA_Color, crcol, DTA_LegacyRenderStyle, STYLE_SHADED, DTA_CenterOffset, true);
 							ct++;
 						}
 						
@@ -285,13 +288,13 @@ class CK7_GameplayHandler : EventHandler
 			}
 			
 		}
-		
+		Return;
 	}
 	override void RenderOverlay(renderEvent e)
 	{
 		if(blodmag)
 		{
-			double bmscl = 0.288* float(trueSizeY)/1080;
+			double bmscl = 0.3* float(trueSizeY)/1080;
 			color bmcol = color(int(200*Min(1,blodmag*0.05)),255,80,80);
 			Screen.DrawTexture(gllight, true, goal0.x*trueSizeY, goal0.y*trueSizeY, DTA_CenterOffset, true,
 			DTA_Color, bmcol, DTA_LegacyRenderStyle, STYLE_ADD, DTA_ScaleX, bmscl, DTA_ScaleY, bmscl );
@@ -305,7 +308,7 @@ class CK7_GameplayHandler : EventHandler
 			DTA_Color, bmcol, DTA_LegacyRenderStyle, STYLE_ADD, DTA_ScaleX, bmscl, DTA_ScaleY, bmscl );
 		}
 	
-		if (bloodi.Size() == 0 || !mo) return;
+		if (bloodi.Size() == 0 || !mo || CK7_Hud(statusbar).autoMapActiveOld) return;
 		
 		forEach(b : bloodi)
 		{
