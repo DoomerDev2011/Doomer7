@@ -42,6 +42,7 @@ class CK7_GameplayHandler : EventHandler
 					}
 				}
 			}
+			//no blood given on Ultraviolence or Nightmare if it isnt a crit
 			if( (skill == 3 || skill == 4) && !Crit) Return;
 			// Initial value: 1-10 mapped to monster's health (between 20 and 1000):
 			double dropcount = CK7_Utils.LinearMap(e.thing.GetMaxHealth(), 20, 1000, 1, 10, true);
@@ -62,11 +63,14 @@ class CK7_GameplayHandler : EventHandler
 				//half amount if on Hurt me plenty or Ultraviolence
 				If(skill == 2 || skill == 3) dropcount *= 0.5;
 			}
+			killer.GiveInventory("CK7_ThinBlood",round(dropcount) );
+			/*
+			k7_thinbloodgiver giver = k7_thinbloodgiver(new("k7_thinbloodgiver") );
+			giver.count = round(dropcount);
+			giver.target = killer;
+			
 			int count = round(dropcount);
-			for (count; count > 0; count--)
-			{
-				e.thing.A_DropItem('CK7_ThinBlood', 1);
-			}
+			for (count; count > 0; count--) e.thing.A_DropItem('CK7_ThinBlood', 1);*/
 		}
 		else If(e.Damagesource is "PlayerPawn" && e.DamageType == "Critical" )
 		{
@@ -153,7 +157,7 @@ class CK7_GameplayHandler : EventHandler
 		
 		oldfov = mo.player.fov*0.5;
 		bool nomt; int mtam;
-		double bloz = 0.003* float(trueSizeY)/1080;
+		double bloz = 4* float(trueSizeY)/(1080*screenSizeX);
 		double Sideofs = CK7_Hud(statusbar).GetSideOffset();
 		goal0 = ( (Sideofs+89)/1080 ,0.6954,bloz);
 		goal1 = ( (Sideofs+153)/1080 ,0.7612,bloz);
@@ -287,7 +291,7 @@ class CK7_GameplayHandler : EventHandler
 	{
 		if(blodmag)
 		{
-			double bmscl = goal0.z*96;
+			double bmscl = 0.288* float(trueSizeY)/1080;
 			color bmcol = color(int(200*Min(1,blodmag*0.05)),255,80,80);
 			Screen.DrawTexture(gllight, true, goal0.x*trueSizeY, goal0.y*trueSizeY, DTA_CenterOffset, true,
 			DTA_Color, bmcol, DTA_LegacyRenderStyle, STYLE_ADD, DTA_ScaleX, bmscl, DTA_ScaleY, bmscl );
@@ -620,6 +624,30 @@ class k7_bloodparticle : actor
 			}
 			Stop;
 	}
+}
+
+class k7_thinbloodgiver : thinker
+{
+	actor target;
+	int count;
+	int timer, delay;
+	
+	override void tick()
+	{
+		timer++;
+		if(delay) delay--;
+		if(!count || !target ) Destroy();
+		if(timer > 55 )
+		{
+			if(target && !delay) 
+			{
+				target.GiveInventory("CK7_ThinBlood",1);
+				count--;
+				delay = 2;
+			}
+		}
+	}
+	
 }
 
 class k7_bloodUI Ui

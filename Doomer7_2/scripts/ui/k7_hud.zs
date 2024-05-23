@@ -37,6 +37,7 @@ Class CK7_Hud : BaseStatusBar
 	double blink;
 	int reloadtime, reloadlerp;
 	bool reloading;
+	bool autoMapActiveOld;
 	
 	override void Init()
 	{
@@ -80,8 +81,9 @@ Class CK7_Hud : BaseStatusBar
 			DrawCharge();
 			DrawThinBlood();
 			DrawHealth();
-			if (!autoMapActive) DrawK7Crosshair();
+			if (!autoMapActive || reloadtime<1) DrawK7Crosshair();
 		//}
+		autoMapActiveOld = autoMapActive;
 	}
 
 	double SinePulse(double frequency = TICRATE, double startVal = 0.0, double endVal = 1.0)
@@ -186,19 +188,23 @@ Class CK7_Hud : BaseStatusBar
 	
 	void UpdateSideSlideTimer()
 	{
+		if(autoMapActive) 
+		{
+			sideSlideDir = CHARGETIME_FWD;
+		}
+		else if (autoMapActiveOld)
+		{
+			sideSlideDir = -CHARGETIME_FWD;
+			sideSlideTimer = Min(sideSlideTimer, CHARGETIME_HOLD);
+		}
+		
 		if (sideSlideTimer >= CHARGETIME)
 		{
 			sideSlideDir = CHARGETIME_BACK;
 		}
 		let weap = CK7_Smith_Weapon(CPlayer.readyweapon);
-		if (weap && weap.m_iSpecialCharges > 0 && sideSlideDir < 0)
-		{
-			sideSlideTimer = CHARGETIME;
-		}
-		else
-		{
-			sideSlideTimer = Clamp(sideSlideTimer + sideSlideDir * deltaTime, 0, CHARGETIME);
-		}
+		//if (weap && weap.m_iSpecialCharges > 0 && sideSlideDir < 0)
+		sideSlideTimer = Clamp(sideSlideTimer + sideSlideDir * deltaTime, 0, CHARGETIME);
 	}
 
 	void DrawSidePanel()
@@ -208,7 +214,7 @@ Class CK7_Hud : BaseStatusBar
 		Vector2 cPos = (pos + (backgroundTexSize.x*0.5, 156) )*ItemScale;
 		Vector2 sc = (0.85, 0.85)*ItemScale;
 		DrawImage("k7comp_0", cPos, DI_SCREEN_LEFT_TOP|DI_ITEM_CENTER, scale:sc);
-		DrawImageRotated("k7comp_1", cPos, DI_SCREEN_LEFT_TOP|DI_ITEM_CENTER, 90 - oldpangle - fracTic*(pangle-oldpangle), scale:(1. / sc.x, 1. / sc.y), style: STYLE_Add);
+		DrawImageRotated("k7comp_1", cPos, DI_SCREEN_LEFT_TOP|DI_ITEM_CENTER, -90 + oldpangle + fracTic*(pangle-oldpangle), scale:(1. / sc.x, 1. / sc.y), style: STYLE_Add);
 		DrawImage("k7comp_2", cPos, DI_SCREEN_LEFT_TOP|DI_ITEM_CENTER, scale:sc);
 	}
 
