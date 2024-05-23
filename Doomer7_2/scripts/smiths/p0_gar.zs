@@ -36,6 +36,7 @@ Class CK7_Smith_Gar_Wep : CK7_Smith_Weapon
 		Shoot:
 			#### # 1 
 			{
+				if ( invoker.m_iAmmo > 0 ) invoker.m_iAmmo--;
 				K7_FireBullet(invoker.m_fDamage,invoker.m_fSpread,invoker.m_fCritical);
 				A_Overlay( LAYER_RECOIL, "Recoil" );
 				//A_AlertMonsters();

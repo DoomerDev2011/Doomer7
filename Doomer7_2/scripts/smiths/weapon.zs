@@ -246,7 +246,6 @@ Class CK7_Smith_Weapon : Weapon abstract
 			If(m_fLevel > 4) Return true;
 			m_fLevel++;
 			m_fRefire -= self.default.m_fRefire*0.1;
-			a_logfloat(m_fRefire);
 			m_fDamage *= 1.09;
 			m_fSpread *= 0.8;
 			m_fReloadTime *= 0.9;
@@ -491,7 +490,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 		Fire:
 			TNT1 A 0;
 			//#### # 0 A_JumpIf( ( CK7_Smith( invoker.owner ).m_bZoomedIn ), "Fire_Zoomed" );
-			#### # 0 A_JumpIf ( ( invoker.m_iAmmo == 0 ), "Reload" );
+			#### # 0 A_JumpIf ( ( invoker.m_iAmmo <= 0 ), "Reload" );
 			#### # 0
 			{
 				if ( CK7_Smith( invoker.owner ).m_bZoomedIn )

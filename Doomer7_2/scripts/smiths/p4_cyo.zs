@@ -72,7 +72,7 @@ Class CK7_Smith_Cyo_Wep : CK7_Smith_Weapon
 			#### # 0
 			{
 				
-				K7_FireBullet(invoker.m_fDamage*3,0,6,1);
+				K7_FireBullet(invoker.m_fDamage*3,0,6);
 			}
 			Stop;		
 			
