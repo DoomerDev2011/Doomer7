@@ -1,8 +1,3 @@
-Class CK7_Smith_Gar
-{
-	
-}
-
 Class CK7_Smith_Gar_Wep : CK7_Smith_Weapon
 {	
 	Default
@@ -12,20 +7,15 @@ Class CK7_Smith_Gar_Wep : CK7_Smith_Weapon
 		Inventory.PickupSound "weapon/getppk";
 		CK7_Smith_Weapon.PersonaSoundClass "k7_gar";
 		CK7_Smith_Weapon.UltrawideOffset 0;
-	}
-	
-	override void BeginPlay()
-	{
-		Super.BeginPlay();
-		m_sPersona = "gar";
-		m_fDamage = 6;
-		m_fCritical = 33.34;
-		m_fRecoil = 2;
-		m_iClipSize = 5;
-		m_fRefire = 10;
-		m_fViewHeight = 0.985;
-		m_fHeight = 60;
-		m_fReloadTime = 28;
+ 		CK7_Smith_Weapon.Persona "gar";
+ 		CK7_Smith_Weapon.PersonaDamage 6;
+		CK7_Smith_Weapon.PersonaCritical 33.34;
+ 		CK7_Smith_Weapon.PersonaRecoil 2;
+ 		CK7_Smith_Weapon.PersonaClipSize 5;
+ 		CK7_Smith_Weapon.PersonaRefireTime 10;
+ 		CK7_Smith_Weapon.PersonaViewHeight 0.985;
+ 		CK7_Smith_Weapon.PersonaHeight 60;
+ 		CK7_Smith_Weapon.PersonaReloadTime 28;
 	}
 	
 	States

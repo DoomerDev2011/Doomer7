@@ -1,8 +1,3 @@
-Class CK7_Smith_Con
-{
-	
-}
-
 Class CK7_Smith_Con_Wep : CK7_Smith_Weapon
 {
 	float m_fConSpeedTimer;

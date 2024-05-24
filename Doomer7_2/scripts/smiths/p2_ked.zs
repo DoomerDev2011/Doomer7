@@ -1,8 +1,3 @@
-Class CK7_Smith_Ked
-{
-	
-}
-
 Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 {	
 	

@@ -1,8 +1,3 @@
-Class CK7_Smith_Cyo
-{
-	
-}
-
 Class CK7_Smith_Cyo_Wep : CK7_Smith_Weapon
 {	
 	Default

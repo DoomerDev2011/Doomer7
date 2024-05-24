@@ -1,8 +1,3 @@
-Class K7_Smith_Msk
-{
-	
-}
-
 Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 {	
 	Default

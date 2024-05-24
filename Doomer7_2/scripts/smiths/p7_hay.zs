@@ -1,8 +1,3 @@
-Class CK7_Smith_Hay
-{
-	
-}
-
 Class CK7_Smith_Hay_Wep : CK7_Smith_Weapon
 {	
 	Default
