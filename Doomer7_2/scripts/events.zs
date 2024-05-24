@@ -115,7 +115,7 @@ class CK7_GameplayHandler : EventHandler
 				hud.ShowSidePanel();
 			}
 		}
-		if (e.name ~== "K7bloodspots") blodmag = 140;
+		if (e.name ~== "K7bloodspots") CK7_Hud(statusbar).blodmag = 140;
 		if (e.name == "K7NewBloodParticle")
 		{
 			k7_bloodUI bld = New("k7_bloodUI");
@@ -141,8 +141,6 @@ class CK7_GameplayHandler : EventHandler
 	ui Vector3 YDir;
 	ui Vector3 XDir;
 	ui Double Tanfov;
-	ui int blodmag;
-	ui vector3 goal0, goal1, goal2, goal3, goal4;
 	k7_bloodparticle bloodprt;
 	ui array <k7_bloodUI> bloodi;
 	ui k7_CritPart[60] critpart;
@@ -153,34 +151,27 @@ class CK7_GameplayHandler : EventHandler
 		mo = players[consoleplayer].mo;
 		[screenOfsX,screenOfsY,screenSizeX,screenSizeY] = screen.GetViewWindow();
 		trueSizeY = Screen.GetHeight();
+		CK7_Hud Hud = CK7_Hud(statusbar);
 		if(!gllight) gllight = TexMan.CheckForTexture("glstuff/gllight.png");
 		
 		oldfov = mo.player.fov*0.5;
-		bool nomt; int mtam;
-		double bloz = 4* float(trueSizeY)/(1080*screenSizeX);
-		double Sideofs = CK7_Hud(statusbar).GetSideOffset();
-		goal0 = ( (Sideofs+89)/1080 ,0.6954,bloz);
-		goal1 = ( (Sideofs+153)/1080 ,0.7612,bloz);
-		goal2 = ( (Sideofs+83)/1080 ,0.8398,bloz);
-		goal3 = ( (Sideofs+168)/1080 ,0.8537,bloz);
-		goal4 = ( (Sideofs+88)/1080 ,0.925,bloz);
-		if(blodmag) blodmag --;
 		
+		bool nomt; int mtam;
 		ForEach(b:bloodi)
 		{
 			if(b) 
 			{
-				blodmag = 60;
-				CK7_Hud(statusbar).ShowSidePanel();
+				Hud.blodmag = 60;
+				hud.ShowSidePanel();
 				nomt = true;
 				b.opos = b.pos;
 				vector3 goalb;
 				switch(b.goal) {
-					case 0: goalb = goal0; break;
-					case 1: goalb = goal1; break;
-					case 2: goalb = goal2; break;
-					case 3: goalb = goal3; break;
-					default: goalb = goal4; break;
+					case 0: goalb = Hud.goal0; break;
+					case 1: goalb = Hud.goal1; break;
+					case 2: goalb = Hud.goal2; break;
+					case 3: goalb = Hud.goal3; break;
+					default: goalb = Hud.goal4; break;
 				}
 				if(b.tics>100) b.pos = goalb;
 				b.tics++;
@@ -292,22 +283,6 @@ class CK7_GameplayHandler : EventHandler
 	}
 	override void RenderOverlay(renderEvent e)
 	{
-		if(blodmag)
-		{
-			double bmscl = 0.3* float(trueSizeY)/1080;
-			color bmcol = color(int(200*Min(1,blodmag*0.05)),255,80,80);
-			Screen.DrawTexture(gllight, true, goal0.x*trueSizeY, goal0.y*trueSizeY, DTA_CenterOffset, true,
-			DTA_Color, bmcol, DTA_LegacyRenderStyle, STYLE_ADD, DTA_ScaleX, bmscl, DTA_ScaleY, bmscl );
-			Screen.DrawTexture(gllight, true, goal1.x*trueSizeY, goal1.y*trueSizeY, DTA_CenterOffset, true,
-			DTA_Color, bmcol, DTA_LegacyRenderStyle, STYLE_ADD, DTA_ScaleX, bmscl, DTA_ScaleY, bmscl );
-			Screen.DrawTexture(gllight, true, goal2.x*trueSizeY, goal2.y*trueSizeY, DTA_CenterOffset, true,
-			DTA_Color, bmcol, DTA_LegacyRenderStyle, STYLE_ADD, DTA_ScaleX, bmscl, DTA_ScaleY, bmscl );
-			Screen.DrawTexture(gllight, true, goal3.x*trueSizeY, goal3.y*trueSizeY, DTA_CenterOffset, true,
-			DTA_Color, bmcol, DTA_LegacyRenderStyle, STYLE_ADD, DTA_ScaleX, bmscl, DTA_ScaleY, bmscl );
-			Screen.DrawTexture(gllight, true, goal4.x*trueSizeY, goal4.y*trueSizeY, DTA_CenterOffset, true,
-			DTA_Color, bmcol, DTA_LegacyRenderStyle, STYLE_ADD, DTA_ScaleX, bmscl, DTA_ScaleY, bmscl );
-		}
-	
 		if (bloodi.Size() == 0 || !mo || CK7_Hud(statusbar).autoMapActiveOld) return;
 		
 		forEach(b : bloodi)

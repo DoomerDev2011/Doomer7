@@ -493,70 +493,54 @@ Class CK7_Smith_Weapon : Weapon abstract
 			#### # 0 A_JumpIf ( ( invoker.m_iAmmo <= 0 ), "Reload" );
 			#### # 0
 			{
-				if ( CK7_Smith( invoker.owner ).m_bZoomedIn )
-					A_Overlay( LAYER_ANIM, "Anim_Fire_Zoomed" );
+				if ( invoker.m_iSpecialChargeCount > 0 && invoker.m_iSpecialCharges > 0 )
+				{
+					if ( CK7_Smith( invoker.owner ).m_bZoomedIn )
+						A_Overlay( LAYER_ANIM, "Anim_Fire_Zoomed" );
+					else switch ( invoker.m_iSpecialCharges )
+					{
+						case 2:
+							A_Overlay( LAYER_ANIM, "Anim_Fire_Special2" );
+							break;
+						case 3:
+							A_Overlay( LAYER_ANIM, "Anim_Fire_Special3" );
+							break;
+						case 4:
+							A_Overlay( LAYER_ANIM, "Anim_Fire_Special4" );
+							break;
+						case 5:
+							A_Overlay( LAYER_ANIM, "Anim_Fire_Special5" );
+							break;
+						default:
+							A_Overlay( LAYER_ANIM, "Anim_Fire_Special1" );
+							break;
+					}
+					switch ( invoker.m_iSpecialCharges )
+					{
+						case 2:
+							A_Overlay( LAYER_SHOOT, "Shoot_Special2" );
+							break;
+						case 3:
+							A_Overlay( LAYER_SHOOT, "Shoot_Special3" );
+							break;
+						case 4:
+							A_Overlay( LAYER_SHOOT, "Shoot_Special4" );
+							break;
+						case 5:
+							A_Overlay( LAYER_SHOOT, "Shoot_Special5" );
+							break;
+						default:
+							A_Overlay( LAYER_SHOOT, "Shoot_Special1" );
+							break;
+					}
+					A_StopSound( CHAN_5 );
+				}
 				else
 				{
-					if ( invoker.m_iSpecialChargeCount > 0 )
-					{
-						if ( invoker.m_iSpecialCharges > 0 )
-						{
-							switch ( invoker.m_iSpecialCharges )
-							{
-								case 2:
-									A_Overlay( LAYER_ANIM, "Anim_Fire_Special2" );
-									break;
-								case 3:
-									A_Overlay( LAYER_ANIM, "Anim_Fire_Special3" );
-									break;
-								case 4:
-									A_Overlay( LAYER_ANIM, "Anim_Fire_Special4" );
-									break;
-								case 5:
-									A_Overlay( LAYER_ANIM, "Anim_Fire_Special5" );
-									break;
-								default:
-									A_Overlay( LAYER_ANIM, "Anim_Fire_Special1" );
-									break;
-							}
-						}
-						else
-							A_Overlay( LAYER_ANIM, "Anim_Fire" );
-					}
+					if ( CK7_Smith( invoker.owner ).m_bZoomedIn )
+						A_Overlay( LAYER_ANIM, "Anim_Fire_Zoomed" );
 					else
 						A_Overlay( LAYER_ANIM, "Anim_Fire" );
-				}
-			}
-			#### # 0
-			{
-				if ( invoker.m_iSpecialChargeCount > 0 )
-				{
-					if ( invoker.m_iSpecialCharges > 0 )
-					{
-						switch ( invoker.m_iSpecialCharges )
-						{
-							case 2:
-								A_Overlay( LAYER_SHOOT, "Shoot_Special2" );
-								break;
-							case 3:
-								A_Overlay( LAYER_SHOOT, "Shoot_Special3" );
-								break;
-							case 4:
-								A_Overlay( LAYER_SHOOT, "Shoot_Special4" );
-								break;
-							case 5:
-								A_Overlay( LAYER_SHOOT, "Shoot_Special5" );
-								break;
-							default:
-								A_Overlay( LAYER_SHOOT, "Shoot_Special1" );
-								break;
-						}
-					}
-					else
-						A_Overlay( LAYER_SHOOT, "Shoot" );
-				}
-				else
-				{
 					A_Overlay( LAYER_SHOOT, "Shoot" );
 				}
 			}

@@ -207,6 +207,7 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 					CK7_Smith( invoker.owner ).SetStatic( false );
 					CK7_Smith( invoker.owner ).m_bZoomedIn = false;
 					A_StartSound( invoker.m_sPersona .. "_zoomout", CHAN_WEAPON, CHANF_OVERLAP );
+					Player.GetPsprite(LAYER_ANIM).Sprite = 0;
 				}
 			}	
 			#### # 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );

@@ -24,7 +24,9 @@ Class CK7_Hud : BaseStatusBar
 	TextureID thinBloodTex;
 	TextureID thinBloodTexEmpty;
 	TextureID backgroundTex;
+	TextureID gllight;
 	Vector2 backgroundTexSize;
+	vector3 goal0, goal1, goal2, goal3, goal4;
 
 	double itemScale;
 	double sideSlideTimer;
@@ -38,6 +40,7 @@ Class CK7_Hud : BaseStatusBar
 	int reloadtime, reloadlerp;
 	bool reloading;
 	bool autoMapActiveOld;
+	int blodmag;
 	
 	override void Init()
 	{
@@ -51,6 +54,7 @@ Class CK7_Hud : BaseStatusBar
 		k7italicFont = HUDFont.Create( fnt, 1, false, -6, -6 );
 		backgroundTex = TexMan.CheckForTexture("K7HUD_BG");
 		backgroundTexSize = TexMan.GetScaledSize(backgroundTex);
+		gllight = TexMan.CheckForTexture("glstuff/gllight.png");
 	}
 	
 	override void Tick()
@@ -60,6 +64,7 @@ Class CK7_Hud : BaseStatusBar
 		pangle = CPlayer.mo.angle;
 		reloadlerp = reloadtime;
 		If(ReloadTime) Reloadtime--;
+		if(blodmag) blodmag --;
 	}
 	
 	override void Draw( int state, double TicFrac )
@@ -216,6 +221,31 @@ Class CK7_Hud : BaseStatusBar
 		DrawImage("k7comp_0", cPos, DI_SCREEN_LEFT_TOP|DI_ITEM_CENTER, scale:sc);
 		DrawImageRotated("k7comp_1", cPos, DI_SCREEN_LEFT_TOP|DI_ITEM_CENTER, -90 + oldpangle + fracTic*(pangle-oldpangle), scale:(1. / sc.x, 1. / sc.y), style: STYLE_Add);
 		DrawImage("k7comp_2", cPos, DI_SCREEN_LEFT_TOP|DI_ITEM_CENTER, scale:sc);
+		
+		if(blodmag) 
+		{
+			int wind,windX;
+			[wind,wind,windX,wind] = Screen.GetViewWindow();
+			double bloz = 4* float(HUDRESY)/(1080*windX);
+			goal0 = ( (pos.x+89)/1080 ,0.6954,bloz);
+			goal1 = ( (pos.x+153)/1080 ,0.7612,bloz);
+			goal2 = ( (pos.x+83)/1080 ,0.8398,bloz);
+			goal3 = ( (pos.x+168)/1080 ,0.8537,bloz);
+			goal4 = ( (pos.x+88)/1080 ,0.925,bloz);
+			
+			double bmscl = 0.3*ItemScale;
+			color bmcol = color(int(200*Min(1,blodmag*0.05)),255,80,80);
+			Screen.DrawTexture(gllight, true, goal0.x*HUDRESY, goal0.y*HUDRESY, DTA_CenterOffset, true,
+			DTA_Color, bmcol, DTA_LegacyRenderStyle, STYLE_ADD, DTA_ScaleX, bmscl, DTA_ScaleY, bmscl );
+			Screen.DrawTexture(gllight, true, goal1.x*HUDRESY, goal1.y*HUDRESY, DTA_CenterOffset, true,
+			DTA_Color, bmcol, DTA_LegacyRenderStyle, STYLE_ADD, DTA_ScaleX, bmscl, DTA_ScaleY, bmscl );
+			Screen.DrawTexture(gllight, true, goal2.x*HUDRESY, goal2.y*HUDRESY, DTA_CenterOffset, true,
+			DTA_Color, bmcol, DTA_LegacyRenderStyle, STYLE_ADD, DTA_ScaleX, bmscl, DTA_ScaleY, bmscl );
+			Screen.DrawTexture(gllight, true, goal3.x*HUDRESY, goal3.y*HUDRESY, DTA_CenterOffset, true,
+			DTA_Color, bmcol, DTA_LegacyRenderStyle, STYLE_ADD, DTA_ScaleX, bmscl, DTA_ScaleY, bmscl );
+			Screen.DrawTexture(gllight, true, goal4.x*HUDRESY, goal4.y*HUDRESY, DTA_CenterOffset, true,
+			DTA_Color, bmcol, DTA_LegacyRenderStyle, STYLE_ADD, DTA_ScaleX, bmscl, DTA_ScaleY, bmscl );
+		}
 	}
 
 	double GetSideOffset()
