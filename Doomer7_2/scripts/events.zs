@@ -145,6 +145,7 @@ class CK7_GameplayHandler : EventHandler
 	ui array <k7_bloodUI> bloodi;
 	ui k7_CritPart[60] critpart;
 	ui TextureId gllight;
+	ui TextureId crossmask;
 	 
 	override void UiTick ()
 	{
@@ -153,6 +154,7 @@ class CK7_GameplayHandler : EventHandler
 		trueSizeY = Screen.GetHeight();
 		CK7_Hud Hud = CK7_Hud(statusbar);
 		if(!gllight) gllight = TexMan.CheckForTexture("glstuff/gllight.png");
+		if(!crossmask) crossmask = TexMan.CheckForTexture("graphics/ui/K7CrosshairMask.png");
 		
 		oldfov = mo.player.fov*0.5;
 		
@@ -245,6 +247,12 @@ class CK7_GameplayHandler : EventHandler
 		
 		if(CK7_Hud(statusbar).autoMapActiveOld) return;
 		
+		Screen.EnableStencil(true);
+		Screen.SetStencil(0, SOP_Increment, SF_ColorMaskOff);
+		float mskscl = float(trueSizeY)/1080;
+		Screen.DrawTexture(crossmask, true, Screen.GetWidth()*0.5, trueSizeY*0.5, DTA_ScaleX, mskscl, DTA_ScaleY, mskscl, DTA_CenterOffset, true);
+		Screen.SetStencil(1, SOP_Keep, SF_AllOn);
+							
 		Vector3 BlockPos = e.ViewPos + Dir*1500;
 		BlockThingsIterator it = BlockThingsIterator.CreateFromPos(BlockPos.x,BlockPos.y,BlockPos.z, 50, 1500, 1);
 		while (it.Next())
@@ -253,32 +261,29 @@ class CK7_GameplayHandler : EventHandler
 			{
 				Vector3 CrPos = CK7_HS_CritSpot(it.thing).oldpos + e.fractic*(it.thing.Pos+it.thing.Vel -CK7_HS_CritSpot(it.thing).oldpos);
 				CrPos = ProjectToScreen(CrPos.PlusZ(it.thing.Height*0.5) , e.ViewPos, e.ViewRoll, TanFov, Dir, XDir, YDir);
-				If(CrPos.xy.LengthSquared() < 0.0022)
+				If(!SightLine) SightLine = New("SightLine");
+				SightLine.Obj = it.thing;
+				SightLine.Trace(e.ViewPos, it.thing.cursector, Level.Vec3Diff(e.ViewPos,it.thing.Pos.PlusZ(it.thing.Height*0.5) ), 3000, TRACE_ReportPortals);
+				If(SightLine.Results.HitActor == it.thing)
 				{
-					If(!SightLine) SightLine = New("SightLine");
-					SightLine.Obj = it.thing;
-					SightLine.Trace(e.ViewPos, it.thing.cursector, Level.Vec3Diff(e.ViewPos,it.thing.Pos.PlusZ(it.thing.Height*0.5) ), 3000, TRACE_ReportPortals);
-					If(SightLine.Results.HitActor == it.thing)
+					color crcol = color(255,255,255,0);
+					double crscl = CrPos.z*screenSizeX;
+					CrPos.xy *= screenSizeX;
+					CrPos.xy += (screenOfsX + screenSizeX*0.5, screenOfsY+ screenSizeY*0.5);
+					int ct;
+					For(int c = it.thing.BounceCount; ct<20 && c<60; c++)
 					{
-						color crcol = color(255,255,255,0);
-						double crscl = CrPos.z*screenSizeX;
-						CrPos.xy *= screenSizeX;
-						CrPos.xy += (screenOfsX + screenSizeX*0.5, screenOfsY+ screenSizeY*0.5);
-						int ct;
-						For(int c = it.thing.BounceCount; ct<20 && c<60; c++)
-						{
-							Vector3 Crp = crscl*(critpart[c].opos + e.fractic*(critpart[c].pos-critpart[c].opos) ) + CrPos.xy;
-							if(critpart[c]) Screen.DrawTexture(gllight, true, Crp.x, Crp.y, 
-							DTA_ScaleX, Crp.z, DTA_ScaleY, Crp.z* (1+0.2*Cos(Apitch) ),
-							DTA_Color, crcol, DTA_LegacyRenderStyle, STYLE_SHADED, DTA_CenterOffset, true);
-							ct++;
-						}
-						
+						Vector3 Crp = crscl*(critpart[c].opos + e.fractic*(critpart[c].pos-critpart[c].opos) ) + CrPos.xy;
+						if(critpart[c]) Screen.DrawTexture(gllight, true, Crp.x, Crp.y, 
+						DTA_ScaleX, Crp.z, DTA_ScaleY, Crp.z* (1+0.2*Cos(Apitch) ),
+						DTA_Color, crcol, DTA_LegacyRenderStyle, STYLE_SHADED, DTA_CenterOffset, true);
+						ct++;
 					}
 				}
 			}
-			
 		}
+		Screen.EnableStencil(False);
+		
 		Return;
 	}
 	override void RenderOverlay(renderEvent e)
