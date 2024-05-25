@@ -251,8 +251,8 @@ Class CK7_Smith_Weapon : Weapon abstract
 			m_fRefire -= Min( 6, self.default.m_fRefire*0.0875 );
 			m_fDamage *= 1.09;
 			m_fSpread *= 0.8;
-			m_fReloadTime *= 0.9;
-			m_fReloadTimeStanding *= 0.9;
+			m_fReloadTime *= 0.8;
+			m_fReloadTimeStanding *= 0.8;
 			
 			item.bQuiet = true;
 			item.PrintPickupMessage(owner.CheckLocalView(), item.GetTag().." upgraded to level "..m_fLevel);
