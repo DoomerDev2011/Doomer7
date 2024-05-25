@@ -225,7 +225,7 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 		Anim_Reload_Down:
 			TNT1 A 5
 			{
-				A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );
+				A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );//, 1, ATTN_NORM, invoker.default.m_fReloadTime/invoker.m_fReloadTime
 				A_Overlay(LAYER_LEFTGUN, "Anim_Reload_SideGun");
 				A_Overlay(LAYER_RIGHTGUN, "Anim_Reload_SideGun");
 			}
@@ -242,6 +242,7 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 		Anim_Reload_Up:
 			TNT1 A 4 
 			{
+				A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, 0, 1, ATTN_NORM, 1, 1.1 );
 				A_Overlay(LAYER_LEFTGUN, "Anim_Reload_Up_SideGun");
 				A_Overlay(LAYER_RIGHTGUN, "Anim_Reload_Up_SideGun");
 			}
@@ -255,7 +256,7 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 			Goto Anim_Aiming_SingleGun;
 			
 		Anim_Standing_Reload:
-			#### # 0 A_StartSound( invoker.m_sPersona .. "_reload_standing", CHAN_WEAPON, CHANF_OVERLAP );
+			#### # 0 A_StartSound( invoker.m_sPersona .. "_reload_standing", CHAN_WEAPON );
 			Stop;			
 	}
 }

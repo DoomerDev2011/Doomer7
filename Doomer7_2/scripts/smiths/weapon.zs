@@ -245,11 +245,17 @@ Class CK7_Smith_Weapon : Weapon abstract
 		{
 			If(m_fLevel > 4) Return true;
 			m_fLevel++;
-			m_fRefire -= self.default.m_fRefire*0.1;
+			m_fRefire -= Min( 1.4, self.default.m_fRefire*0.0875 );
 			m_fDamage *= 1.09;
 			m_fSpread *= 0.8;
 			m_fReloadTime *= 0.9;
 			m_fReloadTimeStanding *= 0.9;
+			
+			item.bQuiet = true;
+			item.PrintPickupMessage(owner.CheckLocalView(), item.GetTag().." upgraded to level "..m_fLevel);
+			item.Pickupsound = "ability_upgrade";
+			item.PlayPickupSound (owner);
+			if (!item.bNoScreenFlash && owner.player.playerstate != PST_DEAD) owner.player.bonuscount = item.BONUSADD;
 		}
 		Return super.HandlePickup(item);
 	}
@@ -546,7 +552,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 			}
 			#### # 0
 			{
-				A_SetTics( ceil( invoker.m_fRefire ) - 1 );
+				A_SetTics( Max( ceil( invoker.m_fRefire ) - 1, 1) );
 			}
 			#### # 0 A_JumpIf( !invoker.m_bAutoFire, "Aiming" );
 			#### # 0 A_Refire();

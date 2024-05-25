@@ -89,6 +89,9 @@ Class CK7_Smith_Hay_Wep : CK7_Smith_Weapon
 			#### # 1 bright K7_WeaponOffset ( -128, 32 + 256, WOF_INTERPOLATE);
 			Stop;
 		Anim_Reload_Up:
+			HAYB A 0 {
+				If(invoker.m_fReloadTime < 58) A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, 0, 1, ATTN_NORM, 1, 1.58 );
+			}
 			HAYB A 1 bright K7_WeaponOffset ( -32, 32 + 64, WOF_INTERPOLATE );
 			#### # 1 bright K7_WeaponOffset ( -8, 32 + 16, WOF_INTERPOLATE );
 			#### # 1 bright K7_WeaponOffset ( -2, 32 + 4, WOF_INTERPOLATE );

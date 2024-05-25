@@ -16,6 +16,7 @@ persona_usefail sound/shared/usefail.ogg
 persona_heal sound/shared/heal.ogg
 persona_healfull sound/shared/heal_full.ogg
 pickup_blood sound/pickup/pickup_blood.ogg
+ability_upgrade sound/shared/ability_upgrade.ogg
 
 // Garcian
 gar_aim sound/gar/aim.ogg

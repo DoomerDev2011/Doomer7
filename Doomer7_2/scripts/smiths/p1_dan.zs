@@ -125,7 +125,7 @@ Class CK7_Smith_Dan_Wep : CK7_Smith_Weapon
 			Goto Anim_Aiming;
 		
 		Anim_Reload_Down:
-			DANB A 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );
+			DANB A 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );//
 			#### # 1 bright K7_WeaponOffset ( 0, 32, 0);
 			#### # 1 bright K7_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
 			#### # 1 bright K7_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
@@ -134,6 +134,9 @@ Class CK7_Smith_Dan_Wep : CK7_Smith_Weapon
 			Stop;
 			
 		Anim_Reload_Up:
+			DANB A 0 {
+				If(invoker.m_fReloadTime < 54) A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, 0, 1, ATTN_NORM, 1, 1.47 );
+			}
 			DANB A 1 bright K7_WeaponOffset ( 32, 32 + 64, WOF_INTERPOLATE );
 			#### # 1 bright K7_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE );
 			#### # 1 bright K7_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE );

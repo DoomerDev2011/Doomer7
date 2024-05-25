@@ -73,7 +73,7 @@ Class CK7_Smith_Gar_Wep : CK7_Smith_Weapon
 			#### EF 2 bright;
 			Goto Anim_Aiming;
 		Anim_Reload_Down:
-			GARB A 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );
+			GARB A 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP, 1, ATTN_NORM, invoker.default.m_fReloadTime/invoker.m_fReloadTime );
 			#### # 1 bright K7_WeaponOffset ( 0, 32, 0);
 			#### # 1 bright K7_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
 			#### # 1 bright K7_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);

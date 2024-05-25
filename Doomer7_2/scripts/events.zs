@@ -332,6 +332,10 @@ class CK7_GameplayHandler : EventHandler
 		{
 			e.Replacement = 'CK7_Smith_Kvn_Wep';
 		}
+		else if (e.Replacee is 'Pistol')
+		{
+			e.Replacement = 'CK7_Smith_Gar_Wep';
+		}
 		else if (e.Replacee is 'Shotgun')
 		{
 			e.Replacement = random[wsp](0,1) == 1? 'CK7_Smith_Dan_Wep' : 'CK7_Smith_Cyo_Wep';

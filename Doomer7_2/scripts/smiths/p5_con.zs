@@ -188,7 +188,7 @@ Class CK7_Smith_Con_Wep : CK7_Smith_Weapon
 			Goto Anim_Aiming;
 			
 		Anim_Reload_Down:
-			CONB A 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP );
+			CONB A 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP, 1, ATTN_NORM, invoker.default.m_fReloadTime/invoker.m_fReloadTime  );
 			#### B 1 bright K7_WeaponOffset ( 0, 32, 0);
 			#### D 1 bright K7_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE);
 			#### G 1 bright K7_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE);
