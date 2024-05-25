@@ -339,7 +339,17 @@ class K7_Mask_M79_Grenade : Actor
 		{
 			int strength = 6;
 			double FullDmgRad = 30;
-			BlockThingsIterator itr = BlockThingsIterator.Create(self, ExplosionRadius);
+			Scale = (1,1);
+			float ExploRadius = ExplosionRadius;
+			
+			Inventory msk;
+			if(Target) msk = Target.FindInventory("CK7_Smith_Msk_Wep");
+			if(msk) {
+				Scale *= CK7_Smith_Msk_Wep(msk).m_fDamage;
+				ExploRadius *= CK7_Smith_Msk_Wep(msk).m_fDamage;
+			}
+			
+			BlockThingsIterator itr = BlockThingsIterator.Create(self, ExploRadius);
 			Actor Obj;
 			while (itr.next())
 			{
@@ -351,7 +361,7 @@ class K7_Mask_M79_Grenade : Actor
 						Vector3 Dirc = Obj.Pos.PlusZ(Obj.Height*0.5) - Pos.PlusZ(Height*0.5);
 						Double Dist = Dirc.Length() - Obj.Radius;
 						Int Damg;
-						Damg = ExplosionDamage*( (ExplosionRadius-Dist) / (ExplosionRadius-FullDmgRad) );
+						Damg = ExplosionDamage*( (ExploRadius-Dist) / (ExploRadius-FullDmgRad) );
 						Damg = Clamp(Damg,0,ExplosionDamage);
 						If(Obj == tracer) Damg += Damage;
 						
@@ -369,7 +379,6 @@ class K7_Mask_M79_Grenade : Actor
 			bNOGRAVITY = true;
 			bBRIGHT = true;
 			Roll = Random(1,360);
-			Scale = (1,1);
 			//A_SetRenderstyle(1.0, STYLE_Add);
 			A_AttachLight('0', DynamicLight.FlickerLight, color(255, 80, 0), 80, 128, DYNAMICLIGHT.LF_ATTENUATE, param: 0.5);
 		}
