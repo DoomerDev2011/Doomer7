@@ -50,7 +50,7 @@ Class CK7_Smith_Dan_Wep : CK7_Smith_Weapon
 			{
 				A_SetTics( ceil( invoker.m_fFireDelay ) );
 				invoker.m_iSpecialCharges = 0;
-				invoker.A_TakeInventory( "CK7_ThinBlood", 3 );
+				A_TakeInventory( "CK7_ThinBlood", 3 );
 			}
 			#### # 1 A_Overlay( LAYER_FUNC, "Fire_Special_Bullet" );
 			#### # 0 A_Overlay( LAYER_RECOIL, "Recoil" );
@@ -195,7 +195,7 @@ Class K7_Dan_CollateralShot : Actor
 				Vector3 Push = ObjOfs - Dir*Dist; 
 				If(Push.Length() < 19) //check if its not too far away from the cylinder's axis
 				{
-					victim.damagemobj(self,target,1300,'COLLATERALSHOT',0,angle);
+					victim.damagemobj(self,target,1300,'critical',0,angle);
 					Return 0;
 				}
 				//&& Dist+Obj.Radius > 0 && Dist-Obj.Radius <= Length ) // to detect if its in length limits

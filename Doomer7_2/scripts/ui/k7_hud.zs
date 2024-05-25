@@ -207,8 +207,10 @@ Class CK7_Hud : BaseStatusBar
 		{
 			sideSlideDir = CHARGETIME_BACK;
 		}
-		let weap = CK7_Smith_Weapon(CPlayer.readyweapon);
-		//if (weap && weap.m_iSpecialCharges > 0 && sideSlideDir < 0)
+		
+		CK7_Smith_Weapon weap = CK7_Smith_Weapon(CPlayer.readyweapon);
+		if (weap && weap.m_iSpecialCharges > 0 && sideSlideDir < 0) sideSlideDir = CHARGETIME_FWD;
+		
 		sideSlideTimer = Clamp(sideSlideTimer + sideSlideDir * deltaTime, 0, CHARGETIME);
 	}
 

@@ -8,7 +8,7 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 		Inventory.PickupSound "weapon/getm79";
 		CK7_Smith_Weapon.PersonaSoundClass "k7_msk";
  		CK7_Smith_Weapon.Persona "msk";
- 		CK7_Smith_Weapon.PersonaDamage 48;
+ 		CK7_Smith_Weapon.PersonaDamage 1; //as the esplosion radius multiplier
  		CK7_Smith_Weapon.PersonaRecoil 6;
  		CK7_Smith_Weapon.PersonaClipSize 1;
  		CK7_Smith_Weapon.PersonaRefireTime 28;
@@ -94,8 +94,8 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 				{
 					invoker.m_iAmmo--;
 				}
-				A_FireProjectile("K7_Mask_M79_Grenade",0,1,-15,-5);
-				A_FireProjectile("K7_Mask_M79_Grenade",0,1,15,-5);
+				A_FireProjectile("K7_Mask_M79_Grenade",0,1,-15,-3);
+				A_FireProjectile("K7_Mask_M79_Grenade",0,1,15,-3);
 				A_SetTics( ceil( invoker.m_fFireDelay ) );
 				A_Overlay( LAYER_RECOIL, "Recoil" );
 			}
@@ -108,11 +108,11 @@ Class CK7_Smith_Msk_Wep : CK7_Smith_Weapon
 				{
 					invoker.m_iAmmo--;
 				}
-				A_FireProjectile("K7_Mask_M79_Charge_Grenade",0,1,-15,-5);
-				A_FireProjectile("K7_Mask_M79_Charge_Grenade",0,1,15,-5);
+				A_FireProjectile("K7_Mask_M79_Charge_Grenade",0,1,-15,-3);
+				A_FireProjectile("K7_Mask_M79_Charge_Grenade",0,1,15,-3);
 				A_SetTics( ceil( invoker.m_fFireDelay ) );
 				invoker.m_iSpecialCharges = 0;
-				invoker.A_TakeInventory( "CK7_ThinBlood", 2 );
+				A_TakeInventory( "CK7_ThinBlood", 2 );
 				A_Overlay( LAYER_RECOIL, "Recoil" );
 			}
 			Stop;
@@ -271,10 +271,13 @@ class K7_Mask_M79_Grenade : Actor
 		+HITTRACER
 		+EXTREMEDEATH
 		+FORCEXYBILLBOARD
-		Radius 11;
+		+ROLLSPRITE
+		RenderStyle "Add";
+		Scale 0.1;
+		Radius 4;
 		Height 8;
 		Speed 130;
-		DamageFunction 80;
+		Damage 80;
 		ReactionTime 139;
 		ExplosionRadius 128;
 		Deathsound "weapon/MaskExplosion";
@@ -284,7 +287,7 @@ class K7_Mask_M79_Grenade : Actor
 	{
 		Vector3 oldPos = pos;
 		Super.Tick();
-		if (isFrozen() || !InstateSequence(curstate, spawnstate) || !(target && Distance3D(target) > speed+radius+target.radius))
+		if (isFrozen())// || !InstateSequence(curstate, spawnstate) || !(target && Distance3D(target) > speed+radius+target.radius)
 		{
 			return;
 		}
@@ -309,8 +312,15 @@ class K7_Mask_M79_Grenade : Actor
 			sm.rollvel = frandom(3, 6) * randompick(-1,1);
 			sm.rollacc = -(sm.rollvel / sm.lifetime);
 			Level.SpawnParticle(sm);
-			oldPos += dir * dist;
+			oldPos -= dir * dist;
 		}
+	}
+	
+	override int SpecialMissileHit(Actor victim)
+	{
+		If(victim == target) return 1;
+		If(victim.bSHOOTABLE) return 0;
+		return -1;
 	}
 
 	override void PostBeginPlay()
@@ -321,7 +331,7 @@ class K7_Mask_M79_Grenade : Actor
 
 	States {
 	Spawn:
-		TNT1 A 1 A_CountDown();
+		MSGR E 1 A_CountDown();
 		Loop;
 		
 	Death:
@@ -334,7 +344,7 @@ class K7_Mask_M79_Grenade : Actor
 			while (itr.next())
 			{
 				obj = itr.thing;
-				if (obj && obj != self && obj != target && (obj.bSHOOTABLE||Obj == tracer) && !obj.bNODAMAGE )
+				if (obj && obj != self && obj != target && obj.bSHOOTABLE && !obj.bNODAMAGE )
 				{	
 					If(CheckSight(obj) )
 					{
@@ -343,6 +353,7 @@ class K7_Mask_M79_Grenade : Actor
 						Int Damg;
 						Damg = ExplosionDamage*( (ExplosionRadius-Dist) / (ExplosionRadius-FullDmgRad) );
 						Damg = Clamp(Damg,0,ExplosionDamage);
+						If(Obj == tracer) Damg += Damage;
 						
 						If(!obj.bDONTTHRUST) 
 						{
@@ -357,7 +368,9 @@ class K7_Mask_M79_Grenade : Actor
 			A_Stop();
 			bNOGRAVITY = true;
 			bBRIGHT = true;
-			A_SetRenderstyle(1.0, STYLE_Add);
+			Roll = Random(1,360);
+			Scale = (1,1);
+			//A_SetRenderstyle(1.0, STYLE_Add);
 			A_AttachLight('0', DynamicLight.FlickerLight, color(255, 80, 0), 80, 128, DYNAMICLIGHT.LF_ATTENUATE, param: 0.5);
 		}
 		MAEX ABCDEFGHIJ 1 { scale *= 1.02; }
@@ -371,7 +384,7 @@ class K7_Mask_M79_Charge_Grenade : K7_Mask_M79_Grenade
 {
 	Default
 	{
-		DamageFunction 120;
+		Damage 120;
 		ExplosionDamage 160;
 		ExplosionRadius 180;
 	}

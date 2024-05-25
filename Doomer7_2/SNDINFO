@@ -156,6 +156,7 @@ $playeralias k7_ked male *taunt ked_crit
 // Kevin
 kvn_aim sound/ksn/aim.ogg
 kvn_shoot sound/kvn/shoot.ogg
+kvn_chargeok sound/kvn/chargeok.ogg
 kvn_special_shot sound/kvn/specialshot.ogg
 kvn_crit sound/kvn/crit_vo.ogg
 
@@ -265,6 +266,7 @@ $playeralias k7_con male *taunt weapon/getglk
 msk_aim sound/msk/aim.ogg
 msk_shoot sound/msk/shoot.ogg
 msk_reload sound/msk/reload.ogg
+msk_chargeok sound/msk/chargeok.ogg
 msk_special_vo sound/msk/special_vo.mp3
 msk_die sound/msk/die.ogg
 msk_hurt1 sound/msk/hurt1.ogg

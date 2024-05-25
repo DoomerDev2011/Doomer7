@@ -62,8 +62,9 @@ class CK7_GameplayHandler : EventHandler
 				dropcount *= invfactor;
 				//half amount if on Hurt me plenty or Ultraviolence
 				If(skill == 2 || skill == 3) dropcount *= 0.5;
+				If(!crit) dropcount *= 0.5;
 			}
-			killer.GiveInventory("CK7_ThinBlood",round(dropcount) );
+			killer.GiveInventory("CK7_ThinBlood",ceil(dropcount) );
 			/*
 			k7_thinbloodgiver giver = k7_thinbloodgiver(new("k7_thinbloodgiver") );
 			giver.count = round(dropcount);

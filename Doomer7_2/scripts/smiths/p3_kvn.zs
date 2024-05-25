@@ -48,6 +48,7 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 					A_Overlay( LAYER_SHOOT, "Shoot" );
 					A_SetTics( ceil( invoker.m_fRefire ) - 1 );
 				}
+				A_StopSound(CHAN_5);
 			}
 			#### # 0 A_JumpIf( !invoker.m_bAutoFire, "Aiming" );
 			#### # 0 A_Refire();
@@ -77,7 +78,7 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			{
 				invoker.m_iSpecialCharges = 0;
 				//invoker.m_fRefire = 85;
-				invoker.A_TakeInventory( "CK7_ThinBlood", 1 );
+				A_TakeInventory( "CK7_ThinBlood", 1 );
 			}
 			#### # 19;
 			stop;
@@ -126,7 +127,9 @@ Class CK7_Smith_Kvn_Wep : CK7_Smith_Weapon
 			KVNA ABC 1 bright;
 			TNT1 A 16;
 			KVNA D 1 {
-				K7_FireBullet(invoker.m_fDamage*3,0,20,1);
+				K7_FireBullet(invoker.m_fDamage,0,20,1);
+				K7_FireBullet(invoker.m_fDamage,0,20,1);
+				K7_FireBullet(invoker.m_fDamage,0,20,1);
 				A_StartSound( invoker.m_sPersona .. "_special_shot", CHAN_WEAPON, CHANF_OVERLAP );
 				A_SetBlend( "E6F63F", 0.25, 10 );
 			}

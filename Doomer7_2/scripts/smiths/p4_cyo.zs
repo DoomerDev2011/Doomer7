@@ -56,7 +56,7 @@ Class CK7_Smith_Cyo_Wep : CK7_Smith_Weapon
 			#### # 0
 			{
 				A_SetTics( ceil( invoker.m_fFireDelay ) );
-				invoker.A_TakeInventory( "CK7_ThinBlood", 1 );
+				A_TakeInventory( "CK7_ThinBlood", 1 );
 				invoker.m_iSpecialCharges = 0;
 			}
 			#### # 1 A_Overlay( LAYER_FUNC, "Fire_Special_Bullet" );
