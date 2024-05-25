@@ -129,6 +129,11 @@ Class CK7_Smith : DoomPlayer
 		PPShader.SetUniform1i( "k7post", "resY", Screen.GetHeight() / 8 );
 	}
 
+	override Vector2 BobWeapon (double ticfrac)
+	{
+		If( !(player.WeaponState & WF_WEAPONBOBBING) ) Return (0,0);
+		return super.BobWeapon (ticfrac);
+	}
 	/*States
 	{
 		Spawn:

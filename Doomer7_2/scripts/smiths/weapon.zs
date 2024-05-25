@@ -187,8 +187,11 @@ Class CK7_Smith_Weapon : Weapon abstract
 				return;
 			}
 		}
+		psprite psp = player.FindPSprite(2);
+		bool anim;
+		if(psp) anim = psp.curstate.InStateSequence(invoker.FindState("Anim_Aiming"));
 
-		DoReadyWeaponToSwitch(player, !(flags & WRF_NoSwitch));
+		DoReadyWeaponToSwitch(player, !(flags & WRF_NoSwitch) && anim);
 		
 		if ((flags & WRF_NoFire) != WRF_NoFire)
 		{
@@ -196,17 +199,17 @@ Class CK7_Smith_Weapon : Weapon abstract
 		}
 		
 		// Don't modify offsets:
-		if (!(flags & WRF_NoBob))
+		if (!(flags & WRF_NoBob) && anim)
 		{
 			// Prepare for bobbing action.
 			player.WeaponState |= WF_WEAPONBOBBING;
 		}
+		
+		//if(!anim) player.WeaponState &= ~WF_WEAPONBOBBING;
 
 		player.WeaponState |= GetButtonStateFlags(flags);
 		DoReadyWeaponDisableSwitch(player, flags & WRF_DisableSwitch);
 	}
-	
-	
 
 	void UpdateSoundClass()
 	{
@@ -245,7 +248,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 		{
 			If(m_fLevel > 4) Return true;
 			m_fLevel++;
-			m_fRefire -= Min( 1.4, self.default.m_fRefire*0.0875 );
+			m_fRefire -= Min( 6, self.default.m_fRefire*0.0875 );
 			m_fDamage *= 1.09;
 			m_fSpread *= 0.8;
 			m_fReloadTime *= 0.9;
