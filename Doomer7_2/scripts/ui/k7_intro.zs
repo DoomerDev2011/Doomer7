@@ -30,7 +30,7 @@ class K7_titlecards : ScreenJob
 		if (ticks > TICRATE && !soun) {S_StartSound("menu/cards",1); soun = true;}
 		if (ticks > TICRATE * 2) pic0 = pic1;
 		if (ticks > TICRATE * 5) pic2 = pic3;
-		if (ticks > TICRATE * 9) jobstate = finished;
+		if (ticks > TICRATE * 9) {jobstate = finished; menu.SetMenu("TitleIntro");}
 	}
 
 	override void Draw(double smoothratio) 

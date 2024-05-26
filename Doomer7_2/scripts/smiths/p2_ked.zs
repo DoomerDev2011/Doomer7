@@ -205,7 +205,7 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 					Player.GetPsprite(LAYER_ANIM).Sprite = 0;
 				}
 			}	
-			#### # 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP, 1, ATTN_NORM, 1, 1- invoker.m_fReloadTime/invoker.default.m_fReloadTime );
+			#### # 0 A_StartSound( invoker.m_sPersona .. "_reload", CHAN_WEAPON, CHANF_OVERLAP, 1, ATTN_NORM, 0.5+0.5*(invoker.default.m_fReloadTime/invoker.m_fReloadTime), 0.5*(1- invoker.m_fReloadTime/invoker.default.m_fReloadTime) );
 			#### # 1 bright K7_WeaponOffset ( 0, 32, 0);
 			#### # 1 bright K7_WeaponOffset ( 2, 32 + 4, WOF_INTERPOLATE );
 			#### # 1 bright K7_WeaponOffset ( 8, 32 + 16, WOF_INTERPOLATE );

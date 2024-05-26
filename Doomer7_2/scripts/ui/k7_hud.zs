@@ -79,13 +79,13 @@ Class CK7_Hud : BaseStatusBar
 		BeginHUD( 1, true, HUDRESX, HUDRESY);
 		if (reloadtime<1) //not draw while reloading
 		{
-		DrawSidePanel();
-		UpdateSideSlideTimer();
-		DrawKeys();
-		DrawCharge();
-		DrawThinBlood();
-		DrawHealth();
-		if (!autoMapActive && reloadtime<1) DrawK7Crosshair();
+			DrawSidePanel();
+			UpdateSideSlideTimer();
+			DrawKeys();
+			DrawCharge();
+			DrawThinBlood();
+			DrawHealth();
+			if (!autoMapActive) DrawK7Crosshair();
 		}
 		DrawReload();
 		autoMapActiveOld = autoMapActive;
