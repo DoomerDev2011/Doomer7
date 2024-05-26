@@ -360,7 +360,7 @@ class CK7_GameplayHandler : EventHandler
 		{
 			e.Replacement = 'CK7_Smith_Msk_Wep';
 		}
-		else if (e.Replacee is 'HealthBonus' || e.Replacee is 'Medikit' || e.Replacee is 'Stimpack')
+		else if (e.Replacee is 'HealthBonus' || e.Replacee is 'Medikit' || e.Replacee is 'Stimpack'|| e.Replacee is 'Backpack'|| e.Replacee is 'Berserk')
 		{
 			e.Replacement = 'CK7_ThinBlood';
 		}

@@ -77,17 +77,17 @@ Class CK7_Hud : BaseStatusBar
 		HUDRESX = Screen.GetWidth();
 		ItemScale = Float(HUDRESY)/1080.0;
 		BeginHUD( 1, true, HUDRESX, HUDRESY);
-		//if (reloadtime<1) //not draw while reloading
-		//{
+		if (reloadtime<1) //not draw while reloading
+		{
 		DrawSidePanel();
 		UpdateSideSlideTimer();
 		DrawKeys();
 		DrawCharge();
 		DrawThinBlood();
 		DrawHealth();
-		DrawReload();
 		if (!autoMapActive && reloadtime<1) DrawK7Crosshair();
-		//}
+		}
+		DrawReload();
 		autoMapActiveOld = autoMapActive;
 	}
 
