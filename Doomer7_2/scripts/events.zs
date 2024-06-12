@@ -13,13 +13,14 @@ class CK7_GameplayHandler : EventHandler
 				If(e.Damagesource is "PlayerPawn" && e.DamageType == "Critical" )// || (e.inflictor is "CK7_BulletPuff" && !e.inflictor.bNOEXTREMEDEATH)
 				{
 					crit = true;
-					int blamount = e.thing.height+e.thing.radius+e.thing.radius;
-					For(int p; p < blamount*blamount*0.01; p++)
+					float bldensity = e.thing.height+e.thing.radius+e.thing.radius;
+					int blamount = bldensity*bldensity*0.01*k7_bloodamount;
+					For(int p; p < blamount; p++)
 					{
 						int pang = Random(0,360);
 						int ppic = Random(-20,70);
 						k7_bloodparticle blp = k7_bloodparticle( Actor.Spawn("k7_bloodparticle",e.thing.pos.PlusZ(Random(0,e.thing.height) ) +(frandom(-0.7,0.7),frandom(-0.7,0.7) )*e.thing.radius )   );
-						blp.Bvel = (cos(pang)*cos(ppic), sin(pang)*cos(ppic), sin(ppic))*Random(10,blamount);
+						blp.Bvel = (cos(pang)*cos(ppic), sin(pang)*cos(ppic), sin(ppic))*fRandom(10,bldensity);
 						blp.even = self;
 						blp.Roll = Random(0,360);
 						blp.target = killer;
@@ -28,7 +29,8 @@ class CK7_GameplayHandler : EventHandler
 					EventHandler.SendInterfaceEvent(killer.PlayerNumber(), "K7ShowHudPanel");
 					EventHandler.SendInterfaceEvent(killer.PlayerNumber(), "K7BloodSpots");
 				}
-				else if (k7_bloodtrails && !(e.DamageFlags & DMG_EXPLOSION) ) {
+				else if (k7_bloodtrails && !(e.DamageFlags & DMG_EXPLOSION) ) 
+				{
 					int t = 0.05*(e.thing.height+e.thing.radius);
 					for(int b = t; b>0; b--)
 					{

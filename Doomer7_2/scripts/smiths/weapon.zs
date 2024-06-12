@@ -335,7 +335,8 @@ Class CK7_Smith_Weapon : Weapon abstract
 				If(!Hitscan.victim.bNOBLOOD)
 				{
 					Hitscan.victim.SpawnBlood(Hitscan.Landpos,puff.angle,Ouch);
-					If(bleed){
+					If(bleed && k7_bloodtrails)
+					{
 						Actor Blud = actor.Spawn("K7_BloodSpew",Hitscan.Landpos);
 						Vector3 dist = Blud.Pos - hitscan.victim.pos ;
 						Blud.master = hitscan.victim;
