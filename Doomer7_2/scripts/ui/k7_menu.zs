@@ -673,7 +673,10 @@ class K7_text: ListMenuItemTextItem
 	Override void Ticker() 
 	{
 		If(Count) {
-			If(Count == 1) {Menu.SetMenu(mAction, mParam); KMenu.LaughBack();}
+			If(Count == 1) {
+				KMenu.LaughBack();
+				Menu.SetMenu(mAction, mParam); 
+			}
 			Count--;
 		}
 	}
