@@ -335,6 +335,15 @@ $playeralias k7_hay male *death hay_die
 $playeralias k7_hay male *xdeath hay_die
 $playeralias k7_hay male *taunt weapon/gettmg
 
+
+// Old Harman
+//hac_aim sound/hay/aim.ogg
+hac_pickup sound/hac/pickup.ogg
+hac_equip sound/hac/equip.ogg
+hac_shoot sound/hac/shoot.ogg
+hac_zoomin sound/ked/zoom_in.ogg
+hac_zoomout sound/ked/zoom_out.ogg
+
 // HeavenSmile
 hs_step1 sound/hs/step1.ogg
 hs_step2 sound/hs/step2.ogg

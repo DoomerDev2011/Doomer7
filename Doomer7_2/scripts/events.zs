@@ -332,7 +332,7 @@ class CK7_GameplayHandler : EventHandler
 		}
 		if (e.Replacee is 'Chainsaw')
 		{
-			e.Replacement = 'CK7_Smith_Kvn_Wep';
+			e.Replacement = 'CK7_Smith_Hac';
 		}
 		else if (e.Replacee is 'Pistol')
 		{

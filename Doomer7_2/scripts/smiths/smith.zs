@@ -7,6 +7,7 @@
 #include "scripts/smiths/p5_con.zs"
 #include "scripts/smiths/p6_msk.zs"
 #include "scripts/smiths/p7_hay.zs"
+#include "scripts/smiths/p7_hac.zs"
 
 const CHAN_WEAPON_CHARGE = CHAN_6;
 
@@ -41,7 +42,7 @@ Class CK7_Smith : DoomPlayer
 		Player.WeaponSlot 5, "CK7_Smith_Cyo_Wep";
 		Player.WeaponSlot 6, "CK7_Smith_Con_Wep";
 		Player.WeaponSlot 7, "CK7_Smith_Msk_Wep";
-		Player.WeaponSlot 8, "CK7_Smith_Hay_Wep";
+		Player.WeaponSlot 8, "CK7_Smith_Hay_Wep", "CK7_Smith_Hac";
 		Player.StartItem "CK7_Smith_Gar_Wep";
 		/*Player.StartItem "CK7_Smith_Dan_Wep";
 		Player.StartItem "CK7_Smith_Ked_Wep";

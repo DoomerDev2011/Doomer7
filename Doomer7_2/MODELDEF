@@ -128,5 +128,22 @@ Model K7_Mask_M79_Grenade{
 	Offset 0 0 3
 	FrameIndex M000 A 0 0
 }
-	
+
+Model CK7_Smith_Hac
+{
+	Rotating
+
+	Path "models"
+	Model 0 "OldHarmanPickup.obj"
+	Skin 0 "models/Skins/GLIDER.png"
+	AngleOffset 180
+	PitchOffset 90
+	RollOffset 0
+	Scale 10 10 10
+	Offset 0 0 12
+
+	Rotation-Speed 5
+
+	FrameIndex M000 A 0 0
+}
 	
