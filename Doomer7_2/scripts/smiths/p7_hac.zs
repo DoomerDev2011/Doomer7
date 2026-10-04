@@ -77,10 +77,87 @@ Class CK7_Smith_Hac : CK7_Smith_Weapon
 
 			#### # 1
 			{
-				A_Overlay(
-					LAYER_FUNC,
-					"Fire_Bullet"
-				);
+				//A_Overlay(LAYER_FUNC,"Fire_Bullet");
+				
+				If(!CK7_Smith(self).hitscan) CK7_Smith(self).hitscan = new("CK7_Hitscan");
+				CK7_Hitscan HitScan = CK7_Smith(self).hitscan;// cast pointer to just type "Hitscan"
+				Hitscan.crosshit.clear();
+				Hitscan.master = self; //the player, so it doesn't hit them
+				
+				double pch = BulletSlope();
+				Vector3 dir = (cos(angle)*cos(pch), sin(angle)*cos(pch), sin(-pch));
+				
+				vector3 Start = (pos.x,pos.y,player.viewz); 
+				hitscan.results.HitType = TRACE_HitActor;
+				Sector shootsec = CurSector;
+				Actor puff;
+				
+				while(true)
+				{
+					Hitscan.victim = null; //reset these variables before the shot
+					Hitscan.crit = false;
+					
+					Hitscan.Trace(Start, shootsec, Dir, 9000, TRACE_HitSky);
+					
+					Puff = Spawn("CK7_BulletPuff",hitscan.results.hitpos - hitscan.results.hitvector*4);
+					Puff.Angle = atan2(hitscan.results.hitvector.y, hitscan.results.hitvector.x);
+					Puff.Pitch = -asin(hitscan.results.hitvector.z);
+					puff.target = self;
+					puff.bNOEXTREMEDEATH = false;
+					shootsec = Puff.CurSector;
+					
+					If(Hitscan.victim)
+					{
+						Hitscan.master = Hitscan.victim;
+						
+						Int damg = 1000000;
+						string typ = "Hitscan";
+						if(hitscan.crit) 
+						{
+							damg = 99999999;
+							typ = "Critical";
+							If(hitscan.victim.health - damg <= 0) A_StartSound("*taunt",2,CHANF_NOSTOP);
+							//CK7_CritVoiceLine(New("CK7_CritVoiceLine")).Player = Self;
+							hitscan.victim.A_StartSound("hs_death",12,CHANF_OVERLAP,1,0);
+						}
+						puff.SetOrigin(Hitscan.landpos,false);
+						float vicheight = hitscan.victim.height;
+						Int Ouch = Hitscan.victim.DamageMobj(puff,self,damg,typ,DMG_INFLICTOR_IS_PUFF|DMG_THRUSTLESS, puff.angle);
+						If(Ouch && Hitscan.victim) 
+						{
+							If(!hitscan.victim.bDONTTHRUST) hitscan.victim.vel += hitscan.results.hitvector*10000/hitscan.victim.mass;
+							If(!Hitscan.victim.bNOBLOOD)
+							{
+								Hitscan.victim.SpawnBlood(Hitscan.Landpos,puff.angle,Ouch);
+								If(k7_bloodtrails)
+								{
+									Actor Blud = actor.Spawn("K7_BloodSpew",Hitscan.Landpos);
+									Vector3 dist = Blud.Pos - hitscan.victim.pos ;
+									Blud.master = hitscan.victim;
+									Blud.Health = Min(ouch,120);
+									Blud.Speed = dist.xy.length();
+									Blud.SpriteAngle = VectorAngle( dist.x, dist.y ) - hitscan.victim.angle;
+									Blud.FloatSpeed  = dist.z/vicheight;
+									Blud.Pitch = -puff.pitch;
+								}
+							}
+						}
+						puff.setstatelabel("null");
+						
+						start = Hitscan.landpos;
+						Dir = hitscan.results.hitvector;
+					}
+					else 
+					{
+						if (hitscan.results.HitType == TRACE_HasHitSky) puff.setstatelabel("null");
+						puff.A_SprayDecal("BulletChip",30,(0,0,-0.5),hitscan.results.HitVector);
+						for(int l; l < Hitscan.crosshit.Size(); l++ )
+						{
+							Hitscan.crosshit[l].Activate(self, 0, SPAC_Impact);
+						}
+						Break;
+					}
+				}
 
 				A_Overlay(
 					LAYER_RECOIL,
