@@ -340,9 +340,26 @@ $playeralias k7_hay male *taunt weapon/gettmg
 //hac_aim sound/hay/aim.ogg
 hac_pickup sound/hac/pickup.ogg
 hac_equip sound/hac/equip.ogg
+hac_move1 sound/hac/move1.ogg
+hac_move2 sound/hac/move2.ogg
+hac_move3 sound/hac/move3.ogg
+hac_move4 sound/hac/move4.ogg
+$random hac_move {
+	hac_move1
+	hac_move2
+	hac_move3
+	hac_move4
+}
 hac_shoot sound/hac/shoot.ogg
 hac_zoomin sound/ked/zoom_in.ogg
 hac_zoomout sound/ked/zoom_out.ogg
+hac_unequip sound/hac/unequip.ogg
+
+hac_crit sound/hac/crit_vo.ogg
+
+$playersound k7_hac male *taunt sound/hac/crit_vo.ogg
+$playersound k7_hac female *taunt sound/hac/crit_vo.ogg
+$playersound k7_hac other *taunt sound/hac/crit_vo.ogg
 
 // HeavenSmile
 hs_step1 sound/hs/step1.ogg
