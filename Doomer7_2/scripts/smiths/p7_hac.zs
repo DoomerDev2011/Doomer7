@@ -75,7 +75,6 @@ Class CK7_Smith_Hac : CK7_Smith_Weapon
 			return;
 		if (owner.player.readyweapon != self)
 		{
-			owner.player.vel = (0, 0);
 			if (m_bChairBobActive)
 			{
 				CK7_Smith smith = CK7_Smith(owner);
