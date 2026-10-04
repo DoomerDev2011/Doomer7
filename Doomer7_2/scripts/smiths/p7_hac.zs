@@ -308,7 +308,7 @@ Class CK7_Smith_Hac : CK7_Smith_Weapon
 
 			#### # 1
 			{
-				A_Overlay(LAYER_FUNC,"Fire_Bullet");
+				//A_Overlay(LAYER_FUNC,"Fire_Bullet");
 				
 				If(!CK7_Smith(self).hitscan) CK7_Smith(self).hitscan = new("CK7_Hitscan");
 				CK7_Hitscan HitScan = CK7_Smith(self).hitscan;// cast pointer to just type "Hitscan"
