@@ -18,6 +18,42 @@ Class CK7_Smith_Hac : CK7_Smith_Weapon
  		//CK7_Smith_Weapon.PersonaReloadTime 122.5;
 	}
 	
+	override void DoEffect()
+	{
+		Super.DoEffect();
+		if(owner)
+		{
+			if(owner.player.readyweapon == self)
+			{
+				CK7_Smith(owner).SetSpeed( 0 );
+				
+				Vector2 chairDir = AngleToVector(angle,1);
+				if(owner.player.onground) 
+					owner.vel.xy = owner.vel.xy*0.8 + chairDir * ( chairDir dot owner.vel.xy*0.2 ); //extra side friction
+				
+				Vector2 movedir = (owner.player.cmd.forwardmove, -owner.player.cmd.sidemove);
+				if(movedir.x != 0 || movedir.y != 0)
+				{
+					movedir = rotateVector(movedir*0.00007, owner.angle);
+					Double moveAngle = Vectorangle(movedir.x,movedir.y);
+					if(chairDir dot movedir < -0.5) moveAngle += 180;
+					
+					Double TurnAng = DeltaAngle( Angle, moveAngle );
+					TurnAng = clamp(TurnAng*0.9, -5, 5); //MaxTurn
+					Angle += TurnAng;
+					
+					chairDir = AngleToVector(angle,1);
+					
+					if(owner.player.onground) 
+						owner.vel.xy += chairDir * max(-0.4, chairDir dot movedir);
+				}
+			}
+			else {
+				angle = owner.angle;
+			}
+		}
+	}
+	
 	States
 	{
 		Spawn:
