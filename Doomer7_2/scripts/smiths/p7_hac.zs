@@ -18,6 +18,7 @@ Class CK7_Smith_Hac : CK7_Smith_Weapon
  		//CK7_Smith_Weapon.PersonaReloadTime 122.5;
 	}
 	
+	actor wheelchair;
 	override void DoEffect()
 	{
 		Super.DoEffect();
@@ -27,6 +28,8 @@ Class CK7_Smith_Hac : CK7_Smith_Weapon
 			{
 				CK7_Smith(owner).SetSpeed( 0 );
 				
+				if(!wheelchair) wheelchair = Spawn("CK7_Wheelchair", owner.pos);
+				
 				Vector2 chairDir = AngleToVector(angle,1);
 				if(owner.player.onground) 
 					owner.vel.xy = owner.vel.xy*0.8 + chairDir * ( chairDir dot owner.vel.xy*0.2 ); //extra side friction
@@ -34,22 +37,28 @@ Class CK7_Smith_Hac : CK7_Smith_Weapon
 				Vector2 movedir = (owner.player.cmd.forwardmove, -owner.player.cmd.sidemove);
 				if(movedir.x != 0 || movedir.y != 0)
 				{
-					movedir = rotateVector(movedir*0.00007, owner.angle);
+					movedir = rotateVector(movedir.unit(), owner.angle);
 					Double moveAngle = Vectorangle(movedir.x,movedir.y);
 					if(chairDir dot movedir < -0.5) moveAngle += 180;
 					
 					Double TurnAng = DeltaAngle( Angle, moveAngle );
-					TurnAng = clamp(TurnAng*0.9, -5, 5); //MaxTurn
+					Double MaxTurn = 4;
+					TurnAng = clamp(TurnAng*0.9, -MaxTurn, MaxTurn);
 					Angle += TurnAng;
 					
 					chairDir = AngleToVector(angle,1);
 					
 					if(owner.player.onground) 
-						owner.vel.xy += chairDir * max(-0.4, chairDir dot movedir);
+						owner.vel.xy += chairDir * Clamp( (chairDir dot movedir)**3, -1, 1 );
 				}
+				
+				wheelchair.angle = angle;
+				wheelchair.Vel = owner.vel;
+				wheelchair.SetOrigin(owner.pos + (0,0,2),true);
 			}
 			else {
 				angle = owner.angle;
+				if(wheelchair) wheelchair.Destroy();
 			}
 		}
 	}
@@ -262,5 +271,23 @@ Class CK7_Smith_Hac : CK7_Smith_Weapon
 			#### # 0 A_Overlay( LAYER_FLASH, "FlashA" );
 			Goto Anim_Aiming;
 		
+	}
+}
+
+Class CK7_Wheelchair : actor
+{
+	Default
+	{
+		RenderStyle "Translucent";
+		alpha 0.75;
+		+INTERPOLATEANGLES
+		+NOINTERACTION
+		+FLATSPRITE
+	}
+	
+	States{
+    Spawn:
+		WHCH RR -1;
+		Loop;
 	}
 }
