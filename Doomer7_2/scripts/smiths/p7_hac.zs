@@ -1,12 +1,22 @@
 Class CK7_Smith_Hac : CK7_Smith_Weapon
 {	
-	
+	int m_iChairState;
+	// 0 = weapon up
+	// 1 = holstering
+	// 2 = weapon holstered / movement allowed
+	// 3 = unholstering
+	int m_iChairTimer;
+	bool m_bMoveSoundPlaying;
+	double m_fOldViewBob;
+	double m_fOldViewBobSpeed;
+	bool m_bChairBobActive;
+	bool m_bChairInputReady;
 	Default
 	{
 		Tag "GLIDER";
 		Inventory.PickupMessage "You got the GLIDER!";
 		Inventory.PickupSound "hac_pickup";
-		CK7_Smith_Weapon.PersonaSoundClass 'k7_hay';
+		CK7_Smith_Weapon.PersonaSoundClass 'k7_hac';
  		CK7_Smith_Weapon.Persona "hac";
  		CK7_Smith_Weapon.PersonaDamage 1000000;
 		CK7_Smith_Weapon.PersonaCritical 10;
@@ -18,47 +28,268 @@ Class CK7_Smith_Hac : CK7_Smith_Weapon
  		//CK7_Smith_Weapon.PersonaReloadTime 122.5;
 	}
 	
-	actor wheelchair;
+	void StartChairBob()
+	{
+		if (!owner || !owner.player)
+			return;
+
+		if (m_bChairBobActive)
+			return;
+
+		CK7_Smith smith = CK7_Smith(owner);
+
+		if (!smith)
+			return;
+		m_fOldViewBob = smith.ViewBob;
+		m_fOldViewBobSpeed = smith.ViewBobSpeed;
+		smith.ViewBob = 1.25;
+		smith.ViewBobSpeed = 42;
+
+		m_bChairBobActive = true;
+	}
+
+
+	void StopChairBob()
+	{
+		if (!owner || !owner.player)
+			return;
+
+		if (!m_bChairBobActive)
+			return;
+
+		CK7_Smith smith = CK7_Smith(owner);
+
+		if (smith)
+		{
+			smith.ViewBob = m_fOldViewBob;
+			smith.ViewBobSpeed = m_fOldViewBobSpeed;
+		}
+
+		m_bChairBobActive = false;
+	}
+	
 	override void DoEffect()
 	{
 		Super.DoEffect();
-		if(owner)
+		if (!owner || !owner.player)
+			return;
+		if (owner.player.readyweapon != self)
 		{
-			if(owner.player.readyweapon == self)
+			owner.player.vel = (0, 0);
+			if (m_bChairBobActive)
 			{
-				CK7_Smith(owner).SetSpeed( 0 );
-				
-				if(!wheelchair) wheelchair = Spawn("CK7_Wheelchair", owner.pos);
-				
-				Vector2 chairDir = AngleToVector(angle,1);
-				if(owner.player.onground) 
-					owner.vel.xy = owner.vel.xy*0.8 + chairDir * ( chairDir dot owner.vel.xy*0.2 ); //extra side friction
-				
-				Vector2 movedir = (owner.player.cmd.forwardmove, -owner.player.cmd.sidemove);
-				if(movedir.x != 0 || movedir.y != 0)
+				CK7_Smith smith = CK7_Smith(owner);
+				if (smith)
 				{
-					movedir = rotateVector(movedir.unit(), owner.angle);
-					Double moveAngle = Vectorangle(movedir.x,movedir.y);
-					if(chairDir dot movedir < -0.5) moveAngle += 180;
-					
-					Double TurnAng = DeltaAngle( Angle, moveAngle );
-					Double MaxTurn = 4;
-					TurnAng = clamp(TurnAng*0.9, -MaxTurn, MaxTurn);
-					Angle += TurnAng;
-					
-					chairDir = AngleToVector(angle,1);
-					
-					if(owner.player.onground) 
-						owner.vel.xy += chairDir * Clamp( (chairDir dot movedir)**3, -1, 1 );
+					smith.ViewBob = m_fOldViewBob;
+					smith.ViewBobSpeed = m_fOldViewBobSpeed;
 				}
-				
-				wheelchair.angle = angle;
-				wheelchair.Vel = owner.vel;
-				wheelchair.SetOrigin(owner.pos + (0,0,2),true);
+				m_bChairBobActive = false;
 			}
-			else {
-				angle = owner.angle;
-				if(wheelchair) wheelchair.Destroy();
+			if (m_bMoveSoundPlaying)
+			{
+				owner.A_StopSound(CHAN_5);
+				m_bMoveSoundPlaying = false;
+			}
+			m_iChairState = 0;
+			m_iChairTimer = 0;
+			m_bChairInputReady = false;
+			return;
+		}
+
+		CK7_Smith(owner).SetSpeed(0);
+		
+		double throttle = clamp(
+			owner.player.cmd.forwardmove * 0.00007,
+			-1.0,
+			1.0
+		);
+
+		double steering = clamp(
+			owner.player.cmd.sidemove * 0.00007,
+			-1.0,
+			1.0
+		);
+
+
+		bool wantsToMove =
+			abs(throttle) > 0.01 ||
+			abs(steering) > 0.01;
+
+
+		if (m_iChairState == 0)
+		{
+			owner.vel.x = 0;
+			owner.vel.y = 0;
+			owner.player.vel = (0, 0);
+			if (wantsToMove && m_bChairInputReady)
+			{
+				m_iChairState = 1;
+				m_iChairTimer = 71;
+				if (CK7_Smith(owner).m_bZoomedIn)
+				{
+					A_ZoomFactor(1);
+					CK7_Smith(owner).SetStatic(false);
+					CK7_Smith(owner).m_bZoomedIn = false;
+				}
+				owner.player.SetPSprite(
+					LAYER_ANIM,
+					FindState("Anim_Move_Down"),
+					false
+				);
+			}
+			return;
+		}
+		if (m_iChairState == 1)
+		{
+			owner.vel.x = 0;
+			owner.vel.y = 0;
+			owner.player.vel = (0, 0);
+			if (m_iChairTimer > 0)
+				m_iChairTimer--;
+			if (m_iChairTimer <= 0)
+			{
+				m_iChairState = 2;
+				owner.player.SetPSprite(
+					LAYER_ANIM,
+					FindState("Anim_Move_Hidden"),
+					false
+				);
+				if (!wantsToMove)
+				{
+					m_iChairState = 3;
+					m_iChairTimer = 36;
+					owner.player.SetPSprite(
+						LAYER_ANIM,
+						FindState("Anim_Move_Up"),
+						false
+					);
+				}
+			}
+			return;
+		}
+		if (m_iChairState == 3)
+		{
+			owner.vel.x = 0;
+			owner.vel.y = 0;
+			owner.player.vel = (0, 0);
+			if (m_bMoveSoundPlaying)
+			{
+				owner.A_StopSound(CHAN_5);
+				m_bMoveSoundPlaying = false;
+			}
+			if (m_bChairBobActive)
+			{
+				CK7_Smith smith = CK7_Smith(owner);
+				if (smith)
+				{
+					smith.ViewBob = m_fOldViewBob;
+					smith.ViewBobSpeed = m_fOldViewBobSpeed;
+				}
+				m_bChairBobActive = false;
+			}
+			if (m_iChairTimer > 0)
+				m_iChairTimer--;
+			if (m_iChairTimer <= 0)
+			{
+				m_iChairState = 0;
+			}
+
+			return;
+		}
+		
+		if (m_iChairState == 2)
+		{
+			if (!wantsToMove)
+			{
+				owner.vel.x = 0;
+				owner.vel.y = 0;
+				owner.player.vel = (0, 0);
+				if (m_bMoveSoundPlaying)
+				{
+					owner.A_StopSound(CHAN_5);
+					m_bMoveSoundPlaying = false;
+				}
+				if (m_bChairBobActive)
+				{
+					CK7_Smith smith = CK7_Smith(owner);
+
+					if (smith)
+					{
+						smith.ViewBob = m_fOldViewBob;
+						smith.ViewBobSpeed = m_fOldViewBobSpeed;
+					}
+
+					m_bChairBobActive = false;
+				}
+				m_iChairState = 3;
+				m_iChairTimer = 36;
+				owner.player.SetPSprite(
+					LAYER_ANIM,
+					FindState("Anim_Move_Up"),
+					false
+				);
+				return;
+			}
+
+			if (!m_bChairBobActive)
+			{
+				CK7_Smith smith = CK7_Smith(owner);
+
+				if (smith)
+				{
+					m_fOldViewBob = smith.ViewBob;
+					m_fOldViewBobSpeed = smith.ViewBobSpeed;
+					smith.ViewBob = 1.5;
+					smith.ViewBobSpeed = 42;
+					m_bChairBobActive = true;
+				}
+			}
+
+			if (!owner.IsActorPlayingSound(CHAN_5))
+			{
+				owner.A_StartSound("hac_move",CHAN_5,0,1.0,ATTN_NORM);
+				m_bMoveSoundPlaying = true;
+			}
+			double turnSpeed = 4.0;
+			if (abs(steering) > 0.01)
+			{
+				owner.Angle -= steering * turnSpeed;
+			}
+			Vector2 chairDir = AngleToVector(
+				owner.Angle,
+				1
+			);
+			double forwardVelocity =
+				chairDir dot owner.vel.xy;
+			if (owner.player.onground)
+			{
+				if (abs(throttle) > 0.01)
+				{
+					forwardVelocity +=
+						throttle * 0.40;
+				}
+				else
+				{
+					forwardVelocity *= 0.82;
+				}
+				forwardVelocity = clamp(
+					forwardVelocity,
+					-6.0,
+					6.0
+				);
+			}
+			owner.vel.xy = chairDir * forwardVelocity;
+
+
+
+			if (abs(throttle) > 0.01 && abs(forwardVelocity) > 0.05)
+			{
+				owner.player.vel = chairDir * 2.5;
+			}
+			else
+			{
+				owner.player.vel = (0, 0);
 			}
 		}
 	}
@@ -77,7 +308,7 @@ Class CK7_Smith_Hac : CK7_Smith_Weapon
 
 			#### # 1
 			{
-				//A_Overlay(LAYER_FUNC,"Fire_Bullet");
+				A_Overlay(LAYER_FUNC,"Fire_Bullet");
 				
 				If(!CK7_Smith(self).hitscan) CK7_Smith(self).hitscan = new("CK7_Hitscan");
 				CK7_Hitscan HitScan = CK7_Smith(self).hitscan;// cast pointer to just type "Hitscan"
@@ -274,27 +505,91 @@ Class CK7_Smith_Hac : CK7_Smith_Weapon
 			}
 		
 		Anim_Aim_In:
-	TNT1 A 70 A_StartSound("hac_equip", CHAN_WEAPON, CHANF_OVERLAP);
-	HACF A 2 bright K7_WeaponOffset(0, 36);
-	HACF B 2 bright K7_WeaponOffset(0, 35.75, WOF_INTERPOLATE);
-	HACF C 2 bright K7_WeaponOffset(0, 35.5, WOF_INTERPOLATE);
-	HACF D 2 bright K7_WeaponOffset(0, 35.25, WOF_INTERPOLATE);
-	HACF E 2 bright K7_WeaponOffset(0, 35, WOF_INTERPOLATE);
-	HACF F 2 bright K7_WeaponOffset(0, 34.75, WOF_INTERPOLATE);
-	HACF G 2 bright K7_WeaponOffset(0, 34.5, WOF_INTERPOLATE);
-	HACF H 2 bright K7_WeaponOffset(0, 34.25, WOF_INTERPOLATE);
-	HACF I 2 bright K7_WeaponOffset(0, 34, WOF_INTERPOLATE);
-	HACF J 2 bright K7_WeaponOffset(0, 33.75, WOF_INTERPOLATE);
-	HACF K 2 bright K7_WeaponOffset(0, 33.5, WOF_INTERPOLATE);
-	HACF L 2 bright K7_WeaponOffset(0, 33.25, WOF_INTERPOLATE);
-	HACF M 2 bright K7_WeaponOffset(0, 33, WOF_INTERPOLATE);
-	HACF N 2 bright K7_WeaponOffset(0, 32.75, WOF_INTERPOLATE);
-	HACF O 2 bright K7_WeaponOffset(0, 32.5, WOF_INTERPOLATE);
-	HACF P 2 bright K7_WeaponOffset(0, 32.25, WOF_INTERPOLATE);
-	HACF Q 2 bright K7_WeaponOffset(0, 32.1, WOF_INTERPOLATE);
-	HACF R 2 bright K7_WeaponOffset(0, 32, WOF_INTERPOLATE);
+			TNT1 A 0
+			{
+				invoker.m_bChairInputReady = false;
+			}
+			TNT1 A 70 A_StartSound("hac_equip", CHAN_WEAPON, CHANF_OVERLAP);
+			HACF A 2 bright K7_WeaponOffset(0, 36);
+			HACF B 2 bright K7_WeaponOffset(0, 35.75, WOF_INTERPOLATE);
+			HACF C 2 bright K7_WeaponOffset(0, 35.5, WOF_INTERPOLATE);
+			HACF D 2 bright K7_WeaponOffset(0, 35.25, WOF_INTERPOLATE);
+			HACF E 2 bright K7_WeaponOffset(0, 35, WOF_INTERPOLATE);
+			HACF F 2 bright K7_WeaponOffset(0, 34.75, WOF_INTERPOLATE);
+			HACF G 2 bright K7_WeaponOffset(0, 34.5, WOF_INTERPOLATE);
+			HACF H 2 bright K7_WeaponOffset(0, 34.25, WOF_INTERPOLATE);
+			HACF I 2 bright K7_WeaponOffset(0, 34, WOF_INTERPOLATE);
+			HACF J 2 bright K7_WeaponOffset(0, 33.75, WOF_INTERPOLATE);
+			HACF K 2 bright K7_WeaponOffset(0, 33.5, WOF_INTERPOLATE);
+			HACF L 2 bright K7_WeaponOffset(0, 33.25, WOF_INTERPOLATE);
+			HACF M 2 bright K7_WeaponOffset(0, 33, WOF_INTERPOLATE);
+			HACF N 2 bright K7_WeaponOffset(0, 32.75, WOF_INTERPOLATE);
+			HACF O 2 bright K7_WeaponOffset(0, 32.5, WOF_INTERPOLATE);
+			HACF P 2 bright K7_WeaponOffset(0, 32.25, WOF_INTERPOLATE);
+			HACF Q 2 bright K7_WeaponOffset(0, 32.1, WOF_INTERPOLATE);
+			HACF R 2 bright K7_WeaponOffset(0, 32, WOF_INTERPOLATE);
+			#### # 0
+			{
+				invoker.m_bChairInputReady = true;
+			}
+			Goto Anim_Aiming;
+			
+		Anim_Move_Down:
+			HACF R 0 bright A_StartSound("hac_unequip",CHAN_WEAPON,CHANF_OVERLAP);
+			HACF R 2 bright K7_WeaponOffset(0, 32);
+			HACF Q 2 bright K7_WeaponOffset(0, 32.1, WOF_INTERPOLATE);
+			HACF P 2 bright K7_WeaponOffset(0, 32.25, WOF_INTERPOLATE);
+			HACF O 2 bright K7_WeaponOffset(0, 32.5, WOF_INTERPOLATE);
+			HACF N 2 bright K7_WeaponOffset(0, 32.75, WOF_INTERPOLATE);
+			HACF M 2 bright K7_WeaponOffset(0, 33, WOF_INTERPOLATE);
+			HACF L 2 bright K7_WeaponOffset(0, 33.25, WOF_INTERPOLATE);
+			HACF K 2 bright K7_WeaponOffset(0, 33.5, WOF_INTERPOLATE);
+			HACF J 2 bright K7_WeaponOffset(0, 33.75, WOF_INTERPOLATE);
+			HACF I 2 bright K7_WeaponOffset(0, 34, WOF_INTERPOLATE);
+			HACF H 2 bright K7_WeaponOffset(0, 34.25, WOF_INTERPOLATE);
+			HACF G 2 bright K7_WeaponOffset(0, 34.5, WOF_INTERPOLATE);
+			HACF F 2 bright K7_WeaponOffset(0, 34.75, WOF_INTERPOLATE);
+			HACF E 2 bright K7_WeaponOffset(0, 35, WOF_INTERPOLATE);
+			HACF D 2 bright K7_WeaponOffset(0, 35.25, WOF_INTERPOLATE);
+			HACF C 2 bright K7_WeaponOffset(0, 35.5, WOF_INTERPOLATE);
+			HACF B 2 bright K7_WeaponOffset(0, 35.75, WOF_INTERPOLATE);
+			HACF A 2 bright K7_WeaponOffset(0, 36, WOF_INTERPOLATE);
+			TNT1 A 70;
+			Goto Anim_Move_Hidden;
 
-	Goto Anim_Aiming;
+		Anim_Move_Hidden:
+			TNT1 A 1;
+			Loop;
+			
+		Anim_Move_Up:
+			TNT1 A 0
+			{
+				invoker.m_bChairInputReady = false;
+			}
+			TNT1 A 70 A_StartSound("hac_equip",CHAN_WEAPON,CHANF_OVERLAP);
+			HACF A 2 bright K7_WeaponOffset(0, 36);
+			HACF B 2 bright K7_WeaponOffset(0, 35.75, WOF_INTERPOLATE);
+			HACF C 2 bright K7_WeaponOffset(0, 35.5, WOF_INTERPOLATE);
+			HACF D 2 bright K7_WeaponOffset(0, 35.25, WOF_INTERPOLATE);
+			HACF E 2 bright K7_WeaponOffset(0, 35, WOF_INTERPOLATE);
+			HACF F 2 bright K7_WeaponOffset(0, 34.75, WOF_INTERPOLATE);
+			HACF G 2 bright K7_WeaponOffset(0, 34.5, WOF_INTERPOLATE);
+			HACF H 2 bright K7_WeaponOffset(0, 34.25, WOF_INTERPOLATE);
+			HACF I 2 bright K7_WeaponOffset(0, 34, WOF_INTERPOLATE);
+			HACF J 2 bright K7_WeaponOffset(0, 33.75, WOF_INTERPOLATE);
+			HACF K 2 bright K7_WeaponOffset(0, 33.5, WOF_INTERPOLATE);
+			HACF L 2 bright K7_WeaponOffset(0, 33.25, WOF_INTERPOLATE);
+			HACF M 2 bright K7_WeaponOffset(0, 33, WOF_INTERPOLATE);
+			HACF N 2 bright K7_WeaponOffset(0, 32.75, WOF_INTERPOLATE);
+			HACF O 2 bright K7_WeaponOffset(0, 32.5, WOF_INTERPOLATE);
+			HACF P 2 bright K7_WeaponOffset(0, 32.25, WOF_INTERPOLATE);
+			HACF Q 2 bright K7_WeaponOffset(0, 32.1, WOF_INTERPOLATE);
+			HACF R 2 bright K7_WeaponOffset(0, 32, WOF_INTERPOLATE);
+			#### # 0
+			{
+				invoker.m_bChairInputReady = true;
+			}
+			Goto Anim_Aiming;
 		
 		Anim_Aiming:
 			HACF R 1 bright
@@ -348,23 +643,5 @@ Class CK7_Smith_Hac : CK7_Smith_Weapon
 			#### # 0 A_Overlay( LAYER_FLASH, "FlashA" );
 			Goto Anim_Aiming;
 		
-	}
-}
-
-Class CK7_Wheelchair : actor
-{
-	Default
-	{
-		RenderStyle "Translucent";
-		alpha 0.75;
-		+INTERPOLATEANGLES
-		+NOINTERACTION
-		+FLATSPRITE
-	}
-	
-	States{
-    Spawn:
-		WHCH RR -1;
-		Loop;
 	}
 }
