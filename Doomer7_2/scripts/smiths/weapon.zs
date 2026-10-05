@@ -189,7 +189,8 @@ Class CK7_Smith_Weapon : Weapon abstract
 		}
 		psprite psp = player.FindPSprite(2);
 		bool anim;
-		if(psp) anim = psp.curstate.InStateSequence(invoker.FindState("Anim_Aiming"));
+		if(psp) anim = psp.curstate.InStateSequence(invoker.FindState("Anim_Aiming")) ||
+						psp.curstate.InStateSequence(invoker.FindState("Anim_Zoomed"));
 
 		DoReadyWeaponToSwitch(player, !(flags & WRF_NoSwitch) && anim);
 		

@@ -87,6 +87,7 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 			{
 				invoker.m_iAmmo = invoker.m_iClipSize;
 			}
+			#### # 0 A_JumpIf( player.pendingweapon != WP_NOCHANGE, "Aiming" );
 			Goto Zoom_In;
 		
 		AltFire:
@@ -111,7 +112,7 @@ Class CK7_Smith_Ked_Wep : CK7_Smith_Weapon
 			{
 				CK7_Smith( invoker.owner ).m_bZoomedIn = true;
 			}
-			Goto Aiming_Zoomed;
+			Goto Aiming;
 		
 		Aiming_Zoomed:
 			TNT1 A 0;
