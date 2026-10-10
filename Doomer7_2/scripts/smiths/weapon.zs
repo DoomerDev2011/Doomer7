@@ -839,7 +839,6 @@ class CK7_Hitscan : LineTracer
 			Crit = false;
 			If(results.HitActor is "CK7_HS_CritSpot" && results.HitActor.master.bSHOOTABLE) 
 			{
-				If(victim && victim != results.HitActor.master) Return TRACE_Stop;
 				Crit = true;
 				victim = results.HitActor.master;
 				LandPos = results.HitPos;
