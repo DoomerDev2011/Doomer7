@@ -327,9 +327,9 @@ Class CK7_Smith_Hac : CK7_Smith_Weapon
 			#### # 1
 			{
 				//A_Overlay(LAYER_FUNC,"Fire_Bullet");
-				
-				If(!CK7_Smith(self).hitscan) CK7_Smith(self).hitscan = new("CK7_Hitscan");
-				CK7_Hitscan HitScan = CK7_Smith(self).hitscan;// cast pointer to just type "Hitscan"
+				CK7_Smith smith = CK7_Smith(self);
+				If(!smith.hitscan) smith.hitscan = new("CK7_Hitscan");
+				CK7_Hitscan HitScan = smith.hitscan;// cast pointer to just type "Hitscan"
 				Hitscan.crosshit.clear();
 				Hitscan.master = self; //the player, so it doesn't hit them
 				
@@ -365,7 +365,7 @@ Class CK7_Smith_Hac : CK7_Smith_Weapon
 						{
 							damg = 99999999;
 							typ = "Critical";
-							If(hitscan.victim.health - damg <= 0) A_StartSound("*taunt",2,CHANF_NOSTOP);
+							If(hitscan.victim.health - damg <= 0) smith.TryTaunt();
 							//CK7_CritVoiceLine(New("CK7_CritVoiceLine")).Player = Self;
 							hitscan.victim.A_StartSound("hs_death",12,CHANF_OVERLAP,1,0);
 						}

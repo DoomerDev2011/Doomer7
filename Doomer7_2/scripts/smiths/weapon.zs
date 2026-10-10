@@ -277,8 +277,9 @@ Class CK7_Smith_Weapon : Weapon abstract
 	Action Void K7_FireBullet(int damage, double spread, double crit = 8, bool bleed = false)
 	{
 		//access the LineTracer class from the player, if there isnt one make it
-		If(!CK7_Smith(self).hitscan) CK7_Smith(self).hitscan = new("CK7_Hitscan");
-		CK7_Hitscan HitScan = CK7_Smith(self).hitscan;// cast pointer to just type "Hitscan"
+		CK7_Smith smith = CK7_Smith(self);
+		If(!smith.hitscan) smith.hitscan = new("CK7_Hitscan");
+		CK7_Hitscan HitScan = smith.hitscan;// cast pointer to just type "Hitscan"
 		Hitscan.master = self; //the player, so it doesn't hit them
 		Hitscan.victim = null; //reset these variables before the shot
 		Hitscan.crit = false;
@@ -323,7 +324,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 				typ = "Critical";
 				if(hitscan.victim.default.health <= 150) damg = Max(damg,hitscan.victim.default.health*3);
 				puff.bNOEXTREMEDEATH = false;
-				If(hitscan.victim.health - damg <= 0) A_StartSound("*taunt",2,CHANF_NOSTOP);
+				If(hitscan.victim.health - damg <= 0) smith.TryTaunt();
 				//CK7_CritVoiceLine(New("CK7_CritVoiceLine")).Player = Self;
 				hitscan.victim.A_StartSound("hs_death",12,CHANF_OVERLAP,1,0);
 			}

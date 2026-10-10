@@ -32,6 +32,7 @@ Class CK7_Smith : DoomPlayer
 	float 	m_fHeight;
 	
 	int 	m_iStaticStartTime;
+	uint 	m_tauntTimer;
 	
 	Default
 	{
@@ -86,6 +87,7 @@ Class CK7_Smith : DoomPlayer
 		// Heal Button
 		m_bHealPressed = ( input & BT_USER3 ) &~ ( input_old & BT_USER3 );
 		
+		if(m_tauntTimer) m_tauntTimer--;
 		
 		PPShader.SetUniform1i( "k7post", "static_timer", level.time - m_iStaticStartTime );
 	}
@@ -134,6 +136,15 @@ Class CK7_Smith : DoomPlayer
 	{
 		If( !(player.WeaponState & WF_WEAPONBOBBING) ) Return (0,0);
 		return super.BobWeapon (ticfrac);
+	}
+	
+	void TryTaunt()
+	{
+		if(!m_tauntTimer)
+		{
+			A_StartSound("*taunt",2,CHANF_NOSTOP);
+			m_tauntTimer = CVar.GetCVar('k7_tauntcooldown', player).GetInt();
+		}
 	}
 	/*States
 	{
