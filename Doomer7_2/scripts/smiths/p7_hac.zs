@@ -92,7 +92,7 @@ Class CK7_Smith_Hac : CK7_Smith_Weapon
 				owner.A_StopSound(CHAN_5);
 				m_bMoveSoundPlaying = false;
 			}
-			m_iChairState = 2;
+			m_iChairState = 0;
 			m_iChairTimer = 0;
 			m_bChairInputReady = false;
 			angle = owner.angle;
@@ -280,6 +280,31 @@ Class CK7_Smith_Hac : CK7_Smith_Weapon
 			M000 A -1;
 			stop;
 			
+		Select:
+			TNT1 A 1 K7_WeaponOffset( 0, 32 );
+			TNT1 A 0 
+			{
+				if ( k7_mode )
+				{
+					invoker.m_iAmmo = invoker.m_iClipSize;
+				}
+				let smith = CK7_Smith( invoker.owner );
+				smith.ApplyStats();
+				smith.SetViewHeight( invoker.m_fHeight - 2.5 );
+				invoker.m_iSpecialCharges = 0;
+				
+				if(player.cmd.forwardmove || player.cmd.sidemove) {
+					invoker.m_iChairState = 2;
+					A_Overlay( LAYER_ANIM, "Anim_Move_Hidden" );
+				}
+				else {
+					invoker.m_iChairState = 0;
+					A_Overlay( LAYER_ANIM, "Anim_Move_Up" );
+				}
+				
+				return ResolveState( "Ready" );
+			}
+		
 		Ready:
 			TNT1 A 0;
 		Aiming_Zoomed:
@@ -569,7 +594,6 @@ Class CK7_Smith_Hac : CK7_Smith_Weapon
 			
 		Anim_Zoomed:
 			TNT1 A 1 bright;
-			
 			Loop;
 		
 		Anim_Fire_Zoomed:
