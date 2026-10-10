@@ -2,6 +2,7 @@ server int k7_mode = 0;
 user nosave bool k7_crosshairEnabled = true;
 user nosave float k7_crosshairOpacity = 1.0;
 user nosave bool k7_reloadblink = false;
+user nosave bool k7_weaponflash = true;
 user nosave int k7_tauntcooldown = 140;
 server float k7_bloodamount = 1.0;
 server bool k7_bloodtrails = true;

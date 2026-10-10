@@ -618,7 +618,7 @@ Class CK7_Smith_Weapon : Weapon abstract
 			#### # 1 bright
 			{
 				A_Light( 3 );
-				A_SetBlend( "E6F63F", 0.25, 10 );
+				if(CVar.GetCVar('k7_weaponflash', Player).GetBool()) A_SetBlend( "E6F63F", 0.25, 10 );
 				A_OverlayFlags( OverlayID(), PSPF_RENDERSTYLE, true );
 				A_OverlayFlags( OverlayID(), PSPF_FORCEALPHA, true );
 				A_OverlayRenderStyle( OverlayID(), STYLE_Add );

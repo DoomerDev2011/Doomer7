@@ -10,9 +10,12 @@ AddOptionMenu "OptionsMenuSimple"
 
 OptionMenu "K7_Options"
 {
+	Title "Doomer7 Options"
+	//StaticText ""
 	Option "Killer7 Crosshair", "k7_crosshairEnabled", "OnOff"
 	Slider "Crosshair opacity", "k7_crosshairOpacity", 0.0, 1.0, 0.05, 2, "k7_crosshairEnabled"
 	Option "Enemies spew blood", "k7_bloodtrails", "OnOff"
+	Option "Full screen muzzle flash", "k7_weaponflash", "OnOff"
 	Slider "Floating blood particles amount", "k7_bloodamount", 0.0, 1.0, 0.05, 2
 	Slider "Cooldown in between critical taunts", "k7_tauntcooldown", 0, 2000, 1, 0
 }
